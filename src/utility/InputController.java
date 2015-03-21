@@ -9,11 +9,11 @@ public class InputController {
 	private boolean downPressed = false;
 	
 	public void reset(){
-		this.leftPressed = false;
-		this.rightPressed = false;
-		this.upPressed = false;
-		this.downPressed = false;
-		this.firePressed = false;
+		leftPressed = false;
+		rightPressed = false;
+		upPressed = false;
+		downPressed = false;
+		firePressed = false;
 	}
 
 	public void setLeftPressed(boolean leftPressed) {
@@ -37,23 +37,23 @@ public class InputController {
 	}
 
 	public boolean isLeftPressed() {
-		return this.leftPressed;
+		return leftPressed;
 	}
 
 	public boolean isRightPressed() {
-		return this.rightPressed;
+		return rightPressed;
 	}
 
 	public boolean isFirePressed() {
-		return this.firePressed;
+		return firePressed;
 	}
 
 	public boolean isUpPressed() {
-		return this.upPressed;
+		return upPressed;
 	}
 
 	public boolean isDownPressed() {
-		return this.downPressed;
+		return downPressed;
 	}
 	
 	

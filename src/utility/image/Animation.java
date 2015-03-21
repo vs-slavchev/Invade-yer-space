@@ -74,9 +74,6 @@ public class Animation {
 		if (!active){
 			return;
 		}
-		int dimensionX = getDimensionX();
-		int dimensionY = getDimensionY();
-		
 		g.drawImage(ImageManager.getImage(name),
 				x, y,
 				x + (int)(getDimensionX()*scale),
@@ -97,7 +94,7 @@ public class Animation {
 	}
 	
 	public boolean getActive(){
-		return this.active;
+		return active;
 	}
 	
 }

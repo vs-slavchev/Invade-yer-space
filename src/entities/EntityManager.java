@@ -3,7 +3,6 @@ package entities;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-import utility.image.ImageManager;
 import entities.aliens.AlienEntity;
 import main.Game;
 
@@ -25,9 +24,13 @@ public class EntityManager {
 	
 	public EntityManager(Game game){
 		this.game = game;
-		assert (maxColumns % 2 == 0);
+		if (!(maxColumns % 2 == 0)){
+			System.out.println("maxColumns is not even!");
+		}
 		generateNewEntitiesMap();
-		assert (entitiesLevelMap.length() == this.maxColumns*this.maxRows);
+		if (entitiesLevelMap.length() != this.maxColumns*this.maxRows){
+			System.out.println("entitiesMap is not the exact size!");
+		}
 	}
 	
 	/* generates a symmetric map of entities that is random
@@ -79,7 +82,8 @@ public class EntityManager {
 		return sum/size;
 	}
 	
-	private int controllTypeBoundaries(int type){
+	private int controllTypeBoundaries(int inType){
+		int type = inType;
 		if( type < 1){
 			type = 1;
 		}else if (type > maxAlienShipType){
@@ -90,33 +94,33 @@ public class EntityManager {
 
 	
 	public void moveEntities(long delta){
-		for( int i = 0; i < this.alienEntities.size(); i++ ){
-			Entity entity = this.alienEntities.get(i);
+		for( int i = 0; i < alienEntities.size(); i++ ){
+			Entity entity = alienEntities.get(i);
 			entity.move(delta);
 		}
-		for( int i = 0; i < this.entities.size(); i++ ){
-			Entity entity = this.entities.get(i);
+		for( int i = 0; i < entities.size(); i++ ){
+			Entity entity = entities.get(i);
 			entity.move(delta);
 		}
 	}
 	
 	public synchronized void drawEntities(Graphics2D g){
-		for( int i = 0; i < this.alienEntities.size(); i++){
-			Entity entity = this.alienEntities.get(i);
+		for( int i = 0; i < alienEntities.size(); i++){
+			Entity entity = alienEntities.get(i);
 			entity.draw(g);
 		}
-		for( int i = 0; i < this.entities.size(); i++){
-			Entity entity = this.entities.get(i);
+		for( int i = 0; i < entities.size(); i++){
+			Entity entity = entities.get(i);
 			entity.draw(g);
 		}
 	}
 	
 	public void collideEntities(){
-		for( int i = 0; i < this.entities.size(); i++){
-			for(int j = 0; j < this.alienEntities.size(); j++){
+		for( int i = 0; i < entities.size(); i++){
+			for(int j = 0; j < alienEntities.size(); j++){
 				
-				Entity me = this.entities.get(i);
-				Entity him = this.alienEntities.get(j);
+				Entity me = entities.get(i);
+				Entity him = alienEntities.get(j);
 
 				if( me.checkCollisionWith(him)){
 					me.collidedWith(him);
@@ -127,9 +131,9 @@ public class EntityManager {
 	}
 	
 	public void removeEntities(){
-		this.entities.removeAll(this.removeList);
-		this.alienEntities.removeAll(this.removeList);
-		this.removeList.clear();
+		entities.removeAll(this.removeList);
+		alienEntities.removeAll(this.removeList);
+		removeList.clear();
 	}
 	
 	public void forceLogic(){
@@ -141,22 +145,22 @@ public class EntityManager {
 	
 	public void initEntities(){
 		//clear the ArrayLists before using them
-		this.entities.clear();
-		this.alienEntities.clear();
+		entities.clear();
+		alienEntities.clear();
 		
-		this.ship = new ShipEntity( this.game, game.getGameWidth()/2, game.getGameHeight()*5/6);
-		this.entities.add(this.ship);
+		ship = new ShipEntity( this.game, Game.getGameWidth()/2, Game.getGameHeight()*5/6);
+		entities.add(this.ship);
 		
 		//create a block of aliens by getting a char id of the alien from the entitiesLevelMap Array of Strings
-		this.alienCount = 0;
+		alienCount = 0;
 		int type = 0;
-		for( int row = 0; row < this.maxRows; row++){
-			for( int col = 0; col < this.maxColumns; col++){
-				type = Character.getNumericValue( this.entitiesLevelMap.charAt( col + row*this.maxColumns ) );
+		for( int row = 0; row < maxRows; row++){
+			for( int col = 0; col < maxColumns; col++){
+				type = Character.getNumericValue( entitiesLevelMap.charAt( col + row*maxColumns ) );
 				Entity alien = produceAlien( type, row, col);
 				if( type != 0 && alien != null){
-					this.alienEntities.add(alien);
-					this.alienCount++;
+					alienEntities.add(alien);
+					alienCount++;
 				}
 			}
 		}
@@ -201,25 +205,25 @@ public class EntityManager {
 		 * their position is set correctly
 		 */
 		// spawn off the screen
-		AlienEntity alien = new AlienEntity( this.game, type, -100, -100, healthPoints);
+		AlienEntity alien = new AlienEntity( game, type, -100, -100, healthPoints);
 		int offsetX = alien.getAnimation().getDimensionX()/2;
 		int offsetY = alien.getAnimation().getDimensionY()/2;
 		// set to the correct position, after having access to the animation
-		alien.setXY(100+(col*game.getGameWidth()/30) - offsetX, 20+(row*game.getGameHeight()/20) - offsetY);
+		alien.setXY(100+(col*Game.getGameWidth()/30) - offsetX, 20+(row*Game.getGameHeight()/20) - offsetY);
 		return alien;
 	}
 	
 	public void addToAlienEntities(Entity entity){
-		this.alienEntities.add(entity);
+		alienEntities.add(entity);
 	}
 	
 	public void addToEntities(Entity entity){
-		this.entities.add(entity);
+		entities.add(entity);
 	}
 	
 	public void speedUpAlienEntities(int difficulty){
-		for( int i = 0; i < this.alienEntities.size(); i++){
-			Entity entity = this.alienEntities.get(i);
+		for( int i = 0; i < alienEntities.size(); i++){
+			Entity entity = alienEntities.get(i);
 			if( entity instanceof AlienEntity){
 				entity.setHorizontalMovement( entity.getHorizontalMovement() * (1.00 + (4.00-difficulty)/100.00 ) );
 				((AlienEntity) entity).reduceShootTimeInterval();
@@ -244,19 +248,19 @@ public class EntityManager {
 	}
 	
 	public void removeEntity(Entity entity){
-		this.removeList.add(entity);
+		removeList.add(entity);
 	}
 	
 	public void decrementAlienCount(){
-		this.alienCount--;
+		alienCount--;
 	}
 	
 	public int getAlienCount(){
-		return this.alienCount;
+		return alienCount;
 	}
 	
 	public Entity getShip(){
-		return this.ship;
+		return ship;
 	}
 	
 

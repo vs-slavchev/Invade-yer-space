@@ -21,15 +21,15 @@ public class AlienShotEntity extends Entity{
 	
 	public void move(long delta){
 		super.move(delta);
-		if( this.y > this.game.getGameHeight() + 20 ){
-			this.game.getEntityManager().removeEntity(this);
+		if( y > Game.getGameHeight() + 20 ){
+			game.getEntityManager().removeEntity(this);
 		}
 	}
 	
 	public void collidedWith(Entity other){
 		if( other instanceof ShipEntity){
-			this.game.getEntityManager().removeEntity(this);
-			this.game.notifyDeath();
+			game.getEntityManager().removeEntity(this);
+			game.notifyDeath();
 		}
 	}
 

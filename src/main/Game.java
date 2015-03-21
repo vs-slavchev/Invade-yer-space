@@ -18,7 +18,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.Font;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -47,7 +46,7 @@ public class Game extends Canvas {
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
 	private SoundManager soundManager = SoundManager.getSoundManager();
-	private InputController inputController;
+	InputController inputController;
 	private String message = "titleText";
 	private int difficulty = 3; // 3-ez, 2-normal, 1-hard
 
@@ -55,10 +54,10 @@ public class Game extends Canvas {
 
 		JFrame container = new JFrame("Invade yer space ye scurvy dog!");
 		JPanel panel = (JPanel) container.getContentPane();
-		panel.setPreferredSize(new Dimension(this.WIDTH, this.HEIGHT)); // *scale
+		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		panel.setLayout(null);
 
-		setBounds(0, 0, this.WIDTH , this.HEIGHT); // *scale
+		setBounds(0, 0, WIDTH , HEIGHT);
 		setLocation(0, 0);
 		container.setUndecorated(true);
 		panel.add(this);
@@ -86,9 +85,9 @@ public class Game extends Canvas {
 		// use BufferStrategy class to manage buffers for the accelerated
 		// graphics
 		createBufferStrategy(2);
-		this.strategy = getBufferStrategy();
+		strategy = getBufferStrategy();
 
-		this.inputController = new InputController();
+		inputController = new InputController();
 		try {
 			ImageManager.initImages();
 		} catch (IOException e1) {
@@ -100,7 +99,7 @@ public class Game extends Canvas {
 		soundManager.initSoundManager();
 
 		// start playing background music
-		this.musicManager.loopBackgroundMusic();
+		musicManager.loopBackgroundMusic();
 		BackgroundImageManager.generateBackgroundStars(300);
 
 	}
@@ -115,49 +114,49 @@ public class Game extends Canvas {
 		long lastLoopTime = System.currentTimeMillis();
 		float minimumFPS = 100.00f;
 
-		while (this.gameRunning) {
+		while (gameRunning) {
 
 			// calculate how far entities should move this loop, based on the
 			// time since last update
-			this.delta = System.currentTimeMillis() - lastLoopTime;
+			delta = System.currentTimeMillis() - lastLoopTime;
 			lastLoopTime = System.currentTimeMillis();
-			if (minimumFPS > 1000.00f / this.delta) {
-				minimumFPS = 1000.00f / this.delta;
+			if (minimumFPS > 1000.00f / delta) {
+				minimumFPS = 1000.00f / delta;
 			}
 
 			// get a graphics context for the accelerated surface and blank it
 			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
 			g.setColor(Color.black);
-			g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
 			BackgroundImageManager.drawBackgroundObjects(g);
 
 			// cycle trough entities and move them
-			if (!this.waitingForKeyPress) {
-				this.entityManager.moveEntities(this.delta);
+			if (!waitingForKeyPress) {
+				entityManager.moveEntities(delta);
 				BackgroundImageManager.update();
 			}
 
 			// draw cycle
-			this.entityManager.drawEntities(g);
+			entityManager.drawEntities(g);
 
 			// collision detection: ship,shots are checked against the aliens,
 			// alienShots
-			if (!this.waitingForKeyPress) {
-				this.entityManager.collideEntities();
+			if (!waitingForKeyPress) {
+				entityManager.collideEntities();
 			}
 
 			// remove destroyed entities that are to be removed and clean up
-			this.entityManager.removeEntities();
+			entityManager.removeEntities();
 
 			// if we need to do logic go through alienEntities only, since only
 			// aliens have a doLogic() implemented
-			if (this.logicRequiredThisLoop) {
-				this.entityManager.forceLogic();
-				this.logicRequiredThisLoop = false;
+			if (logicRequiredThisLoop) {
+				entityManager.forceLogic();
+				logicRequiredThisLoop = false;
 			}
 
 			// if game is waiting for "any key press" show message
-			if (this.waitingForKeyPress) {
+			if (waitingForKeyPress) {
 				g.drawImage(ImageManager.getImage("text/" + message),
 						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
 						(HEIGHT - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
@@ -165,11 +164,11 @@ public class Game extends Canvas {
 
 			// after drawing clean up and flip the buffer
 			g.dispose();
-			this.strategy.show();
+			strategy.show();
 
 			// give the input to the ship to be processed
-			((ShipEntity) this.entityManager.getShip())
-					.processInput(this.inputController);
+			((ShipEntity) entityManager.getShip())
+					.processInput(inputController);
 
 			// pause and fps control
 			try {
@@ -187,37 +186,37 @@ public class Game extends Canvas {
 	}
 
 	public void notifyDeath() {
-		this.message = "deathText";
-		this.waitingForKeyPress = true;
+		message = "deathText";
+		waitingForKeyPress = true;
 	}
 
 	public void notifyWin() {
-		this.message = "winText";
-		this.waitingForKeyPress = true;
+		message = "winText";
+		waitingForKeyPress = true;
 		entityManager.generateNewEntitiesMap();
 	}
 
 	public void notifyAlienKilled() {
-		this.entityManager.decrementAlienCount();
-		if (this.entityManager.getAlienCount() < 1)
+		entityManager.decrementAlienCount();
+		if (entityManager.getAlienCount() < 1)
 			notifyWin();
 
 		// speed up the remaining aliens by 1/2/3% depending on difficulty
-		this.entityManager.speedUpAlienEntities(this.difficulty);
+		entityManager.speedUpAlienEntities(this.difficulty);
 	}
 
 	public void updateLogic() {
-		this.logicRequiredThisLoop = true;
+		logicRequiredThisLoop = true;
 	}
 
 	private void startGame() {
 
-		this.entityManager.initEntities();
-		this.inputController.reset();
+		entityManager.initEntities();
+		inputController.reset();
 	}
 
 	public int getDifficulty() {
-		return this.difficulty;
+		return difficulty;
 	}
 
 	public static int getGameWidth() {
@@ -229,11 +228,11 @@ public class Game extends Canvas {
 	}
 
 	public EntityManager getEntityManager() {
-		return this.entityManager;
+		return entityManager;
 	}
 
 	public MusicManager getSoundManager() {
-		return this.musicManager;
+		return musicManager;
 	}
 
 	private class KeyInputHandler extends KeyAdapter {
@@ -241,53 +240,53 @@ public class Game extends Canvas {
 		private int pressCount;
 
 		public KeyInputHandler() {
-			this.pressCount = 1;
+			pressCount = 1;
 		}
 
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				Game.this.inputController.setLeftPressed(true);
+				inputController.setLeftPressed(true);
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				Game.this.inputController.setRightPressed(true);
+				inputController.setRightPressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				Game.this.inputController.setUpPressed(true);
+				inputController.setUpPressed(true);
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				Game.this.inputController.setDownPressed(true);
+				inputController.setDownPressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				Game.this.inputController.setFirePressed(true);
+				inputController.setFirePressed(true);
 			}
 		}
 
 		public void keyReleased(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-				Game.this.inputController.setLeftPressed(false);
+				inputController.setLeftPressed(false);
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-				Game.this.inputController.setRightPressed(false);
+				inputController.setRightPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_UP) {
-				Game.this.inputController.setUpPressed(false);
+				inputController.setUpPressed(false);
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-				Game.this.inputController.setDownPressed(false);
+				inputController.setDownPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-				Game.this.inputController.setFirePressed(false);
+				inputController.setFirePressed(false);
 			}
 		}
 
 		public void keyTyped(KeyEvent e) {
-			if (Game.this.waitingForKeyPress) {
-				if (this.pressCount == 1) {
-					Game.this.waitingForKeyPress = false;
+			if (waitingForKeyPress) {
+				if (pressCount == 1) {
+					waitingForKeyPress = false;
 					startGame();
-					this.pressCount = 1;
+					pressCount = 1;
 				} else {
-					this.pressCount++;
+					pressCount++;
 				}
 			}
 			if (e.getKeyChar() == 27) { // escape
-				Game.this.gameRunning = false;
+				gameRunning = false;
 			}
 		}
 	}// close KeyInputHandler class

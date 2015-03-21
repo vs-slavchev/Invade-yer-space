@@ -13,7 +13,7 @@ public class ShipEntity extends Entity{
 	private long lastFire = 0;
 	private long firingInterval = 200;
 	private double moveSpeed = 300;
-	private ParticleEmitter particleEmitter = new ParticleEmitter(20, 6);
+	private ParticleEmitter particleEmitter = new ParticleEmitter(40, 6);
 	
 	//private int overheat = 0; // max is always 100, used to draw rect indicator
 	
@@ -25,18 +25,18 @@ public class ShipEntity extends Entity{
 	}
 	
 	public void move(long delta){
-		particleEmitter.emittParticle((int)x + 20, (int)y + 25);
+		particleEmitter.emittParticle((int)x + ImageManager.getImage("mainShip").getWidth(null)/2, (int)y + ImageManager.getImage("mainShip").getHeight(null));
 		
-		if( this.dx < 0 && this.x < 10 ){
+		if( dx < 0 && x < 10 ){
 			return;
 		}
-		if( this.dx > 0 && this.x > this.game.getGameWidth() - 50 ){
+		if( dx > 0 && x > game.getGameWidth() - 50 ){
 			return;
 		}
-		if( this.dy > 0 && this.y > this.game.getGameHeight() - 30 ){
+		if( dy > 0 && y > game.getGameHeight() - collisionHeight ){
 			return;
 		}
-		if( this.dy < 0 && this.y < 10 ){
+		if( dy < 0 && y < 10 ){
 			return;
 		}
 		super.move(delta);
@@ -50,27 +50,27 @@ public class ShipEntity extends Entity{
 	
 	public void processInput(InputController inputController){
 		
-		this.dx = 0;
-		this.dy = 0;
+		dx = 0;
+		dy = 0;
 		if( inputController.isLeftPressed() )
-			this.dx = -this.moveSpeed;
+			dx = -this.moveSpeed;
 		else if( inputController.isRightPressed() )
-			this.dx =  this.moveSpeed;
+			dx =  this.moveSpeed;
 		if( inputController.isUpPressed() )
-			this.dy = -this.moveSpeed/2;
+			dy = -this.moveSpeed/2;
 		else if( inputController.isDownPressed() )
-			this.dy = this.moveSpeed/2;
+			dy = this.moveSpeed/2;
 		if( inputController.isFirePressed() )
 			tryToFire();
 	}
 	
 	public void tryToFire(){
-		if( System.currentTimeMillis() - this.lastFire < this.firingInterval)
+		if( System.currentTimeMillis() - lastFire < firingInterval)
 			return;
 		
-		this.lastFire = System.currentTimeMillis();
-		ShotEntity shot = new ShotEntity( this.game, (int)this.x+collisionWidth/2 - 2, (int)this.y  );
-		this.game.getEntityManager().addToEntities(shot);
+		lastFire = System.currentTimeMillis();
+		ShotEntity shot = new ShotEntity( game, (int)x+collisionWidth/2 - 2, (int)y  );
+		game.getEntityManager().addToEntities(shot);
 	}
 	
 	public ParticleEmitter getParticleEmitter(){

@@ -11,20 +11,20 @@ public class MusicManager {
 	
 	public MusicManager(){
 		try{
-			this.backgroundMusic = new OggClip("music/captain_Manol.ogg");
+			backgroundMusic = new OggClip("music/captain_Manol.ogg");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public void loopBackgroundMusic(){
-			this.backgroundMusic.loop();
-			this.backgroundMusic.setGain(0.75f);
-			this.backgroundMusic.setBalance(-1.0f);
+			backgroundMusic.loop();
+			backgroundMusic.setGain(0.75f);
+			backgroundMusic.setBalance(-1.0f);
 	}
 	
 	public void stopBackgroundMusic(){
-		this.backgroundMusic.stop();
+		backgroundMusic.stop();
 	}
 	
 }

@@ -21,21 +21,21 @@ public class ShotEntity extends Entity{
 	
 	public void move(long delta){
 		super.move(delta);
-		if( this.y < -20 ){
-			this.game.getEntityManager().removeEntity(this);
+		if( y < -20 ){
+			game.getEntityManager().removeEntity(this);
 		}
 	}
 	
 	public void collidedWith(Entity other){
-		if(this.used)
+		if(used)
 			return;
 		if( other instanceof AlienEntity){
-			this.used = true;
-			this.game.getEntityManager().removeEntity(this);
+			used = true;
+			game.getEntityManager().removeEntity(this);
 			((AlienEntity) other).takeDamage(1);
 			if( ((AlienEntity) other).isDead() ){
-				this.game.getEntityManager().removeEntity(other);
-				this.game.notifyAlienKilled();
+				game.getEntityManager().removeEntity(other);
+				game.notifyAlienKilled();
 			}
 		}
 	}

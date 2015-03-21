@@ -33,9 +33,9 @@ public class AnimationManager {
 	}*/
 
 	public static synchronized void updateAnimations() {
-		for (final Iterator iterator = animations.iterator(); iterator
+		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
-			Animation anim = (Animation) iterator.next();
+			Animation anim = iterator.next();
 			anim.update();
 			if (!anim.getActive()) {
 				animations.remove(anim);
@@ -44,9 +44,9 @@ public class AnimationManager {
 	}
 
 	public static synchronized void drawAnimations(Graphics2D g) {
-		for (final Iterator iterator = animations.iterator(); iterator
+		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
-			Animation anim = (Animation) iterator.next();
+			Animation anim = iterator.next();
 			if (anim != null){
 				anim.drawAnimation(g);
 			}

@@ -36,10 +36,10 @@ public class AlienEntity extends Entity{
 
 	public void move(long delta){
 		//if an alien reaches the end of the screen request direction change
-		if( this.dx < 0 && this.x < 10 )
-			this.game.updateLogic();
-		if( this.dx > 0 && this.x > this.game.getGameWidth() - 50 ){
-			this.game.updateLogic();
+		if( dx < 0 && x < 10 )
+			game.updateLogic();
+		if( dx > 0 && this.x > game.getGameWidth() - 50 ){
+			game.updateLogic();
 		}
 		animation.update();
 		animation.setPosition((int)x, (int)y);
@@ -48,12 +48,12 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void doLogic(){
-		this.dx = -this.dx; //swap direction
-		this.y += 10; //move lower
+		dx = -dx; //swap direction
+		y += 10; //move lower
 		
 		//if aliens reach the player then gg
-		if(this.y > this.game.getGameHeight() - 30 ){
-			this.game.notifyDeath();
+		if(y > game.getGameHeight() - 30 ){
+			game.notifyDeath();
 		}
 	}
 	
@@ -61,23 +61,23 @@ public class AlienEntity extends Entity{
 	 *  after it ends transition to default still animation
 	 */
 	public void tryToShoot(){
-		this.lastShotTime++;
-		if(this.lastShotTime >= this.shootTimeInterval){
-			this.lastShotTime = 0;
+		lastShotTime++;
+		if(lastShotTime >= shootTimeInterval){
+			lastShotTime = 0;
 			//set the animation to start running the shoot animation
 			animation.setRunning(true);
-			Entity alienShot = new AlienShotEntity( this.game,
-					(int)(this.x + collisionWidth/2), (int)(this.y + 5) );
-			this.game.getEntityManager().addToAlienEntities(alienShot);
+			Entity alienShot = new AlienShotEntity( game,
+					(int)(x + collisionWidth/2), (int)(y + 5) );
+			game.getEntityManager().addToAlienEntities(alienShot);
 		}
 	}
 	
 	public void reduceShootTimeInterval(){
-		this.shootTimeInterval *= 0.98;
+		shootTimeInterval *= 0.98;
 	}
 	
 	public int getrandom( int min, int max ){
-		return min + this.random.nextInt( max - min );
+		return min + random.nextInt( max - min );
 	}
 	
 	public void draw(Graphics2D g){
@@ -86,11 +86,11 @@ public class AlienEntity extends Entity{
 	
 	public void takeDamage( int damage ){
 		SoundManager.getSoundManager().play("explosion");
-		this.healthPoints -= damage;
+		healthPoints -= damage;
 	}
 	
 	public boolean isDead(){
-		if( this.healthPoints <= 0 )
+		if( healthPoints <= 0 )
 			return true;
 		return false;
 	}

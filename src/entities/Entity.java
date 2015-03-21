@@ -1,6 +1,5 @@
 package entities;
 
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -25,8 +24,8 @@ public abstract class Entity {
 	}
 	
 	public void move(long delta){
-		this.x += (delta * this.dx)/1000;
-		this.y += (delta * this.dy)/1000;
+		x += (delta * dx)/1000;
+		y += (delta * dy)/1000;
 	}
 	
 	public void setHorizontalMovement(double dx){
@@ -37,32 +36,32 @@ public abstract class Entity {
 	}
 	
 	public int getX(){
-		return (int) this.x;
+		return (int)x;
 	}
 	
 	public int getY(){
-		return (int) this.y;
+		return (int)y;
 	}
 	
 	public double getHorizontalMovement(){
-		return this.dx;
+		return dx;
 	}
 	
 	public double getVerticalMovement(){
-		return this.dy;
+		return dy;
 	}
 	
 	public abstract void draw(Graphics2D g);
 	
 	//collision detection
 	public boolean checkCollisionWith(Entity other){
-		this.collisionRectangle.setBounds((int) this.x, (int) this.y, this.collisionWidth, this.collisionHeight );
-		return this.collisionRectangle.intersects( other.getCollisionRectangle() );
+		collisionRectangle.setBounds((int) this.x, (int) this.y, this.collisionWidth, this.collisionHeight );
+		return collisionRectangle.intersects( other.getCollisionRectangle() );
 	}
 	
 	public Rectangle getCollisionRectangle(){
-		this.collisionRectangle.setBounds((int) this.x, (int) this.y, this.collisionWidth, this.collisionHeight );
-		return this.collisionRectangle;
+		collisionRectangle.setBounds((int) x, (int)y, collisionWidth, collisionHeight );
+		return collisionRectangle;
 	}
 	
 	public abstract void collidedWith(Entity other);
