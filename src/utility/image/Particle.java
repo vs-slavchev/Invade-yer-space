@@ -6,20 +6,24 @@ import java.awt.Graphics2D;
 
 public class Particle {
 	private int x, y;
+	private int yModifier;
 	private Color color;
 	
-	public Particle(int x, int y, int positionOffset, Color color){
+	public Particle(int x, int y, int positionOffset, Color color, int yModifier){
 		this.x = (int) (x - positionOffset +  Math.random()*positionOffset*2);
 		this.y = (int) (y - positionOffset +  Math.random()*positionOffset*2);
 		this.color = color;
+		this.yModifier = yModifier;
 	}
 	
 	private void updateParticle(){
-		y += 3;
+		y += yModifier;
 	}
 	
 	public void drawParticle(Graphics g){
-		updateParticle();
+		if (yModifier > 0){
+			updateParticle();
+		}
 		
 		g.setColor(this.color);
 		// java does not support single pixel drawing :(

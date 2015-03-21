@@ -46,6 +46,7 @@ public class Game extends Canvas {
 	private boolean waitingForKeyPress = true;
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
+	private SoundManager soundManager = SoundManager.getSoundManager();
 	private InputController inputController;
 	private String message = "titleText";
 	private int difficulty = 3; // 3-ez, 2-normal, 1-hard
@@ -96,10 +97,11 @@ public class Game extends Canvas {
 		}
 		
 		entityManager.initEntities();
-		SoundManager.initSoundManager();
+		soundManager.initSoundManager();
 
 		// start playing background music
 		this.musicManager.loopBackgroundMusic();
+		BackgroundImageManager.generateBackgroundStars(300);
 
 	}
 
@@ -119,14 +121,12 @@ public class Game extends Canvas {
 			// time since last update
 			this.delta = System.currentTimeMillis() - lastLoopTime;
 			lastLoopTime = System.currentTimeMillis();
-			// System.out.println( "FPS: " + 1000.00f/ this.delta );
 			if (minimumFPS > 1000.00f / this.delta) {
 				minimumFPS = 1000.00f / this.delta;
 			}
 
 			// get a graphics context for the accelerated surface and blank it
 			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
-			//g.scale(scale, scale);
 			g.setColor(Color.black);
 			g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 			BackgroundImageManager.drawBackgroundObjects(g);
@@ -158,17 +158,9 @@ public class Game extends Canvas {
 
 			// if game is waiting for "any key press" show message
 			if (this.waitingForKeyPress) {
-				/*g.setColor(new Color(0, 0, 100));
-				g.fillRect(WIDTH/5, HEIGHT*2/5,
-						WIDTH*3/5, HEIGHT/5);
-				g.setColor(Color.red);
-				g.setFont(new Font("TimesRoman", Font.PLAIN, 48));
-				g.drawString(this.message,
-						(this.WIDTH - g.getFontMetrics().stringWidth(this.message)) / 2,
-						this.HEIGHT/2);*/
-				g.drawImage(ImageManager.getImage(message),
-						(this.WIDTH - ImageManager.getImage(message).getWidth(null))/2,
-						(this.HEIGHT - ImageManager.getImage(message).getHeight(null))/2, null);
+				g.drawImage(ImageManager.getImage("text/" + message),
+						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
+						(HEIGHT - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
 			}
 
 			// after drawing clean up and flip the buffer
@@ -181,14 +173,17 @@ public class Game extends Canvas {
 
 			// pause and fps control
 			try {
-				Thread.sleep(1000 / this.FPS);
-
+				/*long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
+				if (sleepTime <= 1){
+					sleepTime = 1000 / FPS;
+				}*/
+				Thread.sleep(lastLoopTime +  (1000 / FPS) - System.currentTimeMillis());
+				//Thread.sleep(1000 / FPS);
 			} catch (InterruptedException e) {
-				System.out.println("Main thread.sleep was interrupted!");
+				System.out.println("mainThread.sleep was interrupted!");
 			}
 
 		} // close while
-			// System.out.println("minimumFPS: " + minimumFPS);
 	}
 
 	public void notifyDeath() {
@@ -225,12 +220,12 @@ public class Game extends Canvas {
 		return this.difficulty;
 	}
 
-	public int getGameWidth() {
-		return this.WIDTH;
+	public static int getGameWidth() {
+		return WIDTH;
 	}
 
-	public int getGameHeight() {
-		return this.HEIGHT;
+	public static int getGameHeight() {
+		return HEIGHT;
 	}
 
 	public EntityManager getEntityManager() {
@@ -298,8 +293,22 @@ public class Game extends Canvas {
 	}// close KeyInputHandler class
 	
 	/* TODO:
-	 * -animation after playerbullert hits and enemy
-	 * -animation frameMod does not afftect anim speed
-	 */
+	 * - animation after playerbullet hits an enemy
+	 * - basic powerups
+	 * - aliens shoot different bullets
+	 * - more weapons: 
+	 * 	= random pruska4ka
+	 * 	= zalp
+	 * 	= burza kurte4nica
+	 * 	= bavni raketi AoE
+	 * 	= laser
+	 * - combos
+	 * 	= 10 consecutive kills grant resources
+	 * 	= 30 consecutive hits grant laser
+	 * - multiple weapons available
+	 * 	= use 1,2,3,4 to change weapon
+	 * 	= overheating of one weapon forces player to use more weapons
+	 * 	= limited ammo too
+ 	 */
 
 }

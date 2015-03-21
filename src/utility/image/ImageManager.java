@@ -13,10 +13,10 @@ import javax.imageio.ImageIO;
 public class ImageManager {
 
 	// this may need modifying
-	final static String path = "images/";
-	final static String ext = ".png";
+	private final static String path = "images/";
+	private final static String ext = ".png";
 
-	static Map<String, Image> images = new HashMap<String, Image>();
+	private static Map<String, Image> images = new HashMap<String, Image>();
 
 	public static Image getImage(String s) {
 		if(!images.containsKey(s)){
@@ -32,9 +32,10 @@ public class ImageManager {
 		return img; 
 	}
 
-	public static Image loadImage(String imName, String fname) throws IOException {
+	public Image loadImage(String imName, String fname) throws IOException {
 		BufferedImage img = null;
-		img = ImageIO.read(new File(path + fname + ext));
+		//img = ImageIO.read(new File(path + fname + ext));
+		img = ImageIO.read(getClass().getResource(path + fname + ext));
 		images.put(imName, img);
 		return img; 
 	}
@@ -42,19 +43,18 @@ public class ImageManager {
 	public static void initImages() throws IOException{
 		ArrayList<String> imageNames = new ArrayList<>();
 		imageNames.add("mainShip");
-		imageNames.add("alienShip1");
-		imageNames.add("alienShip2");
-		imageNames.add("alienShip3");
-		imageNames.add("alienShip4");
-		imageNames.add("alienShot");
-		imageNames.add("shot");
-		imageNames.add("winText");
-		imageNames.add("startText");
-		imageNames.add("deathText");
-		imageNames.add("titleText");
+		imageNames.add("projectiles/alienShot");
+		imageNames.add("projectiles/shot");
+		imageNames.add("text/winText");
+		imageNames.add("text/startText");
+		imageNames.add("text/deathText");
+		imageNames.add("text/titleText");
 		
-		for (int i = 6; i > 0; i--) {
-			imageNames.add("planet" + i);
+		for (int i = 14; i > 0; i--) {
+			imageNames.add("planets/planet" + i);
+		}
+		for (int i = 8; i > 0; i--) {
+			imageNames.add("aliens/alienShip" + i);
 		}
 
 		loadImages(imageNames);

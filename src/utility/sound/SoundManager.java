@@ -7,6 +7,7 @@ import javax.sound.sampled.FloatControl;
 
 import java.awt.List;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,11 +17,19 @@ import java.util.Map;
 
 public class SoundManager {
 
-	final static String path = "sounds/";
-	static Map<String, Clip> sounds = new HashMap<String, Clip>();
+	private final static String path = "sounds/";
+	private static Map<String, Clip> sounds = new HashMap<String, Clip>();
 	private static ArrayList<String> fileNames = new ArrayList<>();
+	private static SoundManager soundManager;
+	
+	public static SoundManager getSoundManager(){
+		if ( soundManager == null){
+			soundManager = new SoundManager();
+		}
+		return soundManager;
+	}
 
-	public static void initSoundManager() {
+	public void initSoundManager() {
 
 		fileNames.add("beep");
 		fileNames.add("bigpowerup");
@@ -42,7 +51,7 @@ public class SoundManager {
 
 	}
 
-	public static void play(String name) {
+	public void play(String name) {
 		if (!sounds.containsKey(name)){
 			System.out.println(" Sound not found in hashmap. name=\"" + name + "\"");
 		}
@@ -52,12 +61,11 @@ public class SoundManager {
 		}
 	}
 
-	private static Clip getClip(String filename) {
+	private Clip getClip(String filename) {
 		Clip clip = null;
 		try {
 			clip = AudioSystem.getClip();
-			AudioInputStream sample = AudioSystem.getAudioInputStream(new File(
-					path + filename + ".wav"));
+			AudioInputStream sample = AudioSystem.getAudioInputStream(new File(path + filename + ".wav"));
 			clip.open(sample);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,7 +17,7 @@ public class AnimationManager {
 			return animationManager;
 	}
 
-	public static void spawnAnimation(String type, int x, int y, double scale) {
+	/*public static void spawnAnimation(String type, int x, int y, double scale) {
 
 		Animation anim = null;
 		switch (type) {
@@ -30,7 +30,7 @@ public class AnimationManager {
 				animations.add(anim);
 			}
 		}
-	}
+	}*/
 
 	public static synchronized void updateAnimations() {
 		for (final Iterator iterator = animations.iterator(); iterator

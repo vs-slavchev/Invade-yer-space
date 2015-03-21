@@ -11,7 +11,7 @@ public class ShotEntity extends Entity{
 	private double moveSpeed = -600;
 	private boolean used = false;
 	
-	public ShotEntity(Game game, String sprite, int x, int y){
+	public ShotEntity(Game game, int x, int y){
 		super( x, y);
 		this.game = game;
 		this.dy = this.moveSpeed;
@@ -42,7 +42,7 @@ public class ShotEntity extends Entity{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("shot"), (int)x, (int)y, null);
+		g.drawImage(ImageManager.getImage("projectiles/shot"), (int)x, (int)y, null);
 	}
 
 }

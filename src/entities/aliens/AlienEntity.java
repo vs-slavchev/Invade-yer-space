@@ -25,7 +25,7 @@ public class AlienEntity extends Entity{
 		super(game, x, y);
 		this.game = game;
 		this.type = type;
-		this.spriteName = "alienShip" + type;
+		this.spriteName = "aliens/alienShip" + type;
 		this.healthPoints = healthPoints;
 		this.collisionWidth = ImageManager.getImage(spriteName).getWidth(null)/5;
 		this.collisionHeight = ImageManager.getImage(spriteName).getHeight(null);
@@ -85,7 +85,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void takeDamage( int damage ){
-		SoundManager.play("explosion");
+		SoundManager.getSoundManager().play("explosion");
 		this.healthPoints -= damage;
 	}
 	

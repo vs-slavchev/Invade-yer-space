@@ -69,7 +69,7 @@ public class ShipEntity extends Entity{
 			return;
 		
 		this.lastFire = System.currentTimeMillis();
-		ShotEntity shot = new ShotEntity( this.game, "sprites/shot.gif", (int)this.x+collisionWidth/2 - 2, (int)this.y  );
+		ShotEntity shot = new ShotEntity( this.game, (int)this.x+collisionWidth/2 - 2, (int)this.y  );
 		this.game.getEntityManager().addToEntities(shot);
 	}
 	

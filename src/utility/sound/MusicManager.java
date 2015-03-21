@@ -12,7 +12,6 @@ public class MusicManager {
 	public MusicManager(){
 		try{
 			this.backgroundMusic = new OggClip("music/captain_Manol.ogg");
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

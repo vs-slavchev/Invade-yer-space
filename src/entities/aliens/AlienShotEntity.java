@@ -35,7 +35,7 @@ public class AlienShotEntity extends Entity{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("alienShot"), (int)x, (int)y, null);
+		g.drawImage(ImageManager.getImage("projectiles/alienShot"), (int)x, (int)y, null);
 		
 	}
 	

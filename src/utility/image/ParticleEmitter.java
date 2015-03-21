@@ -26,10 +26,10 @@ public class ParticleEmitter {
 		if (this.particles.size() > this.currentIndex && this.particles.get(this.currentIndex) != null){
 			this.particles.remove(this.currentIndex);
 			this.particles.add(this.currentIndex, new Particle(x, y, this.particlePositionOffset,
-					randomColor));
+					randomColor, 3));
 		} else {
 			this.particles.add(new Particle(x, y, this.particlePositionOffset,
-					randomColor));
+					randomColor, 3));
 		}
 		
 		this.currentIndex++;

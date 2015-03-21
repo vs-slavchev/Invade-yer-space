@@ -15,8 +15,8 @@ public class EntityManager {
 	private ArrayList<Entity> removeList = new ArrayList<>(); // list of entities to be removed
 	private Entity ship;
 	private int alienCount = 0;
-	private final int maxAlienShipType = 4;
-	private final int maxRows = 8; // 8x20
+	private final int maxAlienShipType = 8;
+	private final int maxRows = 6; // 8x20
 	private final int maxColumns = 20; //must be an even number
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
@@ -38,7 +38,7 @@ public class EntityManager {
 		for (int i = 0; i < maxRows; i++){
 			StringBuilder innerSb = new StringBuilder();
 			for (int j = 0; j < maxColumns/2; j++){
-				int currentType = 1 + (int)(Math.random()*(maxAlienShipType));
+				int currentType = 1 + (int)(Math.random()*(maxAlienShipType-1));
 				typesArray[i*maxColumns/2 + j] = currentType;
 				currentType += balanceAccordingToMean(i*maxColumns/2 + j + 1);
 				currentType = controllTypeBoundaries(currentType);
@@ -48,6 +48,7 @@ public class EntityManager {
 			sb.append(innerSb.reverse());
 		}
 		entitiesLevelMap  = sb.toString();
+		//printEntitiesMapInfo();
 		levelDifficulty += levelDifficultyModifier;
 	}
 	
@@ -60,12 +61,12 @@ public class EntityManager {
 	private int balanceAccordingToMean(int size) {
 		if (calculateMean(size) > levelDifficulty) {
 			if (Math.random() < 0.8) {
-				return -1;
+				return -2;
 			}
 			return 0;
 		}
 		if (Math.random() < 0.8) {
-			return 1;
+			return 2;
 		}
 		return 0;
 	}
@@ -176,12 +177,29 @@ public class EntityManager {
 			healthPoints = 5;
 			break;
 		case 4:
-			healthPoints = 8;
+			healthPoints = 7;
+			break;
+		case 5:
+			healthPoints = 10;
+			break;
+		case 6:
+			healthPoints = 10;
+			break;
+		case 7:
+			healthPoints = 15;
+			break;
+		case 8:
+			healthPoints = 20;
 			break;
 		default:
 			healthPoints = 1;
 			break;
 		}
+		/*
+		 * aliens are centered according to their image; they are created first,
+		 * so their image is not null, and then according to the image
+		 * their position is set correctly
+		 */
 		// spawn off the screen
 		AlienEntity alien = new AlienEntity( this.game, type, -100, -100, healthPoints);
 		int offsetX = alien.getAnimation().getDimensionX()/2;
@@ -207,6 +225,22 @@ public class EntityManager {
 				((AlienEntity) entity).reduceShootTimeInterval();
 			}
 		}
+	}
+	
+	public void printEntitiesMapInfo(){
+		for( int i = 1; i < 9; i++){
+			occurencesOfNumber(Integer.toString(i));
+		}
+	}
+
+	private void occurencesOfNumber(String ch) {
+		int occursOfOne = 0;
+		int index = entitiesLevelMap.indexOf(ch);
+		while ( index != -1){
+			occursOfOne++;
+			index = entitiesLevelMap.indexOf(ch, index+1);
+		}
+		System.out.println( ch + "s: " + occursOfOne);
 	}
 	
 	public void removeEntity(Entity entity){
