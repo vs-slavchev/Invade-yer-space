@@ -13,12 +13,14 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.JFrame;
@@ -48,7 +50,7 @@ public class Game extends Canvas {
 	private MusicManager musicManager = new MusicManager();
 	private SoundManager soundManager = SoundManager.getSoundManager();
 	InputController inputController;
-	private String message = "titleText";
+	private String message = "startText";
 	private int difficulty = 3; // 3-ez, 2-normal, 1-hard
 
 	public Game() {
@@ -63,6 +65,8 @@ public class Game extends Canvas {
 		container.setUndecorated(true);
 		panel.add(this);
 
+		// make the cursor transparent
+		container.setCursor( container.getToolkit().createCustomCursor( new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null ) );
 		// tell awt not to repaint the canvas since I am doing it myself in
 		// accelerated mode
 		setIgnoreRepaint(true);
@@ -101,7 +105,7 @@ public class Game extends Canvas {
 
 		// start playing background music
 		musicManager.loopBackgroundMusic();
-		BackgroundImageManager.generateBackgroundStars(300);
+		BackgroundImageManager.generateBackgroundStars(400);
 
 	}
 
@@ -148,43 +152,49 @@ public class Game extends Canvas {
 			((ShipEntity) entityManager.getShip())
 					.processInput(inputController);
 			
-			// get a graphics context for the accelerated surface and blank it
-			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
-			g.setColor(Color.black);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			BackgroundImageManager.drawBackgroundObjects(g);
+			drawGame();
 
-			// draw cycle
-			entityManager.drawEntities(g);
-			
-			AnimationManager.getAnimationManager().drawAnimations(g);
-
-			// if game is waiting for "any key press" show message
-			if (waitingForKeyPress) {
-				g.drawImage(ImageManager.getImage("text/" + message),
-						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
-						(HEIGHT - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
-			}
-
-			// after drawing clean up and flip the buffer
-			g.dispose();
-			strategy.show();
-
-			
-
-			// pause and fps control
-			try {
-				long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
-				if (sleepTime <= 1){
-					sleepTime = 1000 / FPS;
-				}
-				Thread.sleep(sleepTime);
-				//Thread.sleep(1000 / FPS);
-			} catch (InterruptedException e) {
-				System.out.println("mainThread.sleep was interrupted!");
-			}
+			pauseAndFPSControl(lastLoopTime);
 
 		} // close while
+	}
+
+	// pause and fps control
+	private void pauseAndFPSControl(long lastLoopTime) {
+		try {
+			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
+			if (sleepTime <= 1){
+				sleepTime = 1000 / FPS;
+			}
+			Thread.sleep(sleepTime);
+			//Thread.sleep(1000 / FPS);
+		} catch (InterruptedException e) {
+			System.out.println("mainThread.sleep was interrupted!");
+		}
+	}
+
+	private void drawGame() {
+		// get a graphics context for the accelerated surface and blank it
+		Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
+		g.setColor(Color.black);
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		BackgroundImageManager.drawBackgroundObjects(g);
+
+		// draw cycle
+		entityManager.drawEntities(g);
+		
+		AnimationManager.getAnimationManager().drawAnimations(g);
+
+		// if game is waiting for "any key press" show message
+		if (waitingForKeyPress) {
+			g.drawImage(ImageManager.getImage("text/" + message),
+					(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
+					(HEIGHT - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
+		}
+
+		// after drawing clean up and flip the buffer
+		g.dispose();
+		strategy.show();
 	}
 
 	public void notifyDeath() {
@@ -212,7 +222,6 @@ public class Game extends Canvas {
 	}
 
 	private void startGame() {
-
 		entityManager.initEntities();
 		inputController.reset();
 	}
@@ -259,6 +268,15 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				inputController.setFirePressed(true);
 			}
+			if (e.getKeyCode() == KeyEvent.VK_1) {
+				inputController.setOnePressed(true);
+			}else if (e.getKeyCode() == KeyEvent.VK_2) {
+				inputController.setTwoPressed(true);
+			}else if (e.getKeyCode() == KeyEvent.VK_3) {
+				inputController.setThreePressed(true);
+			}else if (e.getKeyCode() == KeyEvent.VK_4) {
+				inputController.setFourPressed(true);
+			}
 		}
 
 		public void keyReleased(KeyEvent e) {
@@ -274,6 +292,15 @@ public class Game extends Canvas {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				inputController.setFirePressed(false);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_1) {
+				inputController.setOnePressed(false);
+			}else if (e.getKeyCode() == KeyEvent.VK_2) {
+				inputController.setTwoPressed(false);
+			}else if (e.getKeyCode() == KeyEvent.VK_3) {
+				inputController.setThreePressed(false);
+			}else if (e.getKeyCode() == KeyEvent.VK_4) {
+				inputController.setFourPressed(false);
 			}
 		}
 
@@ -294,7 +321,10 @@ public class Game extends Canvas {
 	}// close KeyInputHandler class
 	
 	/* TODO:
-	 * - basic powerups
+	 * - basic powerups - very rare
+	 * 	= immune to alienShots, timed
+	 * 	= laser: up to the top of the screen, timed
+	 * 	= 2 rockets get fired every second
 	 * - aliens shoot different bullets
 	 * - more weapons: 
 	 * 	= random pruska4ka
@@ -309,6 +339,11 @@ public class Game extends Canvas {
 	 * 	= use 1,2,3,4 to change weapon
 	 * 	= overheating of one weapon forces player to use more weapons
 	 * 	= limited ammo too
+	 * 	= side UI with 4 vertical bars representing heat levels and ammo
+	 * - sfx
+	 * 	= yarr!; on powerup pickup
+	 * 	= random pirate swears on events
+	 * 	= yarr! me cannon is too hot'h!
  	 */
 
 }

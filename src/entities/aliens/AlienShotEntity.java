@@ -9,14 +9,15 @@ import main.Game;
 
 public class AlienShotEntity extends Entity{
 
-	private double moveSpeed = 400;
+	private int type;
 	
-	public AlienShotEntity(Game game, int x, int y){
-		super( x, y);
+	public AlienShotEntity(Game game, int x, int y, int type){
+		super(x, y);
 		this.game = game;
-		this.dy = this.moveSpeed;
-		this.collisionWidth = 5;
-		this.collisionHeight = 8;
+		this.dy = 250 + type*50;
+		this.type = type;
+		this.collisionWidth = ImageManager.getImage("projectiles/alienShot" + type).getWidth(null);
+		this.collisionHeight = ImageManager.getImage("projectiles/alienShot" + type).getHeight(null);
 	}
 	
 	public void move(long delta){
@@ -35,7 +36,7 @@ public class AlienShotEntity extends Entity{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("projectiles/alienShot1"), (int)x, (int)y, null);
+		g.drawImage(ImageManager.getImage("projectiles/alienShot" + type), (int)x, (int)y, null);
 		
 	}
 	

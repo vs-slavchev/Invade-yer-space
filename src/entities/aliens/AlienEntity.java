@@ -14,7 +14,6 @@ import utility.sound.SoundManager;
 public class AlienEntity extends Entity{
 	
 	private int type;
-	private double moveSpeed = 175;
 	private int healthPoints = 1;
 	private long shootTimeInterval = 200;
 	private long lastShotTime = 60;
@@ -31,7 +30,7 @@ public class AlienEntity extends Entity{
 		this.animation = new Animation( x, y, 0.07, 5, spriteName, true, false, 1);
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
-		this.dx = -this.moveSpeed;
+		this.dx = -150;
 		this.shootTimeInterval = getrandom( game.getDifficulty()*80, game.getDifficulty() * 450);
 	}
 
@@ -39,7 +38,7 @@ public class AlienEntity extends Entity{
 		//if an alien reaches the end of the screen request direction change
 		if( dx < 0 && x < 10 )
 			game.updateLogic();
-		if( dx > 0 && this.x > game.getGameWidth() - 50 ){
+		if( dx > 0 && this.x > Game.getGameWidth() - 50 ){
 			game.updateLogic();
 		}
 		animation.update();
@@ -53,7 +52,7 @@ public class AlienEntity extends Entity{
 		y += 10; //move lower
 		
 		//if aliens reach the player then gg
-		if(y > game.getGameHeight() - 30 ){
+		if(y > Game.getGameHeight() - 30 ){
 			game.notifyDeath();
 		}
 	}
@@ -68,7 +67,7 @@ public class AlienEntity extends Entity{
 			//set the animation to start running the shoot animation
 			animation.setRunning(true);
 			Entity alienShot = new AlienShotEntity( game,
-					(int)(x + collisionWidth/2), (int)(y + 5) );
+					(int)(x + collisionWidth/2), (int)(y + 5), type );
 			game.getEntityManager().addToAlienEntities(alienShot);
 		}
 	}
@@ -87,7 +86,9 @@ public class AlienEntity extends Entity{
 	
 	public void takeDamage( int damage ){
 		SoundManager.getSoundManager().play("explosion");
-		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", (int)x, (int)y, 1);
+		int sparksX = (int) (x + 10 + Math.random()*animation.getDimensionX()/2);
+		int sparksY = (int) (y + 10 + Math.random()*animation.getDimensionY()/2);
+		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", sparksX, sparksY, 1);
 		healthPoints -= damage;
 	}
 	

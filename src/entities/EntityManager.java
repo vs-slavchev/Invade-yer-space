@@ -19,7 +19,7 @@ public class EntityManager {
 	private final int maxColumns = 20; //must be an even number
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
-	private double levelDifficulty = 1.0;
+	private double levelDifficulty = 3.0;
 	private final double levelDifficultyModifier = 0.3;
 	
 	public EntityManager(Game game){

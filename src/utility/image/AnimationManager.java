@@ -25,7 +25,7 @@ public class AnimationManager {
 				anim = new Animation(x, y, 0.5, 4, type, false, true, 1);
 				break;
 			case "effects/explosion":
-				type += Integer.toString((int)(1 + Math.random()*3));
+				type += Integer.toString((int)Math.round(1 + Math.random()*3));
 				anim = new Animation(x, y, 0.2, 7, type, false, true, 1);
 				break;
 		}

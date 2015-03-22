@@ -9,18 +9,41 @@ import main.Game;
 public class ShotEntity extends Entity{
 	
 	private boolean used = false;
+	private String name;
 	
-	public ShotEntity(Game game, int x, int y){
-		super( x, y);
+	public ShotEntity(Game game, String name, int x, int y, int dx){
+		super(x, y);
 		this.game = game;
-		this.dy = -600;
-		this.dx = -50 + Math.random()*100;
-		this.collisionWidth = 5;
-		this.collisionHeight = 8;
+		this.name = name;
+		this.collisionWidth = ImageManager.getImage(name).getWidth(null);
+		this.collisionHeight = ImageManager.getImage(name).getHeight(null);
+		
+		switch (name) {
+		case "projectiles/shot1":
+			dy = -600;
+			this.dx = -60 + Math.random() * 120;
+			break;
+		case "projectiles/shot2":
+			dy = -400;
+			this.dx = dx;
+			break;
+		case "projectiles/shot3":
+			dy = -500;
+			this.dx = dx;
+			break;
+		case "projectiles/shot4":
+			dy = -250;
+			this.dx = dx;
+			break;
+		}
 	}
 	
 	public void move(long delta){
 		super.move(delta);
+		if (name.equals("projectiles/shot2")){
+			dx += Math.sin(y)*20;
+		}
+		
 		if( y < -20 ){
 			game.getEntityManager().removeEntity(this);
 		}
@@ -43,7 +66,7 @@ public class ShotEntity extends Entity{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("projectiles/shot1"), (int)x, (int)y, null);
+		g.drawImage(ImageManager.getImage(name), (int)x, (int)y, null);
 	}
 
 }
