@@ -22,7 +22,7 @@ public class Animation {
 	private String name;
 	private double scale;
 	
-	public Animation(int x, int y, double frameModifier, int numFrame, String name, boolean doesLoop, double scale){
+	public Animation(int x, int y, double frameModifier, int numFrame, String name, boolean doesLoop,boolean running, double scale){
 		this.x = x;
 		this.y = y;
 		this.frameModifier = frameModifier;
@@ -30,6 +30,7 @@ public class Animation {
 		this.name = name;
 		this.doesLoop = doesLoop;
 		this.scale = scale;
+		this.running = running;
 	}
 	
 	public void update(){
@@ -86,7 +87,7 @@ public class Animation {
 	}
 	
 	public int getDimensionX(){
-		return ImageManager.getImage(name).getWidth(null)/numFrame;
+		return ImageManager.getImage(name).getWidth(null) / numFrame;
 	}
 	
 	public int getDimensionY(){
@@ -95,6 +96,10 @@ public class Animation {
 	
 	public boolean getActive(){
 		return active;
+	}
+	
+	public int getNumberFrames(){
+		return numFrame;
 	}
 	
 }

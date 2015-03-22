@@ -7,6 +7,7 @@ import java.util.Random;
 import entities.Entity;
 import main.Game;
 import utility.image.Animation;
+import utility.image.AnimationManager;
 import utility.image.ImageManager;
 import utility.sound.SoundManager;
 
@@ -27,11 +28,11 @@ public class AlienEntity extends Entity{
 		this.type = type;
 		this.spriteName = "aliens/alienShip" + type;
 		this.healthPoints = healthPoints;
-		this.collisionWidth = ImageManager.getImage(spriteName).getWidth(null)/5;
-		this.collisionHeight = ImageManager.getImage(spriteName).getHeight(null);
+		this.animation = new Animation( x, y, 0.07, 5, spriteName, true, false, 1);
+		this.collisionWidth = animation.getDimensionX();
+		this.collisionHeight = animation.getDimensionY();
 		this.dx = -this.moveSpeed;
 		this.shootTimeInterval = getrandom( game.getDifficulty()*80, game.getDifficulty() * 450);
-		this.animation = new Animation( x, y, 0.07, 5, spriteName, true, 1);
 	}
 
 	public void move(long delta){
@@ -86,6 +87,7 @@ public class AlienEntity extends Entity{
 	
 	public void takeDamage( int damage ){
 		SoundManager.getSoundManager().play("explosion");
+		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", (int)x, (int)y, 1);
 		healthPoints -= damage;
 	}
 	
@@ -93,6 +95,10 @@ public class AlienEntity extends Entity{
 		if( healthPoints <= 0 )
 			return true;
 		return false;
+	}
+	
+	public void spawnExplosionAnimation(){
+		AnimationManager.getAnimationManager().spawnAnimation("effects/explosion", (int)x, (int)y, 1);
 	}
 	
 	public void setXY(int x, int y){

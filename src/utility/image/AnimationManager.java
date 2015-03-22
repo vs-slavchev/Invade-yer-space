@@ -17,22 +17,26 @@ public class AnimationManager {
 			return animationManager;
 	}
 
-	/*public static void spawnAnimation(String type, int x, int y, double scale) {
+	public void spawnAnimation(String type, int x, int y, double scale) {
 
 		Animation anim = null;
 		switch (type) {
-		case "alienShip":
-				anim = new Animation(x, y, 0.3, 3, type, false, 1);
-			break;
+			case "effects/sparks":
+				anim = new Animation(x, y, 0.5, 4, type, false, true, 1);
+				break;
+			case "effects/explosion":
+				type += Integer.toString((int)(1 + Math.random()*3));
+				anim = new Animation(x, y, 0.2, 7, type, false, true, 1);
+				break;
 		}
 		synchronized (animations) {
 			if (anim != null) {
 				animations.add(anim);
 			}
 		}
-	}*/
+	}
 
-	public static synchronized void updateAnimations() {
+	public synchronized void updateAnimations() {
 		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
 			Animation anim = iterator.next();
@@ -41,9 +45,15 @@ public class AnimationManager {
 				animations.remove(anim);
 			}
 		}
+		/*for (Animation anim : animations ){
+			anim.update();
+			if (!anim.getActive()) {
+				animations.remove(anim);
+			}
+		}*/
 	}
 
-	public static synchronized void drawAnimations(Graphics2D g) {
+	public synchronized void drawAnimations(Graphics2D g) {
 		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
 			Animation anim = iterator.next();

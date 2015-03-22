@@ -8,13 +8,13 @@ import main.Game;
 
 public class ShotEntity extends Entity{
 	
-	private double moveSpeed = -600;
 	private boolean used = false;
 	
 	public ShotEntity(Game game, int x, int y){
 		super( x, y);
 		this.game = game;
-		this.dy = this.moveSpeed;
+		this.dy = -600;
+		this.dx = -50 + Math.random()*100;
 		this.collisionWidth = 5;
 		this.collisionHeight = 8;
 	}
@@ -34,6 +34,7 @@ public class ShotEntity extends Entity{
 			game.getEntityManager().removeEntity(this);
 			((AlienEntity) other).takeDamage(1);
 			if( ((AlienEntity) other).isDead() ){
+				((AlienEntity) other).spawnExplosionAnimation();
 				game.getEntityManager().removeEntity(other);
 				game.notifyAlienKilled();
 			}
@@ -42,7 +43,7 @@ public class ShotEntity extends Entity{
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("projectiles/shot"), (int)x, (int)y, null);
+		g.drawImage(ImageManager.getImage("projectiles/shot1"), (int)x, (int)y, null);
 	}
 
 }

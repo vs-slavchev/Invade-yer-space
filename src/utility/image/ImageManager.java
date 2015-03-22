@@ -43,18 +43,22 @@ public class ImageManager {
 	public static void initImages() throws IOException{
 		ArrayList<String> imageNames = new ArrayList<>();
 		imageNames.add("mainShip");
-		imageNames.add("projectiles/alienShot");
-		imageNames.add("projectiles/shot");
+		imageNames.add("projectiles/alienShot1");
+		imageNames.add("projectiles/shot1");
 		imageNames.add("text/winText");
 		imageNames.add("text/startText");
 		imageNames.add("text/deathText");
 		imageNames.add("text/titleText");
+		imageNames.add("effects/sparks");
 		
 		for (int i = 14; i > 0; i--) {
 			imageNames.add("planets/planet" + i);
 		}
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("aliens/alienShip" + i);
+		}
+		for (int i = 4; i > 0; i--) {
+			imageNames.add("effects/explosion" + i);
 		}
 
 		loadImages(imageNames);

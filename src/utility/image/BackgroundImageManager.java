@@ -32,7 +32,7 @@ public class BackgroundImageManager {
 			int y = -250;
 			String name = "planets/planet" + (int) (1 + Math.random() * 13);
 			double scale = 1 + Math.random();
-			backgroundObjects.add(new Animation(x, y, 0, 1, name, false, scale));
+			backgroundObjects.add(new Animation(x, y, 0, 1, name, false, false, scale));
 		}
 	}
 	

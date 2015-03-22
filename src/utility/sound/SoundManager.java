@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-// note: having too many clips open may cause
-// "LineUnavailableException: No Free Voices"
-
 public class SoundManager {
 
 	private final static String path = "sounds/";

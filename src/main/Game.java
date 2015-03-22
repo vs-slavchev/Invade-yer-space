@@ -1,6 +1,7 @@
 package main;
 
 import utility.InputController;
+import utility.image.AnimationManager;
 import utility.image.BackgroundImageManager;
 import utility.image.ImageManager;
 import utility.sound.MusicManager;
@@ -124,36 +125,39 @@ public class Game extends Canvas {
 				minimumFPS = 1000.00f / delta;
 			}
 
-			// get a graphics context for the accelerated surface and blank it
-			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
-			g.setColor(Color.black);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			BackgroundImageManager.drawBackgroundObjects(g);
-
 			// cycle trough entities and move them
 			if (!waitingForKeyPress) {
 				entityManager.moveEntities(delta);
 				BackgroundImageManager.update();
 			}
-
-			// draw cycle
-			entityManager.drawEntities(g);
-
 			// collision detection: ship,shots are checked against the aliens,
 			// alienShots
 			if (!waitingForKeyPress) {
 				entityManager.collideEntities();
 			}
-
+			AnimationManager.getAnimationManager().updateAnimations();
 			// remove destroyed entities that are to be removed and clean up
 			entityManager.removeEntities();
-
 			// if we need to do logic go through alienEntities only, since only
 			// aliens have a doLogic() implemented
 			if (logicRequiredThisLoop) {
 				entityManager.forceLogic();
 				logicRequiredThisLoop = false;
 			}
+			// give the input to the ship to be processed
+			((ShipEntity) entityManager.getShip())
+					.processInput(inputController);
+			
+			// get a graphics context for the accelerated surface and blank it
+			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
+			g.setColor(Color.black);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			BackgroundImageManager.drawBackgroundObjects(g);
+
+			// draw cycle
+			entityManager.drawEntities(g);
+			
+			AnimationManager.getAnimationManager().drawAnimations(g);
 
 			// if game is waiting for "any key press" show message
 			if (waitingForKeyPress) {
@@ -166,17 +170,15 @@ public class Game extends Canvas {
 			g.dispose();
 			strategy.show();
 
-			// give the input to the ship to be processed
-			((ShipEntity) entityManager.getShip())
-					.processInput(inputController);
+			
 
 			// pause and fps control
 			try {
-				/*long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
+				long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
 				if (sleepTime <= 1){
 					sleepTime = 1000 / FPS;
-				}*/
-				Thread.sleep(lastLoopTime +  (1000 / FPS) - System.currentTimeMillis());
+				}
+				Thread.sleep(sleepTime);
 				//Thread.sleep(1000 / FPS);
 			} catch (InterruptedException e) {
 				System.out.println("mainThread.sleep was interrupted!");
@@ -292,7 +294,6 @@ public class Game extends Canvas {
 	}// close KeyInputHandler class
 	
 	/* TODO:
-	 * - animation after playerbullet hits an enemy
 	 * - basic powerups
 	 * - aliens shoot different bullets
 	 * - more weapons: 
