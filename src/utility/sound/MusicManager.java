@@ -19,7 +19,7 @@ public class MusicManager {
 	
 	public void loopBackgroundMusic(){
 			backgroundMusic.loop();
-			backgroundMusic.setGain(0.75f);
+			backgroundMusic.setGain(0.50f);
 			backgroundMusic.setBalance(-1.0f);
 	}
 	

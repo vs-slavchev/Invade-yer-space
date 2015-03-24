@@ -1,8 +1,10 @@
-package entities;
+package entities.utility;
 
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import entities.Entity;
+import entities.ShipEntity;
 import entities.aliens.AlienEntity;
 import main.Game;
 
@@ -19,7 +21,7 @@ public class EntityManager {
 	private final int maxColumns = 20; //must be an even number
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
-	private double levelDifficulty = 3.0;
+	private double levelDifficulty = 1.0;
 	private final double levelDifficultyModifier = 0.3;
 	
 	public EntityManager(Game game){
@@ -107,7 +109,9 @@ public class EntityManager {
 	public synchronized void drawEntities(Graphics2D g){
 		for( int i = 0; i < alienEntities.size(); i++){
 			Entity entity = alienEntities.get(i);
-			entity.draw(g);
+			if (!(entity == null)) {
+				entity.draw(g);
+			}
 		}
 		for( int i = 0; i < entities.size(); i++){
 			Entity entity = entities.get(i);
@@ -231,6 +235,7 @@ public class EntityManager {
 		}
 	}
 	
+	// 2 methods for debugging
 	public void printEntitiesMapInfo(){
 		for( int i = 1; i < 9; i++){
 			occurencesOfNumber(Integer.toString(i));

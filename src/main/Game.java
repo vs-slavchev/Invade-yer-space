@@ -26,8 +26,8 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import entities.EntityManager;
 import entities.ShipEntity;
+import entities.utility.EntityManager;
 
 public class Game extends Canvas {
 
@@ -210,6 +210,7 @@ public class Game extends Canvas {
 
 	public void notifyAlienKilled() {
 		entityManager.decrementAlienCount();
+		((ShipEntity) entityManager.getShip()).getComboManager().incrementRecentKillCount();
 		if (entityManager.getAlienCount() < 1)
 			notifyWin();
 
@@ -319,31 +320,24 @@ public class Game extends Canvas {
 			}
 		}
 	}// close KeyInputHandler class
+}
 	
 	/* TODO:
 	 * - basic powerups - very rare
 	 * 	= immune to alienShots, timed
 	 * 	= laser: up to the top of the screen, timed
 	 * 	= 2 rockets get fired every second
-	 * - aliens shoot different bullets
-	 * - more weapons: 
-	 * 	= random pruska4ka
-	 * 	= zalp
-	 * 	= burza kurte4nica
-	 * 	= bavni raketi AoE
-	 * 	= laser
-	 * - combos
-	 * 	= 10 consecutive kills grant resources
-	 * 	= 30 consecutive hits grant laser
-	 * - multiple weapons available
-	 * 	= use 1,2,3,4 to change weapon
-	 * 	= overheating of one weapon forces player to use more weapons
-	 * 	= limited ammo too
-	 * 	= side UI with 4 vertical bars representing heat levels and ammo
+	 * - music on/off keys
+	 * - autoshoot key
+	 * - auto switch to coolest weapon when current one is 100% hot?
 	 * - sfx
 	 * 	= yarr!; on powerup pickup
 	 * 	= random pirate swears on events
 	 * 	= yarr! me cannon is too hot'h!
+	 *  = yarr! i got shield
+	 *  = shooting sfx for diff weapons
+	 *  = reflect shots sfx
+	 *  = more explosions sfx
+	 * - extract more magic values to ContentValues class
  	 */
 
-}

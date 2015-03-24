@@ -1,5 +1,6 @@
 package utility.image;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 
 import utility.image.ImageManager;
@@ -75,6 +76,7 @@ public class Animation {
 		if (!active){
 			return;
 		}
+		
 		g.drawImage(ImageManager.getImage(name),
 				x, y,
 				x + (int)(getDimensionX()*scale),

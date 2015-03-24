@@ -35,6 +35,14 @@ public class ShotEntity extends Entity{
 			dy = -250;
 			this.dx = dx;
 			break;
+		case "projectiles/shot5":
+			dy = -450;
+			this.dx = dx;
+			break;
+		case "projectiles/shot6":
+			dy = -400;
+			this.dx = dx;
+			break;
 		}
 	}
 	

@@ -1,5 +1,7 @@
-package entities;
+package entities.utility;
 
+import entities.ShipEntity;
+import entities.ShotEntity;
 import utility.image.ImageManager;
 import main.Game;
 
@@ -10,7 +12,6 @@ public class PlayerWeapon {
 	private double overheatPercent = 0;
 	private double overheatCoolingSpeed = 0.0;
 	private double heatAmplifier;
-	private int ammo;
 	private long lastFireTime;
 	private int firingInterval;
 	
@@ -21,29 +22,32 @@ public class PlayerWeapon {
 		switch(bulletName){
 		case "projectiles/shot1":
 			firingInterval = 100;
-			ammo = 200;
 			heatAmplifier = 1.8;
 			break;
 		case "projectiles/shot2":
 			firingInterval = 250;
-			ammo = 100;
 			heatAmplifier = 3;
 			break;
 		case "projectiles/shot3":
 			firingInterval = 400;
-			ammo = 20;
 			heatAmplifier = 7;
 			break;
 		case "projectiles/shot4":
 			firingInterval = 600;
-			ammo = 10;
 			heatAmplifier = 20;
+			break;
+		case "projectiles/shot5":
+			firingInterval = 1500;
+			heatAmplifier = 0;
+			break;
+		case "projectiles/shot6":
+			firingInterval = 500;
+			heatAmplifier = 0;
 			break;
 		default:
 			this.bulletName = "projectiles/shot1";
 			firingInterval = 100;
-			ammo = 200;
-			heatAmplifier = 1.3;
+			heatAmplifier = 1.8;
 			break;
 		}
 	}
@@ -98,6 +102,20 @@ public class PlayerWeapon {
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-15, y+35, -20));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+15, y+35, 20));
 			break;
+		case "projectiles/shot5":
+			for (int i = -600; i <= 600; i += 100) {
+				game.getEntityManager().addToEntities(
+						new ShotEntity(game, bulletName, x + i, y, 0));
+			}
+			break;
+		case "projectiles/shot6":
+			for (int i = 0; i <= 180; i += 30){
+				game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-30+i/3, (int)(y+30-30*Math.sin(Math.toRadians(i))), -90 + i));
+			}
+			break;
+		default:
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+			break;
 		}
 	}
 	
@@ -108,9 +126,5 @@ public class PlayerWeapon {
 			return 0;
 		}
 		return overheatPercent;
-	}
-
-	public int getAmmo() {
-		return ammo;
 	}
 }

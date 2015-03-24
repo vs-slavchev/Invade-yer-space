@@ -22,11 +22,15 @@ public class AnimationManager {
 		Animation anim = null;
 		switch (type) {
 			case "effects/sparks":
-				anim = new Animation(x, y, 0.5, 4, type, false, true, 1);
+				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
+				break;
+			case "effects/reflectionSparks":
+				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
 				break;
 			case "effects/explosion":
 				type += Integer.toString((int)Math.round(1 + Math.random()*3));
-				anim = new Animation(x, y, 0.2, 7, type, false, true, 1);
+				double randomScale = scale + Math.random();
+				anim = new Animation(x, y, 0.15, 7, type, false, true, scale);
 				break;
 		}
 		synchronized (animations) {

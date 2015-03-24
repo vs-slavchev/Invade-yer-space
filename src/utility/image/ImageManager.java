@@ -48,8 +48,11 @@ public class ImageManager {
 		imageNames.add("text/startText");
 		imageNames.add("text/deathText");
 		imageNames.add("text/titleText");
+		imageNames.add("text/comboText");
 		imageNames.add("projectiles/laser");
 		imageNames.add("effects/sparks");
+		imageNames.add("effects/reflectionSparks");
+		imageNames.add("effects/shield");
 		
 		for (int i = 14; i > 0; i--) {
 			imageNames.add("planets/planet" + i);
@@ -57,7 +60,7 @@ public class ImageManager {
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/alienShot" + i);
 		}
-		for (int i = 5; i > 0; i--) {
+		for (int i = 6; i > 0; i--) {
 			imageNames.add("projectiles/shot" + i);
 		}
 		for (int i = 8; i > 0; i--) {
