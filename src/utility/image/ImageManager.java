@@ -60,7 +60,7 @@ public class ImageManager {
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/alienShot" + i);
 		}
-		for (int i = 6; i > 0; i--) {
+		for (int i = 7; i > 0; i--) {
 			imageNames.add("projectiles/shot" + i);
 		}
 		for (int i = 8; i > 0; i--) {

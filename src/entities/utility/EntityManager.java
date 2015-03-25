@@ -1,7 +1,9 @@
 package entities.utility;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import entities.Entity;
 import entities.ShipEntity;
@@ -11,9 +13,12 @@ import main.Game;
 public class EntityManager {
 	
 	private Game game;
-	private ArrayList<Entity> alienEntities = new ArrayList<>(); // aliens and alienShots
+	private CopyOnWriteArrayList<Entity> alienEntities = new CopyOnWriteArrayList<>(); // aliens and alienShots
 	private ArrayList<Entity> entities = new ArrayList<>(); // ship and playerProjectiles
 	private ArrayList<Entity> removeList = new ArrayList<>(); // list of entities to be removed
+	// list manages the AoE objects: explosions and lasers
+	// that affect more than 1 entity at the same time
+	private ArrayList<Rectangle> aoeObjects = new ArrayList<>();
 	private Entity ship;
 	private int alienCount = 0;
 	private final int maxAlienShipType = 8;
@@ -36,8 +41,7 @@ public class EntityManager {
 	}
 	
 	/* generates a symmetric map of entities that is random
-	 * but also near the difficulty of the level
-	 */
+	 * but also near the difficulty of the level */
 	public void generateNewEntitiesMap(){
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < maxRows; i++){
@@ -123,19 +127,38 @@ public class EntityManager {
 		for( int i = 0; i < entities.size(); i++){
 			for(int j = 0; j < alienEntities.size(); j++){
 				
-				Entity me = entities.get(i);
-				Entity him = alienEntities.get(j);
+				Entity first = entities.get(i);
+				Entity second = alienEntities.get(j);
 
-				if( me.checkCollisionWith(him)){
-					me.collidedWith(him);
-					him.collidedWith(me);
+				if( first.checkCollisionWith(second)){
+					first.collidedWith(second);
+					second.collidedWith(first);
 				}
 			}
 		}
+		
+		// collide alienEntities with aoeObjects
+		if (!aoeObjects.isEmpty()) {
+			for (int i = 0; i < alienEntities.size(); i++) {
+				for (int j = 0; j < aoeObjects.size(); j++) {
+					Entity alien = alienEntities.get(i);
+					if (alien.getCollisionRectangle().intersects(aoeObjects.get(j))){
+						removeList.add(alienEntities.get(i));
+					}
+				}
+			}
+		}
+		// clear the list after the AoE collision checks have been performed
+		aoeObjects.clear();
 	}
 	
 	public void removeEntities(){
 		entities.removeAll(this.removeList);
+		for (Entity entity : removeList) {
+			if (entity instanceof AlienEntity){
+				game.notifyAlienKilled();
+			}
+		}
 		alienEntities.removeAll(this.removeList);
 		removeList.clear();
 	}
@@ -233,6 +256,10 @@ public class EntityManager {
 				((AlienEntity) entity).reduceShootTimeInterval();
 			}
 		}
+	}
+	
+	public void createAoEObject(int x, int y, int width, int height){
+		aoeObjects.add(new Rectangle(x, y, width, height));
 	}
 	
 	// 2 methods for debugging

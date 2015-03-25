@@ -34,7 +34,6 @@ public class Game extends Canvas {
 	private static final long serialVersionUID = -4872814357516418820L;
 	private BufferStrategy strategy;
 	
-	
 	public final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public final static GraphicsDevice device = env.getScreenDevices()[0]; 
 	public static final Rectangle RECTANGLE = device.getDefaultConfiguration().getBounds(); 
@@ -66,7 +65,8 @@ public class Game extends Canvas {
 		panel.add(this);
 
 		// make the cursor transparent
-		container.setCursor( container.getToolkit().createCustomCursor( new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null ) );
+		container.setCursor( container.getToolkit().createCustomCursor(
+				new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null ) );
 		// tell awt not to repaint the canvas since I am doing it myself in
 		// accelerated mode
 		setIgnoreRepaint(true);
@@ -211,8 +211,10 @@ public class Game extends Canvas {
 	public void notifyAlienKilled() {
 		entityManager.decrementAlienCount();
 		((ShipEntity) entityManager.getShip()).getComboManager().incrementRecentKillCount();
-		if (entityManager.getAlienCount() < 1)
+		System.out.println(entityManager.getAlienCount());
+		if (entityManager.getAlienCount() < 1){
 			notifyWin();
+		}
 
 		// speed up the remaining aliens by 1/2/3% depending on difficulty
 		entityManager.speedUpAlienEntities(this.difficulty);
@@ -323,21 +325,24 @@ public class Game extends Canvas {
 }
 	
 	/* TODO:
-	 * - basic powerups - very rare
-	 * 	= immune to alienShots, timed
-	 * 	= laser: up to the top of the screen, timed
-	 * 	= 2 rockets get fired every second
-	 * - music on/off keys
-	 * - autoshoot key
-	 * - auto switch to coolest weapon when current one is 100% hot?
-	 * - sfx
-	 * 	= yarr!; on powerup pickup
-	 * 	= random pirate swears on events
-	 * 	= yarr! me cannon is too hot'h!
-	 *  = yarr! i got shield
-	 *  = shooting sfx for diff weapons
-	 *  = reflect shots sfx
-	 *  = more explosions sfx
-	 * - extract more magic values to ContentValues class
+	 * - fix wrong alienCount; debug: print out every to be deleted alien's mem address and compare
+	 * - get rid of difficulty; playable with 8 rows of aliens
+	 * - errors while loading resources must open in new window (alt: error text in current fullscreen window all caps)
+	 * - fix sfx memory leak
+	 * - fix switch cases to look like StatusEffect constructor default
+	 * - music on/off keys or decrease/incr volume;
+	 * - fix bug with constantly switching to the same weapon and resetting the lastShotTime interval; keep feature for switching b/w different weapons
+	 * - key that toggles alien's healthbars?
+	 * - extract more magic numbers to ContentValues class
+	 * - background planets should not spawn very close to each other
+	 * - sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
+		 * 	= yarr!; on powerup pickup
+		 * 	= random pirate swears on events
+		 * 	= yarr! me cannon is too hot'h!
+		 *  = yarr! i got shield
+		 *  = shooting sfx for diff weapons
+		 *  = reflect shots sfx
+		 *  = more explosions sfx
+		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
  	 */
 

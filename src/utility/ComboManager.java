@@ -18,6 +18,8 @@ public class ComboManager {
 	private boolean shieldBonusReady = true;
 	private boolean spearsBonusReady = true;
 	private boolean scatterBonusReady = true;
+	private boolean quadRocketsBonusReady = true;
+	private boolean laserBonusReady = true;
 	
 	public ComboManager(Game game){
 		this.game = game;
@@ -26,6 +28,11 @@ public class ComboManager {
 	public void updateRecentKillCount(){
 		if (System.currentTimeMillis() - recentKillTime  > recentKillTimeWindow){
 			recentKillCount = 0;
+			shieldBonusReady = true;
+			spearsBonusReady = true;
+			scatterBonusReady = true;
+			quadRocketsBonusReady = true;
+			laserBonusReady = true;
 		}
 	}
 	
@@ -33,12 +40,22 @@ public class ComboManager {
 		if (shieldBonusReady && recentKillCount >= 10){
 			shieldBonusReady = false;
 			return new StatusEffect("shield");
-		}else if (spearsBonusReady && recentKillCount >= 30){
-			spearsBonusReady = false;
-			return new StatusEffect("spears");
-		}else if(scatterBonusReady && recentKillCount >= 50){
+		}
+		else if(quadRocketsBonusReady && recentKillCount >= 25){
+			quadRocketsBonusReady = false;
+			return new StatusEffect("quadRockets");
+		}
+		else if(scatterBonusReady && recentKillCount >= 40){
 			scatterBonusReady = false;
 			return new StatusEffect("scatter");
+		}
+		else if (spearsBonusReady && recentKillCount >= 55){
+			spearsBonusReady = false;
+			return new StatusEffect("spears");
+		}
+		else if (laserBonusReady && recentKillCount >= 70){
+			laserBonusReady = false;
+			return new StatusEffect("laser");
 		}
 		return null;
 	}

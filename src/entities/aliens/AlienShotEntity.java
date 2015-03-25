@@ -25,7 +25,7 @@ public class AlienShotEntity extends Entity{
 	
 	public void move(long delta){
 		super.move(delta);
-		if( y > Game.getGameHeight() + 20 ){
+		if( y > Game.getGameHeight() + 20  || y < -20){
 			game.getEntityManager().removeEntity(this);
 		}
 	}

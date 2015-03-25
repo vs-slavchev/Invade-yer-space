@@ -13,17 +13,21 @@ public class StatusEffect {
 		this.name  = name;
 		switch(name){
 		case "laser":
-			duration = 1_000;
+			duration = 200;
 			break;
 		case "scatter":
-			duration = 180;
+			duration = 150;
 			break;
 		case "spears":
 			duration = 200;
 			break;
-		case "shield":
+		case "quadRockets":
+			duration = 10;
+			break;
+		default: // shield
 			duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
 			break;
+			
 		}
 	}
 	

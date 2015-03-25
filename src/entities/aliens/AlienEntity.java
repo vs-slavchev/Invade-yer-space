@@ -84,12 +84,12 @@ public class AlienEntity extends Entity{
 		animation.drawAnimation(g);
 	}
 	
-	public void takeDamage( int damage ){
+	public void takeDamage(){
 		SoundManager.getSoundManager().play("explosion");
 		int sparksX = (int) (x + 10 + Math.random()*animation.getDimensionX()/2);
 		int sparksY = (int) (y + 10 + Math.random()*animation.getDimensionY()/2);
 		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", sparksX, sparksY, 1);
-		healthPoints -= damage;
+		healthPoints--;
 	}
 	
 	public boolean isDead(){

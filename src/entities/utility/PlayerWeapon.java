@@ -33,8 +33,8 @@ public class PlayerWeapon {
 			heatAmplifier = 7;
 			break;
 		case "projectiles/shot4":
-			firingInterval = 600;
-			heatAmplifier = 20;
+			firingInterval = 1200;
+			heatAmplifier = 60;
 			break;
 		case "projectiles/shot5":
 			firingInterval = 1500;
@@ -42,6 +42,10 @@ public class PlayerWeapon {
 			break;
 		case "projectiles/shot6":
 			firingInterval = 500;
+			heatAmplifier = 0;
+			break;
+		case "projectiles/shot7":
+			firingInterval = 1_000;
 			heatAmplifier = 0;
 			break;
 		default:
@@ -99,11 +103,10 @@ public class PlayerWeapon {
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
 			break;
 		case "projectiles/shot4":
-			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-15, y+35, -20));
-			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+15, y+35, 20));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
 			break;
 		case "projectiles/shot5":
-			for (int i = -600; i <= 600; i += 100) {
+			for (int i = -800; i <= 800; i += 100) {
 				game.getEntityManager().addToEntities(
 						new ShotEntity(game, bulletName, x + i, y, 0));
 			}
@@ -112,6 +115,12 @@ public class PlayerWeapon {
 			for (int i = 0; i <= 180; i += 30){
 				game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-30+i/3, (int)(y+30-30*Math.sin(Math.toRadians(i))), -90 + i));
 			}
+			break;
+		case "projectiles/shot7":
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+25, y+15, 15));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-25, y+15, -15));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+90, y+50, 30));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-90, y+50, -30));
 			break;
 		default:
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));

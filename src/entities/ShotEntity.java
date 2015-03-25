@@ -2,6 +2,8 @@ package entities;
 
 import java.awt.Graphics2D;
 
+import utility.ContentValues;
+import utility.image.AnimationManager;
 import utility.image.ImageManager;
 import entities.aliens.AlienEntity;
 import main.Game;
@@ -43,6 +45,10 @@ public class ShotEntity extends Entity{
 			dy = -400;
 			this.dx = dx;
 			break;
+		case "projectiles/shot7":
+			dy = -200;
+			this.dx = dx;
+			break;
 		}
 	}
 	
@@ -63,12 +69,27 @@ public class ShotEntity extends Entity{
 		if( other instanceof AlienEntity){
 			used = true;
 			game.getEntityManager().removeEntity(this);
-			((AlienEntity) other).takeDamage(1);
+			
+			performRocketCollision();
+			
+			((AlienEntity) other).takeDamage();
 			if( ((AlienEntity) other).isDead() ){
 				((AlienEntity) other).spawnExplosionAnimation();
 				game.getEntityManager().removeEntity(other);
-				game.notifyAlienKilled();
+				//game.notifyAlienKilled();
 			}
+		}
+	}
+
+	private void performRocketCollision() {
+		if (name.equals("projectiles/shot4") || name.equals("projectiles/shot7")){
+			game.getEntityManager().createAoEObject((int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
+			// the scale is = explosion radius/image raduis
+			AnimationManager.getAnimationManager().spawnAnimation("effects/explosion",
+					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
 		}
 	}
 

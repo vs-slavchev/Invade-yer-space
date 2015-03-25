@@ -23,10 +23,11 @@ public class ShipEntity extends Entity{
 	private ParticleEmitter particleEmitter = new ParticleEmitter(40, 6);
 	private ComboManager comboManager;
 	private CopyOnWriteArrayList<StatusEffect> buffs = new CopyOnWriteArrayList<>();
-	private PlayerWeapon[] weapons = new PlayerWeapon[6];
+	private PlayerWeapon[] weapons = new PlayerWeapon[7];
 	private final int numberOfNormalWeapons = 4;
 	private int currentWeapon = 0;
 	private boolean invulnerable = false;
+	private boolean laserOn = false;
 	
 	public ShipEntity(Game game, int x, int y) {
 		super(x, y);
@@ -38,13 +39,19 @@ public class ShipEntity extends Entity{
 		for ( int i = 0; i < weapons.length; i++){
 			weapons[i] = new PlayerWeapon(game, "projectiles/shot" + (i+1));
 		}
-		//buffs.add(new StatusEffect("shield"));
 	}
 	
 	public void move(long delta){
 		particleEmitter.emittParticle((int)x + animation.getDimensionX()/2, (int)y + animation.getDimensionY());
 		animation.update();
 		animation.setPosition((int)x, (int)y);
+		
+		for(int i = 0; i < weapons.length; i++){
+			weapons[i].coolDown();
+		}
+		
+		receiveComboBonusStatusEffect();
+		updateStatusEffects();
 		
 		if( dx < 0 && x < 10 ){
 			return;
@@ -60,20 +67,44 @@ public class ShipEntity extends Entity{
 		}
 		super.move(delta);
 		
-		for(int i = 0; i < weapons.length; i++){
-			weapons[i].coolDown();
-		}
 		
-		comboManager.updateRecentKillCount();
-		StatusEffect newBuff = comboManager.giveBonusStatusEffect();
-		if (newBuff != null){
-			buffs.add(newBuff);
-		}
+		
+	}
+
+	private void updateStatusEffects() {
 		for (StatusEffect statusEffect : buffs) {
 			statusEffect.update();
 			if (!statusEffect.isActive()){
 				buffs.remove(statusEffect);
 			}
+		}
+		
+		invulnerable = false;
+		laserOn = false;
+		if (!buffs.isEmpty()) {
+			for (StatusEffect statusEffect : buffs) {
+				if (statusEffect.getName().equals("scatter")) {
+					weapons[5].tryToFire();
+				} else if (statusEffect.getName().equals("spears")) {
+					weapons[4].tryToFire();
+				}else if (statusEffect.getName().equals("quadRockets")) {
+					weapons[6].tryToFire();
+				} else if (statusEffect.getName().equals("shield")) {
+					invulnerable = true;
+				} else if (statusEffect.getName().equals("laser")) {
+					int laserWidth = ImageManager.getImage("projectiles/laser").getWidth(null);
+					game.getEntityManager().createAoEObject((int)x + animation.getDimensionX()/2 - laserWidth/2, 0, laserWidth, (int)y);
+					laserOn = true;
+				}
+			}
+		}
+	}
+
+	private void receiveComboBonusStatusEffect() {
+		comboManager.updateRecentKillCount();
+		StatusEffect newBuff = comboManager.giveBonusStatusEffect();
+		if (newBuff != null){
+			buffs.add(newBuff);
 		}
 	}
 	
@@ -113,21 +144,7 @@ public class ShipEntity extends Entity{
 			weapons[currentWeapon].resetFireTimer();
 		}else if (inputController.isFourPressed()){
 			currentWeapon = 3;
-			weapons[currentWeapon].resetFireTimer();
-		}
-		
-		invulnerable = false;
-		if (!buffs.isEmpty()) {
-			for (StatusEffect statusEffect : buffs) {
-				if (statusEffect.getName().equals("scatter")) {
-					weapons[5].tryToFire();
-				} else if (statusEffect.getName().equals("spears")) {
-					weapons[4].tryToFire();
-				}
-				else if (statusEffect.getName().equals("shield")) {
-					invulnerable = true;
-				}
-			}
+			//weapons[currentWeapon].resetFireTimer();
 		}
 	}
 	
@@ -140,7 +157,25 @@ public class ShipEntity extends Entity{
 		particleEmitter.drawParticles(g);
 		animation.drawAnimation(g);
 		
-		//draw shield
+		if (laserOn){
+			g.drawImage(ImageManager.getImage("projectiles/laser"),
+					(int)x + animation.getDimensionX()/2 - ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)), null);
+			g.drawImage(ImageManager.getImage("projectiles/laser"),
+					(int)x + animation.getDimensionX()/2 - ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					0,
+					(int)x + animation.getDimensionX()/2 + ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)),
+					0, 0,
+					ImageManager.getImage("projectiles/laser").getWidth(null), 2, null);
+		}
+		
+		drawShield(g);
+		drawWeaponUI(g);
+		comboManager.drawComboUI(g);
+	}
+
+	private void drawShield(Graphics2D g) {
 		if (invulnerable) {
 			
 			float opacity = 1.0f;
@@ -161,9 +196,6 @@ public class ShipEntity extends Entity{
 					ImageManager.getImage("effects/shield").getHeight(null)*2, null);
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
 		}
-		
-		drawWeaponUI(g);
-		comboManager.drawComboUI(g);
 	}
 
 	private void drawWeaponUI(Graphics2D g) {
