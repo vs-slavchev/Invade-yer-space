@@ -76,7 +76,6 @@ public class ShotEntity extends Entity{
 			if( ((AlienEntity) other).isDead() ){
 				((AlienEntity) other).spawnExplosionAnimation();
 				game.getEntityManager().removeEntity(other);
-				//game.notifyAlienKilled();
 			}
 		}
 	}

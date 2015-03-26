@@ -133,18 +133,26 @@ public class ShipEntity extends Entity{
 		if( inputController.isFirePressed() ){
 			weapons[currentWeapon].tryToFire();
 		}
-		if (inputController.isOnePressed()){
-			currentWeapon = 0;
-			weapons[currentWeapon].resetFireTimer();
-		}else if (inputController.isTwoPressed()){
-			currentWeapon = 1;
-			weapons[currentWeapon].resetFireTimer();
-		}else if (inputController.isThreePressed()){
-			currentWeapon = 2;
-			weapons[currentWeapon].resetFireTimer();
-		}else if (inputController.isFourPressed()){
-			currentWeapon = 3;
-			//weapons[currentWeapon].resetFireTimer();
+		if (inputController.isOnePressed()) {
+			if (currentWeapon != 0) {
+				currentWeapon = 0;
+				weapons[currentWeapon].resetFireTimer();
+			}
+		} else if (inputController.isTwoPressed()) {
+			if (currentWeapon != 1) {
+				currentWeapon = 1;
+				weapons[currentWeapon].resetFireTimer();
+			}
+		} else if (inputController.isThreePressed()) {
+			if (currentWeapon != 2) {
+				currentWeapon = 2;
+				weapons[currentWeapon].resetFireTimer();
+			}
+		} else if (inputController.isFourPressed()) {
+			if (currentWeapon != 3) {
+				currentWeapon = 3;
+				weapons[currentWeapon].resetFireTimer();
+			}
 		}
 	}
 	

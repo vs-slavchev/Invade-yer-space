@@ -1,11 +1,13 @@
 package entities.aliens;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
 import entities.Entity;
 import main.Game;
+import utility.ContentValues;
 import utility.image.Animation;
 import utility.image.AnimationManager;
 import utility.image.ImageManager;
@@ -31,7 +33,7 @@ public class AlienEntity extends Entity{
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
 		this.dx = -150;
-		this.shootTimeInterval = getrandom( game.getDifficulty()*80, game.getDifficulty() * 450);
+		this.shootTimeInterval = getrandom(250, 1500);
 	}
 
 	public void move(long delta){
@@ -73,7 +75,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void reduceShootTimeInterval(){
-		shootTimeInterval *= 0.98;
+		shootTimeInterval *= 0.99;
 	}
 	
 	public int getrandom( int min, int max ){
@@ -82,6 +84,14 @@ public class AlienEntity extends Entity{
 	
 	public void draw(Graphics2D g){
 		animation.drawAnimation(g);
+		if (game.isAlienHPBarDrawn()) {
+			g.setColor(Color.red);
+			g.fillRect((int) x, (int) y - 7, animation.getDimensionX(), 7);
+			g.setColor(Color.green);
+			int fillerBarWidth = (int) (((double) healthPoints / (double) (type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER)) * (animation
+					.getDimensionX() - 2));
+			g.fillRect((int) x + 1, (int) y - 6, fillerBarWidth, 5);
+		}
 	}
 	
 	public void takeDamage(){

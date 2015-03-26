@@ -49,8 +49,8 @@ public class Game extends Canvas {
 	private MusicManager musicManager = new MusicManager();
 	private SoundManager soundManager = SoundManager.getSoundManager();
 	InputController inputController;
+	private static boolean alienHPBarDrawn = false;
 	private String message = "startText";
-	private int difficulty = 3; // 3-ez, 2-normal, 1-hard
 
 	public Game() {
 
@@ -211,13 +211,19 @@ public class Game extends Canvas {
 	public void notifyAlienKilled() {
 		entityManager.decrementAlienCount();
 		((ShipEntity) entityManager.getShip()).getComboManager().incrementRecentKillCount();
-		System.out.println(entityManager.getAlienCount());
 		if (entityManager.getAlienCount() < 1){
 			notifyWin();
 		}
-
 		// speed up the remaining aliens by 1/2/3% depending on difficulty
-		entityManager.speedUpAlienEntities(this.difficulty);
+		entityManager.speedUpAlienEntities();
+	}
+	
+	public boolean isAlienHPBarDrawn(){
+		return alienHPBarDrawn;
+	}
+	
+	public static void setAlienHPBarDrawn(boolean value){
+		alienHPBarDrawn = value;
 	}
 
 	public void updateLogic() {
@@ -227,10 +233,6 @@ public class Game extends Canvas {
 	private void startGame() {
 		entityManager.initEntities();
 		inputController.reset();
-	}
-
-	public int getDifficulty() {
-		return difficulty;
 	}
 
 	public static int getGameWidth() {
@@ -271,6 +273,9 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				inputController.setFirePressed(true);
 			}
+			if (e.getKeyCode() == KeyEvent.VK_R) {
+				Game.setAlienHPBarDrawn(true);
+			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
 				inputController.setOnePressed(true);
 			}else if (e.getKeyCode() == KeyEvent.VK_2) {
@@ -295,6 +300,9 @@ public class Game extends Canvas {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				inputController.setFirePressed(false);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_R) {
+				Game.setAlienHPBarDrawn(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
 				inputController.setOnePressed(false);
@@ -325,14 +333,10 @@ public class Game extends Canvas {
 }
 	
 	/* TODO:
-	 * - fix wrong alienCount; debug: print out every to be deleted alien's mem address and compare
-	 * - get rid of difficulty; playable with 8 rows of aliens
 	 * - errors while loading resources must open in new window (alt: error text in current fullscreen window all caps)
 	 * - fix sfx memory leak
 	 * - fix switch cases to look like StatusEffect constructor default
 	 * - music on/off keys or decrease/incr volume;
-	 * - fix bug with constantly switching to the same weapon and resetting the lastShotTime interval; keep feature for switching b/w different weapons
-	 * - key that toggles alien's healthbars?
 	 * - extract more magic numbers to ContentValues class
 	 * - background planets should not spawn very close to each other
 	 * - sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
@@ -341,8 +345,9 @@ public class Game extends Canvas {
 		 * 	= yarr! me cannon is too hot'h!
 		 *  = yarr! i got shield
 		 *  = shooting sfx for diff weapons
-		 *  = reflect shots sfx
+		 *  = reflecting the shots sfx
 		 *  = more explosions sfx
 		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
+		 *  = shield buff goes up (powerup sound)
  	 */
 

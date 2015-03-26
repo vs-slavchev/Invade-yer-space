@@ -3,8 +3,10 @@ package entities.utility;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import utility.ContentValues;
 import entities.Entity;
 import entities.ShipEntity;
 import entities.aliens.AlienEntity;
@@ -15,14 +17,14 @@ public class EntityManager {
 	private Game game;
 	private CopyOnWriteArrayList<Entity> alienEntities = new CopyOnWriteArrayList<>(); // aliens and alienShots
 	private ArrayList<Entity> entities = new ArrayList<>(); // ship and playerProjectiles
-	private ArrayList<Entity> removeList = new ArrayList<>(); // list of entities to be removed
+	private HashSet<Entity> removeList = new HashSet<>(); // set of entities to be removed
 	// list manages the AoE objects: explosions and lasers
 	// that affect more than 1 entity at the same time
 	private ArrayList<Rectangle> aoeObjects = new ArrayList<>();
 	private Entity ship;
 	private int alienCount = 0;
 	private final int maxAlienShipType = 8;
-	private final int maxRows = 6; // 8x20
+	private final int maxRows = 8; // 8x20
 	private final int maxColumns = 20; //must be an even number
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
@@ -152,8 +154,9 @@ public class EntityManager {
 		aoeObjects.clear();
 	}
 	
-	public void removeEntities(){
+	public void removeEntities(){		
 		entities.removeAll(this.removeList);
+		
 		for (Entity entity : removeList) {
 			if (entity instanceof AlienEntity){
 				game.notifyAlienKilled();
@@ -194,43 +197,11 @@ public class EntityManager {
 	}
 	
 	private AlienEntity produceAlien( int type, int row, int col){
-		int healthPoints;
-		switch( type ){
-		case 0:
-			return null;
-		case 1:
-			healthPoints = 1;
-			break;
-		case 2:
-			healthPoints = 3;
-			break;
-		case 3:
-			healthPoints = 5;
-			break;
-		case 4:
-			healthPoints = 7;
-			break;
-		case 5:
-			healthPoints = 10;
-			break;
-		case 6:
-			healthPoints = 10;
-			break;
-		case 7:
-			healthPoints = 15;
-			break;
-		case 8:
-			healthPoints = 20;
-			break;
-		default:
-			healthPoints = 1;
-			break;
-		}
-		/*
-		 * aliens are centered according to their image; they are created first,
-		 * so their image is not null, and then according to the image
-		 * their position is set correctly
-		 */
+		int healthPoints = type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER;
+		
+		/* aliens are centered according to their image; aliens are created first,
+		 * so their image is not null, and then according to the image dimensions
+		 * their position is set correctly */
 		// spawn off the screen
 		AlienEntity alien = new AlienEntity( game, type, -100, -100, healthPoints);
 		int offsetX = alien.getAnimation().getDimensionX()/2;
@@ -248,11 +219,11 @@ public class EntityManager {
 		entities.add(entity);
 	}
 	
-	public void speedUpAlienEntities(int difficulty){
+	public void speedUpAlienEntities(){
 		for( int i = 0; i < alienEntities.size(); i++){
 			Entity entity = alienEntities.get(i);
 			if( entity instanceof AlienEntity){
-				entity.setHorizontalMovement( entity.getHorizontalMovement() * (1.00 + (4.00-difficulty)/100.00 ) );
+				entity.setHorizontalMovement( entity.getHorizontalMovement() * 1.013 );
 				((AlienEntity) entity).reduceShootTimeInterval();
 			}
 		}
@@ -293,6 +264,13 @@ public class EntityManager {
 	
 	public Entity getShip(){
 		return ship;
+	}
+	
+	public boolean existAliens(){
+		if (alienEntities.isEmpty()){
+			return false;
+		}
+		return true;
 	}
 	
 
