@@ -50,9 +50,9 @@ public class EntityManager {
 			StringBuilder innerSb = new StringBuilder();
 			for (int j = 0; j < maxColumns/2; j++){
 				int currentType = 1 + (int)(Math.random()*(maxAlienShipType-1));
-				typesArray[i*maxColumns/2 + j] = currentType;
-				currentType += balanceAccordingToMean(i*maxColumns/2 + j + 1);
+				currentType += balanceAccordingToMean(i*maxColumns/2 + j);
 				currentType = controllTypeBoundaries(currentType);
+				typesArray[i*maxColumns/2 + j] = currentType;
 				innerSb.append(currentType);
 			}
 			sb.append(innerSb);
@@ -64,28 +64,20 @@ public class EntityManager {
 	}
 	
 	/* method balances the alien type according to the mean
-	 * of so far created alien types and also adds a bit
-	 * of randomness, so that the balancing rules
-	 * are not so rigorous. Returned int is to be used
+	 * of so far created alien types. Returned int is to be used
 	 * to modify the currentType of the newly created alien
 	 */
 	private int balanceAccordingToMean(int size) {
-		if (calculateMean(size) > levelDifficulty) {
-			if (Math.random() < 0.8) {
-				return -2;
-			}
-			return 0;
-		}
-		if (Math.random() < 0.8) {
-			return 2;
-		}
-		return 0;
+		return (int) (levelDifficulty - calculateMean(size));
 	}
 	
 	private double calculateMean(int size) {
 		int sum = 0;
 		for (int i = 0; i < size; i++){
 			sum += typesArray[i];
+		}
+		if (size == 0){
+			return 0;
 		}
 		return sum/size;
 	}
@@ -177,6 +169,8 @@ public class EntityManager {
 		//clear the ArrayLists before using them
 		entities.clear();
 		alienEntities.clear();
+		// after clearing up the big collections request a GC; changing levels happens rarely and minor lag is unnoticed
+		System.gc();
 		
 		ship = new ShipEntity( this.game, Game.getGameWidth()/2, Game.getGameHeight()*5/6);
 		entities.add(this.ship);

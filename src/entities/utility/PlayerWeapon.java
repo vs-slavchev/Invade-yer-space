@@ -60,12 +60,16 @@ public class PlayerWeapon {
 		lastFireTime = System.currentTimeMillis();
 	}
 	
-	public void tryToFire(){
+	/*
+	 * returns true on successful shooting
+	 * false when not allowed to shoot
+	 */
+	public boolean tryToFire(){
 		if (overheatPercent >= 100){
-			return;
+			return false;
 		}
 		if( System.currentTimeMillis() - lastFireTime < firingInterval)
-			return;
+			return false;
 		
 		lastFireTime = System.currentTimeMillis();
 		int x = game.getEntityManager().getShip().getX()
@@ -76,7 +80,8 @@ public class PlayerWeapon {
 		createShot(x, y);
 		
 		overheatPercent += heatAmplifier;
-		overheatCoolingSpeed = 0.0000001;
+		overheatCoolingSpeed = 0.0000001; // same for all weapons
+		return true;
 	}
 	
 	public void coolDown(){
@@ -117,8 +122,7 @@ public class PlayerWeapon {
 			}
 			break;
 		case "projectiles/shot7":
-			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+25, y+15, 15));
-			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-25, y+15, -15));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y+15, 0));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+90, y+50, 30));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-90, y+50, -30));
 			break;

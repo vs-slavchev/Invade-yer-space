@@ -95,12 +95,7 @@ public class Game extends Canvas {
 		strategy = getBufferStrategy();
 
 		inputController = new InputController();
-		try {
-			ImageManager.initImages();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			System.out.println(" Initializing images failed!");
-		}
+		ImageManager.initImages();
 		
 		entityManager.initEntities();
 		soundManager.initSoundManager();
@@ -167,8 +162,8 @@ public class Game extends Canvas {
 			drawGame();
 
 			sleepAndFPSControl(lastLoopTime);
-
 		} // close while
+		soundManager.close();
 	}
 
 	private void controlPause() {
@@ -382,39 +377,46 @@ public class Game extends Canvas {
 }
 	
 	/* TODO:
-	 * - errors while loading resources must open in new window (alt: error text in current fullscreen window all caps)
-	 * - fix sfx memory leak
-	 * - pirate themed weapon/powerups
-	 * - 4th weapon shoots pirate bombs not rockets
-	 * - paused image
-	 * - redo 3 images of text
-	 * - cooltext combo digits
-	 * - decrease laser duration
-	 * - improve calculateMean()
-	 * - some enemies randomly explode on death and kill nearby aliens (adds luck and fun and ezness)
-	 * - muzzle flash: bright circle (+for aliens too + colored + smaller)
-	 * - faster+bigger bullets (white cap on front)
-	 * - ship weight - friction as opposed to instant movement
-	 * - slight firing knockback
-	 * - permanence - parts of ship (can fade out and drift away slowly)
-	 * - first few levels are predesigned; after that procedurally generated
-	 * - boss levels are swarms of bigger stronger enemies with different attacks
+	 * [X] errors while loading resources must open in new window
+	 * [X] added closing sound clips after exit
+	 * [X] some enemies randomly explode on death and kill nearby aliens (adds luck and fun and ezness)
+	 * [X] rockets combo bonus fires 3 not 4 units
+	 * [X] decrease laser duration
+	 * [X] 4th weapon shoots pirate bombs not rockets
+	 * [X] improve calculateMean()
+	 * [X] slight firing knockback
+	 * [X] rework alien sprites to remove bullet glow
+	 * [-] pirate themed weapon/powerups
+	 * [-] paused text image
+	 * [-] redo 3 images of text
+	 * [-] cooltext combo digits
+	 * [-] muzzle flash: bright circle (+for aliens too + colored + smaller)
+	 * [-] faster+bigger bullets
+	 * [-] ship weight - friction as opposed to instant movement
+	 * [-] permanence - parts of ship (can fade out and drift away slowly)
+	 * [-] first few levels are predesigned; after that procedurally generated
+	 * [-] boss levels are swarms of bigger stronger enemies with different attacks
 	 * 		= R to show hp bars must work => alien types will be not in range [1,8] but [15,30]
-	 * - scoring mechanic: max combo achieved this level
-	 * - dying restarts the level
-	 * - random combo bonuses are awarded; more bonuses
-	 * - rockets combo bonus fires 3 not 4 units
-	 * - after completing a level:
-		 * 	= allow the player to choose 1 of 3 random upgrades to add to his/her ship (+fancy img demostrating)
+	 * [-] scoring mechanic: max combo achieved this level
+	 * [-] dying restarts the level
+	 * [-] random combo bonuses are awarded; more bonuses
+	 * [-] warp zone (press key to place WZ press again to teleport to that WZ and delete the WZ; next keypress places a new one...)
+	 * [-] blocking wall object (x,y,durability): soaks up hits
+	 * 		= immovable, gets thinner by getting hit by enemy bullets
+	 * 		= one-shot by enemy ships, does not collide with player
+	 * [-] only enemies that are near the X of the player shoot
+	 * [-] after completing a level:
+		 * 	= allow the player to choose 1 of 3 random upgrades to add to his/her ship (+fancy img demonstrating)
+		 *  = offered upgrades cannot be duplicate
 		 * 	= a certain weapon deals increased dmg
 		 * 	= a certain weapon cools down faster
 		 * 	= a certain weapon is upgraded (shoots more bullets at once)
 		 * 	= comboBonus weapons are also upgradeable
 		 * 	= buff duration too
-	 * - refactoring:
+	 * [-] refactoring:
 		 * 	= fix switch cases to look like StatusEffect constructor default
 		 * 	= extract more magic numbers to ContentValues class
-	 * - sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
+	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
 		 * 	= yarr!; on powerup pickup
 		 * 	= random pirate swears on events
 		 * 	= yarr! me cannon is too hot'h!
@@ -424,10 +426,5 @@ public class Game extends Canvas {
 		 *  = more explosions sfx
 		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
 		 *  = shield buff goes up/down (powerups sound)
-	 *  fixed: 
-	 *  switch weap bug; 
-	 *  added autoshoot key T; 
-	 *  fixed planets spawn; 
-	 *  decr/ incr music volume </>
  	 */
 

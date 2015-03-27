@@ -4,6 +4,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.FloatControl;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import java.awt.List;
 import java.io.File;
@@ -40,10 +42,10 @@ public class SoundManager {
 			Clip clip = getClip(name);
 			sounds.put(name, clip);
 
-			/*// decrease each clip's gain
+			// decrease each clip's gain
 			FloatControl gainControl = (FloatControl) clip
 					.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-15.0f);*/
+			gainControl.setValue(-20.0f);
 		}
 
 	}
@@ -58,16 +60,26 @@ public class SoundManager {
 		}
 	}
 
-	private Clip getClip(String filename) {
+	private Clip getClip(final String filename) {
 		Clip clip = null;
 		try {
 			clip = AudioSystem.getClip();
 			AudioInputStream sample = AudioSystem.getAudioInputStream(new File(path + filename + ".wav"));
 			clip.open(sample);
 		} catch (Exception e) {
-			e.printStackTrace();
+			 JOptionPane.showMessageDialog(null,
+					"Error: \n" + path + filename + ".wav" + "\nmissing!",
+				    "Error loading sound!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 		}
 		return clip;
+	}
+	
+	public void close(){
+		for (Clip clip : sounds.values()) {
+			clip.close();
+		}
 	}
 
 }

@@ -60,7 +60,7 @@ public class ShipEntity extends Entity{
 		if( dx > 0 && x > Game.getGameWidth() - 50 ){
 			return;
 		}
-		if( dy > 0 && y > Game.getGameHeight() - collisionHeight ){
+		if( dy > 0 && y >= Game.getGameHeight() - collisionHeight ){
 			return;
 		}
 		if( dy < 0 && y < 10 ){
@@ -132,7 +132,13 @@ public class ShipEntity extends Entity{
 			dy = this.moveSpeed/2;
 		}
 		if( inputController.isFirePressed() || autoFireOn ){
-			weapons[currentWeapon].tryToFire();
+			if (weapons[currentWeapon].tryToFire()) {
+				// if successfully shot then get knocked back as a result
+				y += 2;
+				if (y > Game.getGameHeight() - collisionHeight) {
+					y = Game.getGameHeight() - collisionHeight;
+				}
+			}
 		}
 		if( inputController.isAutoFirePressed()){
 			autoFireOn = !autoFireOn;

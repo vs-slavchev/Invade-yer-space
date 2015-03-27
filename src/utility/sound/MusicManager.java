@@ -3,6 +3,8 @@ package utility.sound;
 import java.io.IOException;
 import java.util.Random;
 
+import javax.swing.JOptionPane;
+
 import org.newdawn.easyogg.OggClip;
 
 import utility.ContentValues;
@@ -10,13 +12,17 @@ import utility.ContentValues;
 public class MusicManager {
 	
 	private OggClip backgroundMusic;
-	private float gain = 0.87f;
+	private float gain = 0.60f; // 0.87
 	
 	public MusicManager(){
 		try{
 			backgroundMusic = new OggClip("music/captain_Manol.ogg");
 		} catch (IOException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + "music/captain_Manol.ogg" + "\nmissing!",
+				    "Error loading music!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 		}
 	}
 	

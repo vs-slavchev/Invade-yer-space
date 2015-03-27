@@ -9,38 +9,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 public class ImageManager {
 
-	// this may need modifying
 	private final static String path = "images/";
 	private final static String ext = ".png";
 
 	private static Map<String, Image> images = new HashMap<String, Image>();
 
-	public static Image getImage(String s) {
-		if(!images.containsKey(s)){
-			System.out.println(" Image not found in hashmap. key=\"" + s + "\"");
-		}
-		return images.get(s);
-	}
-
-	public static Image loadImage(String fname) throws IOException {
+	public static Image loadImage(String fname){
 		BufferedImage img = null;
-		img = ImageIO.read(new File(path + fname + ext));
+		try {
+			img = ImageIO.read(new File(path + fname + ext));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + path + fname + ext + "\nmissing!",
+				    "Error loading image!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
+		}
 		images.put(fname, img);
 		return img; 
 	}
 
-	public Image loadImage(String imName, String fname) throws IOException {
-		BufferedImage img = null;
-		//img = ImageIO.read(new File(path + fname + ext));
-		img = ImageIO.read(getClass().getResource(path + fname + ext));
-		images.put(imName, img);
-		return img; 
-	}
-
-	public static void initImages() throws IOException{
+	public static void initImages(){
 		ArrayList<String> imageNames = new ArrayList<>();
 		
 		imageNames.add("mainShip");
@@ -76,14 +69,21 @@ public class ImageManager {
 		loadImages(imageNames);
 	}
 	
-	public static void loadImages(String[] fNames) throws IOException {
+	public static void loadImages(String[] fNames){
 		for (String s : fNames)
 			loadImage(s);
 	}
 
-	public static void loadImages(Iterable<String> fNames) throws IOException {
+	public static void loadImages(Iterable<String> fNames){
 		for (String s : fNames)
 			loadImage(s);
+	}
+	
+	public static Image getImage(String s) {
+		if(!images.containsKey(s)){
+			System.out.println(" Image not found in hashmap. key=\"" + s + "\"");
+		}
+		return images.get(s);
 	}
 
 }

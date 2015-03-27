@@ -109,7 +109,18 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void spawnExplosionAnimation(){
-		AnimationManager.getAnimationManager().spawnAnimation("effects/explosion", (int)x, (int)y, 1);
+		if (Math.random() < ContentValues.CHANCE_TO_EXPLODE_ALIEN){
+			game.getEntityManager().createAoEObject((int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
+			// the scale is = explosion radius/image raduis
+			AnimationManager.getAnimationManager().spawnAnimation("effects/explosion",
+					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
+		} else {
+			AnimationManager.getAnimationManager().spawnAnimation(
+					"effects/explosion", (int) x, (int) y, 1);
+		}
 	}
 	
 	public void setXY(int x, int y){

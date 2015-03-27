@@ -1,17 +1,26 @@
 package utility;
 
+import java.awt.Color;
+
 public class ContentValues {
 	// player related:
 	public static final int MAX_PLAYER_SHIELD_DURATION = 100_000; // 1_000
 	
 	// enemy related:
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 3;
+	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	
 	// effect related:
 	public static final int ROCKET_EXPLOSION_RADIUS = 80;
 	
 	// sound and music
 	public static final float MUSIC_PER_TICK_MODIFIER = 0.002f;
+	
+	// used colors
+	public static final Color COLOR_STUFF = new Color(0, 0, 0);
+	
+	
+	
 	
 	// utility method for values
 	public static int controlMinMax(final int i, final int min, final int max){
