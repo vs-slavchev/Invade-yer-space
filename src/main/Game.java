@@ -1,5 +1,6 @@
 package main;
 
+import utility.ContentValues;
 import utility.InputController;
 import utility.image.AnimationManager;
 import utility.image.BackgroundImageManager;
@@ -42,9 +43,10 @@ public class Game extends Canvas {
 	
 	private int FPS = 60;
 	private volatile long delta = 1000 / this.FPS;
-	private volatile boolean gameRunning = true;
+	volatile boolean gameRunning = true;
+	private volatile boolean paused = false;
 	private boolean logicRequiredThisLoop = false;
-	private boolean waitingForKeyPress = true;
+	boolean waitingForKeyPress = true;
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
 	private SoundManager soundManager = SoundManager.getSoundManager();
@@ -128,39 +130,64 @@ public class Game extends Canvas {
 			if (minimumFPS > 1000.00f / delta) {
 				minimumFPS = 1000.00f / delta;
 			}
-
-			// cycle trough entities and move them
-			if (!waitingForKeyPress) {
-				entityManager.moveEntities(delta);
-				BackgroundImageManager.update();
-			}
-			// collision detection: ship,shots are checked against the aliens,
-			// alienShots
-			if (!waitingForKeyPress) {
-				entityManager.collideEntities();
-			}
-			AnimationManager.getAnimationManager().updateAnimations();
-			// remove destroyed entities that are to be removed and clean up
-			entityManager.removeEntities();
-			// if we need to do logic go through alienEntities only, since only
-			// aliens have a doLogic() implemented
-			if (logicRequiredThisLoop) {
-				entityManager.forceLogic();
-				logicRequiredThisLoop = false;
-			}
-			// give the input to the ship to be processed
-			((ShipEntity) entityManager.getShip())
-					.processInput(inputController);
 			
+			
+			if (!paused) {
+				// cycle trough entities and move them
+				if (!waitingForKeyPress) {
+					entityManager.moveEntities(delta);
+					BackgroundImageManager.update();
+				}
+
+				// collision detection: ship,shots are checked against the
+				// aliens,
+				// alienShots
+				if (!waitingForKeyPress) {
+					entityManager.collideEntities();
+				}
+
+				AnimationManager.getAnimationManager().updateAnimations();
+				// remove destroyed entities that are to be removed and clean up
+				entityManager.removeEntities();
+				// if we need to do logic go through alienEntities only, since
+				// only
+				// aliens have a doLogic() implemented
+				if (logicRequiredThisLoop) {
+					entityManager.forceLogic();
+					logicRequiredThisLoop = false;
+				}
+				// give the input to the ship to be processed
+				((ShipEntity) entityManager.getShip())
+						.processInput(inputController);
+
+			}
+			
+			controlPause();
+			controlMusicGain();
 			drawGame();
 
-			pauseAndFPSControl(lastLoopTime);
+			sleepAndFPSControl(lastLoopTime);
 
 		} // close while
 	}
 
+	private void controlPause() {
+		if (inputController.isPausePressed()){
+			paused = !paused;
+			inputController.setPausePressed(false);
+		}
+	}
+
+	private void controlMusicGain() {
+		if (inputController.isMusicDownPressed()){
+			musicManager.modifyGain( -ContentValues.MUSIC_PER_TICK_MODIFIER);
+		}else if (inputController.isMusicUpPressed()){
+			musicManager.modifyGain(ContentValues.MUSIC_PER_TICK_MODIFIER);
+		}
+	}
+
 	// pause and fps control
-	private void pauseAndFPSControl(long lastLoopTime) {
+	private void sleepAndFPSControl(long lastLoopTime) {
 		try {
 			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
 			if (sleepTime <= 1){
@@ -184,6 +211,10 @@ public class Game extends Canvas {
 		entityManager.drawEntities(g);
 		
 		AnimationManager.getAnimationManager().drawAnimations(g);
+		
+		if (paused){
+			g.drawString("PAUSED", 500, 400);
+		}
 
 		// if game is waiting for "any key press" show message
 		if (waitingForKeyPress) {
@@ -214,7 +245,7 @@ public class Game extends Canvas {
 		if (entityManager.getAlienCount() < 1){
 			notifyWin();
 		}
-		// speed up the remaining aliens by 1/2/3% depending on difficulty
+		// speed up the remaining aliens by 1%
 		entityManager.speedUpAlienEntities();
 	}
 	
@@ -230,7 +261,7 @@ public class Game extends Canvas {
 		logicRequiredThisLoop = true;
 	}
 
-	private void startGame() {
+	void startGame() {
 		entityManager.initEntities();
 		inputController.reset();
 	}
@@ -276,6 +307,18 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				Game.setAlienHPBarDrawn(true);
 			}
+			if (e.getKeyCode() == KeyEvent.VK_T) {
+				inputController.setAutoFirePressed(true);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+				inputController.setMusicDownPressed(true);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+				inputController.setMusicUpPressed(true);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_P) {
+				inputController.setPausePressed(true);
+			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
 				inputController.setOnePressed(true);
 			}else if (e.getKeyCode() == KeyEvent.VK_2) {
@@ -303,6 +346,12 @@ public class Game extends Canvas {
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				Game.setAlienHPBarDrawn(false);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+				inputController.setMusicDownPressed(false);
+			}
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+				inputController.setMusicUpPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
 				inputController.setOnePressed(false);
@@ -335,19 +384,50 @@ public class Game extends Canvas {
 	/* TODO:
 	 * - errors while loading resources must open in new window (alt: error text in current fullscreen window all caps)
 	 * - fix sfx memory leak
-	 * - fix switch cases to look like StatusEffect constructor default
-	 * - music on/off keys or decrease/incr volume;
-	 * - extract more magic numbers to ContentValues class
-	 * - background planets should not spawn very close to each other
+	 * - pirate themed weapon/powerups
+	 * - 4th weapon shoots pirate bombs not rockets
+	 * - paused image
+	 * - redo 3 images of text
+	 * - cooltext combo digits
+	 * - decrease laser duration
+	 * - improve calculateMean()
+	 * - some enemies randomly explode on death and kill nearby aliens (adds luck and fun and ezness)
+	 * - muzzle flash: bright circle (+for aliens too + colored + smaller)
+	 * - faster+bigger bullets (white cap on front)
+	 * - ship weight - friction as opposed to instant movement
+	 * - slight firing knockback
+	 * - permanence - parts of ship (can fade out and drift away slowly)
+	 * - first few levels are predesigned; after that procedurally generated
+	 * - boss levels are swarms of bigger stronger enemies with different attacks
+	 * 		= R to show hp bars must work => alien types will be not in range [1,8] but [15,30]
+	 * - scoring mechanic: max combo achieved this level
+	 * - dying restarts the level
+	 * - random combo bonuses are awarded; more bonuses
+	 * - rockets combo bonus fires 3 not 4 units
+	 * - after completing a level:
+		 * 	= allow the player to choose 1 of 3 random upgrades to add to his/her ship (+fancy img demostrating)
+		 * 	= a certain weapon deals increased dmg
+		 * 	= a certain weapon cools down faster
+		 * 	= a certain weapon is upgraded (shoots more bullets at once)
+		 * 	= comboBonus weapons are also upgradeable
+		 * 	= buff duration too
+	 * - refactoring:
+		 * 	= fix switch cases to look like StatusEffect constructor default
+		 * 	= extract more magic numbers to ContentValues class
 	 * - sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
 		 * 	= yarr!; on powerup pickup
 		 * 	= random pirate swears on events
 		 * 	= yarr! me cannon is too hot'h!
 		 *  = yarr! i got shield
-		 *  = shooting sfx for diff weapons
+		 *  = shooting sfx for diff weapons - dr.petter
 		 *  = reflecting the shots sfx
 		 *  = more explosions sfx
 		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
-		 *  = shield buff goes up (powerup sound)
+		 *  = shield buff goes up/down (powerups sound)
+	 *  fixed: 
+	 *  switch weap bug; 
+	 *  added autoshoot key T; 
+	 *  fixed planets spawn; 
+	 *  decr/ incr music volume </>
  	 */
 

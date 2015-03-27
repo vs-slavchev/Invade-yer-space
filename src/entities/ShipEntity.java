@@ -28,7 +28,8 @@ public class ShipEntity extends Entity{
 	private int currentWeapon = 0;
 	private boolean invulnerable = false;
 	private boolean laserOn = false;
-	
+	private boolean autoFireOn = false;
+
 	public ShipEntity(Game game, int x, int y) {
 		super(x, y);
 		this.game = game;
@@ -130,8 +131,12 @@ public class ShipEntity extends Entity{
 		else if( inputController.isDownPressed() ){
 			dy = this.moveSpeed/2;
 		}
-		if( inputController.isFirePressed() ){
+		if( inputController.isFirePressed() || autoFireOn ){
 			weapons[currentWeapon].tryToFire();
+		}
+		if( inputController.isAutoFirePressed()){
+			autoFireOn = !autoFireOn;
+			inputController.setAutoFirePressed(false);
 		}
 		if (inputController.isOnePressed()) {
 			if (currentWeapon != 0) {
@@ -241,5 +246,13 @@ public class ShipEntity extends Entity{
 	
 	public boolean isInvulnerable(){
 		return invulnerable;
+	}
+	
+	public boolean isAutoFireOn() {
+		return autoFireOn;
+	}
+
+	public void setAutoFireOn(boolean autoFireOn) {
+		this.autoFireOn = autoFireOn;
 	}
 }

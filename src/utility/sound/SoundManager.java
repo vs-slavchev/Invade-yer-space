@@ -40,10 +40,10 @@ public class SoundManager {
 			Clip clip = getClip(name);
 			sounds.put(name, clip);
 
-			// decrease each clip's gain
+			/*// decrease each clip's gain
 			FloatControl gainControl = (FloatControl) clip
 					.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-15.0f);
+			gainControl.setValue(-15.0f);*/
 		}
 
 	}

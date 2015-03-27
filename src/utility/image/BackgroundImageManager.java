@@ -17,23 +17,34 @@ public class BackgroundImageManager {
 			// move animation lower: x+0,y+1
 			animation.modifyPosition(0, 1);
 			if( animation.getY() > Game.HEIGHT){
-				backgroundObjects.remove(animation);
+				animation = generateBackgroundObject();
 			}
 		}
-		generateBackgroundObject();
+		if (backgroundObjects.size() < maxObjects){
+			Animation newBackgroundObj = generateBackgroundObject();
+			if (!(newBackgroundObj == null)) {
+				backgroundObjects.add(newBackgroundObj);
+			}
+		}
 	}
 	
-	public static void generateBackgroundObject(){
-		if (backgroundObjects.size() >= maxObjects){
-			return;
+	private static Animation generateBackgroundObject(){
+		int minY = Game.HEIGHT;
+		if (!backgroundObjects.isEmpty()){
+			for (Animation animation : backgroundObjects) {
+				if( animation.getY() < minY){
+					minY = animation.getY();
+				}
+			}
 		}
-		if (Math.random() < 0.0005) {
+		if (Math.random() < 0.0005 && minY > 0) {
 			int x = (int) (-30 + Math.random() * Game.WIDTH);
 			int y = -250;
 			String name = "planets/planet" + (int) (1 + Math.random() * 13);
 			double scale = 1 + Math.random();
-			backgroundObjects.add(new Animation(x, y, 0, 1, name, false, false, scale));
+			return new Animation(x, y, 0, 1, name, false, false, scale);
 		}
+		return null;
 	}
 	
 	public static void drawBackgroundObjects(Graphics2D g){

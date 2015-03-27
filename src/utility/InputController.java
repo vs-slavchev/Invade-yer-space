@@ -11,6 +11,10 @@ public class InputController {
 	private boolean twoPressed = false;
 	private boolean threePressed = false;
 	private boolean fourPressed = false;
+	private boolean autoFirePressed = false;
+	private boolean musicDownPressed = false;
+	private boolean musicUpPressed = false;
+	private boolean pausePressed = false;
 	
 	public void reset(){
 		leftPressed = false;
@@ -22,6 +26,42 @@ public class InputController {
 		twoPressed = false;
 		threePressed = false;
 		fourPressed = false;
+		autoFirePressed = false;
+		musicDownPressed = false;
+		musicUpPressed = false;
+		pausePressed = false;
+	}
+
+	public boolean isPausePressed() {
+		return pausePressed;
+	}
+
+	public void setPausePressed(boolean pausePressed) {
+		this.pausePressed = pausePressed;
+	}
+
+	public boolean isMusicDownPressed() {
+		return musicDownPressed;
+	}
+
+	public void setMusicDownPressed(boolean musicDownPressed) {
+		this.musicDownPressed = musicDownPressed;
+	}
+
+	public boolean isMusicUpPressed() {
+		return musicUpPressed;
+	}
+
+	public void setMusicUpPressed(boolean musicUpPressed) {
+		this.musicUpPressed = musicUpPressed;
+	}
+
+	public boolean isAutoFirePressed() {
+		return autoFirePressed;
+	}
+
+	public void setAutoFirePressed(boolean autoFirePressed) {
+		this.autoFirePressed = autoFirePressed;
 	}
 
 	public void setLeftPressed(boolean leftPressed) {

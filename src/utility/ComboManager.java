@@ -45,33 +45,19 @@ public class ComboManager {
 			quadRocketsBonusReady = false;
 			return new StatusEffect("quadRockets");
 		}
-		else if(scatterBonusReady && recentKillCount >= 40){
+		else if(scatterBonusReady && recentKillCount >= 50){
 			scatterBonusReady = false;
 			return new StatusEffect("scatter");
 		}
-		else if (spearsBonusReady && recentKillCount >= 55){
+		else if (spearsBonusReady && recentKillCount >= 70){
 			spearsBonusReady = false;
 			return new StatusEffect("spears");
 		}
-		else if (laserBonusReady && recentKillCount >= 70){
+		else if (laserBonusReady && recentKillCount >= 90){
 			laserBonusReady = false;
 			return new StatusEffect("laser");
 		}
 		return null;
-	}
-	
-	private static int controlMinMax(final int i, final int min, final int max){
-		if (min >= max){
-			System.out.println(" min more than max: " + min + ">=" + max);
-			return i;
-		}
-		int result = i;
-		if(result < min){
-			result = min; 
-		}else if(result > max){
-			result = max;
-		}
-		return result;
 	}
 	
 	public void incrementRecentKillCount(){
@@ -87,14 +73,14 @@ public class ComboManager {
 			
 			int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) / (double) recentKillTimeWindow) * 360);
 			int greenComponent = 255 - (int)((arcLength/360.00)*255);
-			greenComponent = controlMinMax(greenComponent, 0, 255);
+			greenComponent = ContentValues.controlMinMax(greenComponent, 0, 255);
 			g.setColor(new Color(0, greenComponent, 255));
 			g.fillArc(xBase, yBase, 150, 150, 90, -arcLength);
 			g.setColor(Color.BLACK);
 			g.drawArc(xBase + 5, yBase + 5, 140, 140, 90, -arcLength);
 
 			int secondGreenComponent = 255 - (int)((recentKillCount / 50.00) * 255);
-			secondGreenComponent = controlMinMax(secondGreenComponent, 0, 255);
+			secondGreenComponent = ContentValues.controlMinMax(secondGreenComponent, 0, 255);
 			g.setColor(new Color(255, secondGreenComponent, 0));
 			g.setFont(new Font("Dialog", Font.BOLD, 60+recentKillCount*3/2));
 			g.drawString(String.valueOf(recentKillCount),
