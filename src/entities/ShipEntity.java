@@ -10,6 +10,7 @@ import entities.utility.PlayerWeapon;
 import entities.utility.StatusEffect;
 import main.Game;
 import utility.image.Animation;
+import utility.image.AnimationManager;
 import utility.image.ImageManager;
 import utility.ComboManager;
 import utility.ContentValues;
@@ -18,7 +19,7 @@ import utility.image.ParticleEmitter;
 
 public class ShipEntity extends Entity{
 
-	private double moveSpeed = 350;
+	private double moveSpeed = 300;
 	private Animation animation;
 	private ParticleEmitter particleEmitter = new ParticleEmitter(40, 6);
 	private ComboManager comboManager;
@@ -117,20 +118,45 @@ public class ShipEntity extends Entity{
 	
 	public void processInput(InputController inputController){
 		
-		dx = 0;
-		dy = 0;
 		if( inputController.isLeftPressed() ){
-			dx = -this.moveSpeed;
+			if (dx > -moveSpeed){
+				dx -= ContentValues.ACCELERATION;
+			}
 		}
 		else if( inputController.isRightPressed() ){
-			dx =  this.moveSpeed;
+			if (dx < moveSpeed){
+				dx += ContentValues.ACCELERATION;
+			}
+		}else{ // apply horizontal friction
+			if (dx > ContentValues.FRICTION){
+				dx -= ContentValues.FRICTION;
+			}else if (dx < -ContentValues.FRICTION){
+				dx += ContentValues.FRICTION;
+			}else{
+				dx = 0;
+			}
 		}
+		
 		if( inputController.isUpPressed() ){
-			dy = -this.moveSpeed/2;
+			if (dy > -moveSpeed*2/3){
+				dy -= ContentValues.ACCELERATION;
+			}
 		}
 		else if( inputController.isDownPressed() ){
-			dy = this.moveSpeed/2;
+			if (dy < moveSpeed*2/3){
+				dy += ContentValues.ACCELERATION;
+			}
+		}else{ // apply vertical friction
+			if (dy > ContentValues.FRICTION){
+				dy -= ContentValues.FRICTION;
+			}else if (dy < -ContentValues.FRICTION){
+				dy += ContentValues.FRICTION;
+			}else{
+				dy = 0;
+			}
 		}
+		
+		
 		if( inputController.isFirePressed() || autoFireOn ){
 			if (weapons[currentWeapon].tryToFire()) {
 				// if successfully shot then get knocked back as a result
@@ -138,6 +164,7 @@ public class ShipEntity extends Entity{
 				if (y > Game.getGameHeight() - collisionHeight) {
 					y = Game.getGameHeight() - collisionHeight;
 				}
+				AnimationManager.getAnimationManager().spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}
 		}
 		if( inputController.isAutoFirePressed()){

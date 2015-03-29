@@ -42,10 +42,12 @@ public class ImageManager {
 		imageNames.add("text/deathText");
 		imageNames.add("text/titleText");
 		imageNames.add("text/comboText");
+		imageNames.add("text/pausedText");
 		imageNames.add("projectiles/laser");
 		imageNames.add("effects/sparks");
 		imageNames.add("effects/reflectionSparks");
 		imageNames.add("effects/shield");
+		imageNames.add("effects/muzzleFlash");
 		
 		for (int i = 14; i > 0; i--) {
 			imageNames.add("planets/planet" + i);

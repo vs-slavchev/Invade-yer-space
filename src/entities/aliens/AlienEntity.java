@@ -66,11 +66,17 @@ public class AlienEntity extends Entity{
 		lastShotTime++;
 		if(lastShotTime >= shootTimeInterval){
 			lastShotTime = 0;
-			//set the animation to start running the shoot animation
-			animation.setRunning(true);
-			Entity alienShot = new AlienShotEntity( game,
-					(int)(x + collisionWidth/2), (int)(y + 5), type );
-			game.getEntityManager().addToAlienEntities(alienShot);
+			if (Math.abs(game.getEntityManager().getShip().getX() - x) < ContentValues.X_SHOOT_RANGE) {
+				// set the animation to start running the shoot animation
+				animation.setRunning(true);
+				Entity alienShot = new AlienShotEntity(game,
+						(int) (x + collisionWidth / 2), (int) (y + 5), type);
+				game.getEntityManager().addToAlienEntities(alienShot);
+				AnimationManager.getAnimationManager().spawnAnimation(
+						"effects/muzzleFlash",
+						(int) x - 8 + animation.getDimensionX(),
+						(int) y - 8 + animation.getDimensionY(), 1);
+			}
 		}
 	}
 	

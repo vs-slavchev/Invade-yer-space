@@ -208,7 +208,9 @@ public class Game extends Canvas {
 		AnimationManager.getAnimationManager().drawAnimations(g);
 		
 		if (paused){
-			g.drawString("PAUSED", 500, 400);
+			g.drawImage(ImageManager.getImage("text/pausedText"),
+					WIDTH/2 - ImageManager.getImage("text/pausedText").getWidth(null)/2,
+					HEIGHT/2 - ImageManager.getImage("text/pausedText").getHeight(null)/2, null);
 		}
 
 		// if game is waiting for "any key press" show message
@@ -360,7 +362,8 @@ public class Game extends Canvas {
 		}
 
 		public void keyTyped(KeyEvent e) {
-			if (waitingForKeyPress) {
+			if (waitingForKeyPress && e.getKeyChar() == 32) {
+				inputController.setFirePressed(false); // added to cancel instant shooting
 				if (pressCount == 1) {
 					waitingForKeyPress = false;
 					startGame();
@@ -377,23 +380,15 @@ public class Game extends Canvas {
 }
 	
 	/* TODO:
-	 * [X] errors while loading resources must open in new window
-	 * [X] added closing sound clips after exit
-	 * [X] some enemies randomly explode on death and kill nearby aliens (adds luck and fun and ezness)
-	 * [X] rockets combo bonus fires 3 not 4 units
-	 * [X] decrease laser duration
-	 * [X] 4th weapon shoots pirate bombs not rockets
-	 * [X] improve calculateMean()
-	 * [X] slight firing knockback
-	 * [X] rework alien sprites to remove bullet glow
+	 * [X] paused text image
+	 * [X] redo 3 images of text
+	 * [X] muzzle flash: bright circle (+for aliens too + colored + smaller)
+	 * [X] faster+bigger bullets
+	 * [X] ship weight - friction as opposed to instant movement
+	 * [X] only enemies that are near the X of the player shoot
+	 * [-] low prio: fix showing healthbars while not playing
 	 * [-] pirate themed weapon/powerups
-	 * [-] paused text image
-	 * [-] redo 3 images of text
 	 * [-] cooltext combo digits
-	 * [-] muzzle flash: bright circle (+for aliens too + colored + smaller)
-	 * [-] faster+bigger bullets
-	 * [-] ship weight - friction as opposed to instant movement
-	 * [-] permanence - parts of ship (can fade out and drift away slowly)
 	 * [-] first few levels are predesigned; after that procedurally generated
 	 * [-] boss levels are swarms of bigger stronger enemies with different attacks
 	 * 		= R to show hp bars must work => alien types will be not in range [1,8] but [15,30]
@@ -404,7 +399,8 @@ public class Game extends Canvas {
 	 * [-] blocking wall object (x,y,durability): soaks up hits
 	 * 		= immovable, gets thinner by getting hit by enemy bullets
 	 * 		= one-shot by enemy ships, does not collide with player
-	 * [-] only enemies that are near the X of the player shoot
+	 * [-] basic main menu; states: menu, credits, playing, choosing bonus
+	 * [-] tutoral style: "press 2 to switch to the wave gun"
 	 * [-] after completing a level:
 		 * 	= allow the player to choose 1 of 3 random upgrades to add to his/her ship (+fancy img demonstrating)
 		 *  = offered upgrades cannot be duplicate

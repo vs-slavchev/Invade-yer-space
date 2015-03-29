@@ -17,7 +17,7 @@ public class AlienShotEntity extends Entity{
 	public AlienShotEntity(Game game, int x, int y, int type){
 		super(x, y);
 		this.game = game;
-		this.dy = 250 + type*50;
+		this.dy = 350 + type*50;
 		this.type = type;
 		this.collisionWidth = ImageManager.getImage("projectiles/alienShot" + type).getWidth(null);
 		this.collisionHeight = ImageManager.getImage("projectiles/alienShot" + type).getHeight(null);

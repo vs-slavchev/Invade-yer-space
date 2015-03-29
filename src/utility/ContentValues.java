@@ -5,10 +5,14 @@ import java.awt.Color;
 public class ContentValues {
 	// player related:
 	public static final int MAX_PLAYER_SHIELD_DURATION = 100_000; // 1_000
+	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200};
+	public static final int ACCELERATION = 25;
+	public static final int FRICTION = 12;
 	
 	// enemy related:
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 3;
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
+	public static final int X_SHOOT_RANGE = 300;
 	
 	// effect related:
 	public static final int ROCKET_EXPLOSION_RADIUS = 80;

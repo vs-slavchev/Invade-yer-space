@@ -22,31 +22,31 @@ public class ShotEntity extends Entity{
 		
 		switch (name) {
 		case "projectiles/shot1":
-			dy = -600;
+			dy = ContentValues.BULLETS_VELOCITY[0];
 			this.dx = -60 + Math.random() * 120;
 			break;
 		case "projectiles/shot2":
-			dy = -400;
+			dy = ContentValues.BULLETS_VELOCITY[1];
 			this.dx = dx;
 			break;
 		case "projectiles/shot3":
-			dy = -500;
+			dy = ContentValues.BULLETS_VELOCITY[2];
 			this.dx = dx;
 			break;
 		case "projectiles/shot4":
-			dy = -250;
+			dy = ContentValues.BULLETS_VELOCITY[3];
 			this.dx = dx;
 			break;
 		case "projectiles/shot5":
-			dy = -450;
+			dy = ContentValues.BULLETS_VELOCITY[4];
 			this.dx = dx;
 			break;
 		case "projectiles/shot6":
-			dy = -400;
+			dy = ContentValues.BULLETS_VELOCITY[5];
 			this.dx = dx;
 			break;
 		case "projectiles/shot7":
-			dy = -200;
+			dy = ContentValues.BULLETS_VELOCITY[6];
 			this.dx = dx;
 			break;
 		}
