@@ -2,6 +2,7 @@ package entities.aliens;
 
 import java.awt.Graphics2D;
 
+import utility.ContentValues;
 import utility.image.AnimationManager;
 import utility.image.ImageManager;
 import entities.Entity;
@@ -17,7 +18,7 @@ public class AlienShotEntity extends Entity{
 	public AlienShotEntity(Game game, int x, int y, int type){
 		super(x, y);
 		this.game = game;
-		this.dy = 350 + type*50;
+		this.dy = ContentValues.BASE_BULLET_VELOCITY + type*50;
 		this.type = type;
 		this.collisionWidth = ImageManager.getImage("projectiles/alienShot" + type).getWidth(null);
 		this.collisionHeight = ImageManager.getImage("projectiles/alienShot" + type).getHeight(null);

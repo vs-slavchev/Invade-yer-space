@@ -33,7 +33,7 @@ public class AlienEntity extends Entity{
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
 		this.dx = -150;
-		this.shootTimeInterval = getrandom(250, 1500);
+		this.shootTimeInterval = getrandom(ContentValues.MIN_ATTACK_INTERVAL, ContentValues.MAX_ATTACK_INTERVAL);
 	}
 
 	public void move(long delta){

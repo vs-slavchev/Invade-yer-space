@@ -245,7 +245,7 @@ public class ShipEntity extends Entity{
 	}
 
 	private void drawWeaponUI(Graphics2D g) {
-		int baseX = 20;
+		int baseX = ContentValues.WEAPON_UI_BASE_X;
 		if (x < 180){
 			baseX = game.getWidth() - 150;
 		}
