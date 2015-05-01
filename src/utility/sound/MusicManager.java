@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import org.newdawn.easyogg.OggClip;
 
 import utility.ContentValues;
+import utility.TextBoxManager;
 
 public class MusicManager {
 	
@@ -30,6 +31,7 @@ public class MusicManager {
 			backgroundMusic.loop();
 			backgroundMusic.setGain(gain);
 			backgroundMusic.setBalance(0.0f); // -1.0f
+			TextBoxManager.createTextBox("songPirateManol");
 	}
 	
 	public void modifyGain(float value){

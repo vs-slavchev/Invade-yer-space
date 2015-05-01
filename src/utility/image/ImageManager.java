@@ -48,6 +48,7 @@ public class ImageManager {
 		imageNames.add("effects/reflectionSparks");
 		imageNames.add("effects/shield");
 		imageNames.add("effects/muzzleFlash");
+		imageNames.add("effects/speakerUI");
 		
 		for (int i = 14; i > 0; i--) {
 			imageNames.add("planets/planet" + i);

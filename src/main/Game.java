@@ -2,6 +2,7 @@ package main;
 
 import utility.ContentValues;
 import utility.InputController;
+import utility.TextBoxManager;
 import utility.image.AnimationManager;
 import utility.image.BackgroundImageManager;
 import utility.image.ImageManager;
@@ -116,8 +117,6 @@ public class Game extends Canvas {
 
 		long lastLoopTime = System.currentTimeMillis();
 		float minimumFPS = 100.00f;
-		
-		updateAndDrawSplashScreen();
 
 		while (gameRunning) {
 
@@ -169,38 +168,6 @@ public class Game extends Canvas {
 		soundManager.close();
 	}
 
-	private void updateAndDrawSplashScreen() {
-		int i = 0;
-		while (i < 250){
-			
-			Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
-			g.setColor(Color.black);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
-			g.setColor(Color.red);
-			g.setFont(new Font("Dialog", Font.BOLD, 40));
-			drawStringCentered(g, "a game by", WIDTH/2, HEIGHT/4);
-			g.setFont(new Font("Dialog", Font.BOLD, 70));
-			drawStringCentered(g, "Veselin Slavchev", WIDTH/2, HEIGHT/2);
-			g.setFont(new Font("Dialog", Font.BOLD, 40));
-			drawStringCentered(g, "of", WIDTH/2, HEIGHT*2/3);
-			drawStringCentered(g, "Vandalsoft", WIDTH/2, HEIGHT*3/4);
-			g.setColor(Color.black);
-			g.fillRect(WIDTH/3 + i*3, HEIGHT/2 - 100, 50, 150);
-			
-			try {
-				Thread.sleep(1000 / FPS);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			// after drawing clean up and flip the buffer
-			g.dispose();
-			strategy.show();
-			
-			i++;
-		}
-	}
-
 	private void controlPause() {
 		if (inputController.isPausePressed()){
 			paused = !paused;
@@ -241,6 +208,9 @@ public class Game extends Canvas {
 		entityManager.drawEntities(g);
 		
 		AnimationManager.getAnimationManager().drawAnimations(g);
+		drawSpeakerIcon(g);
+		
+		TextBoxManager.drawTextBoxes(g);
 		
 		if (paused){
 			g.drawImage(ImageManager.getImage("text/pausedText"),
@@ -258,6 +228,14 @@ public class Game extends Canvas {
 		// after drawing clean up and flip the buffer
 		g.dispose();
 		strategy.show();
+	}
+
+	private void drawSpeakerIcon(Graphics2D g) {
+		if (inputController.isMusicDownPressed()){
+			g.drawImage(ImageManager.getImage("effects/speakerUI"), WIDTH-90, 30, WIDTH-90+64, 30+64, 64, 0, 128, 64, null);
+		}else if (inputController.isMusicUpPressed()){
+			g.drawImage(ImageManager.getImage("effects/speakerUI"), WIDTH-90, 30, WIDTH-90+64, 30+64, 0, 0, 64, 64, null);
+		}
 	}
 
 	public void notifyDeath() {
@@ -420,42 +398,21 @@ public class Game extends Canvas {
 	
 	/* TODO:
 	 * 
-	 * [-] level ending animation
-	 * [-] speaker icons x3 to show music volume
-	 * [-] < and > decrease sfx volume too
-	 * [-] < > decr/incr a lot at one keypress, not requiring holding the button
-	 * [-] song playing
+	 * [-] level ending delay
+	 * [+] speaker icons x3 to show music volume
+	 * [+] song playing ( a text box; managed my a textBoxManager)
 	 * 		= song: Midnight sun
 	 * 		= artist: Marto
-	 * [-] splash screen Veselin Slavchev of Vandalsoft
-	 * [-] look up XML saving of variables
 	 * [-] low prio: fix showing healthbars while not playing
-	 * [-] random starting 4 weapons to add randomization in the initial conditions
-	 * 		= 1st weap is always machine gun, but there are different variations of it
-	 * 		= 2nd is always funky waves, but ...
-	 * [-] more variations on basic weapons
 	 * [-] place projectiles icon underneath the heat bars; write 1,2,3,4 on the lower part of each bar, small, not bold font
-	 * [-] pirate themed weapon/powerups
+	 * [-] pirate themed weapon/powerups names
 	 * [-] cooltext combo digits
-	 * [-] all levels are procedurally generated; there is a small chance that you encounter a predesigned boss level
-	 * [-] boss levels are swarms of bigger stronger enemies with different attacks
-	 * 		= R to show hp bars must work => alien types will be not in range [1,8] but [15,30]
 	 * [-] scoring mechanic: max combo achieved this level
-	 * [-] dying restarts the level
-	 * [-] random combo bonuses are awarded; more bonuses
-	 * [-] blocking wall object (x,y,durability): soaks up hits
-	 * 		= immovable, gets thinner by getting hit by enemy bullets
-	 * 		= one-shot by enemy ships, does not collide with player
-	 * [-] basic main menu; states: menu, credits, playing, choosing bonus
-	 * [-] tutoral style: "press 1, 2, 3 or 4 to switch to that weapon"
-	 * [-] after completing a level:
-		 * 	= allow the player to choose 1 of 3 random upgrades to add to his/her ship (+fancy img demonstrating)
-		 *  = offered upgrades cannot be duplicate
-		 * 	= a certain weapon deals increased dmg
-		 * 	= a certain weapon cools down faster
-		 * 	= a certain weapon is upgraded (shoots more bullets at once)
-		 * 	= comboBonus weapons are also upgradeable
-		 * 	= buff duration too
+	 * [-] basic main menu; states: menu, credits, playing
+	 * [-] menu items: play, tutorials on/off, credits, exit
+	 * [-] tutoral style: "press 1, 2, 3 or 4 to switch to that weapon" a textBox
+	 *		= upgrades
+	 *		= keys: R, T, <, >
 	 * [-] refactoring:
 		 * 	= fix switch cases to look like StatusEffect constructor default
 	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests

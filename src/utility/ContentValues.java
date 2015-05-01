@@ -25,9 +25,10 @@ public class ContentValues {
 	public static final float MUSIC_PER_TICK_MODIFIER = 0.002f;
 	
 	// used colors
-	public static final Color COLOR_STUFF = new Color(0, 0, 0);
+	public static final Color COLOR_TEXT_BOX_FILL = new Color(80, 80, 255);
 	
-	
+	// user interface
+	public static final int STUFF = 0;
 	
 	
 	// utility method for values
