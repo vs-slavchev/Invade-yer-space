@@ -25,7 +25,6 @@ public class ShipEntity extends Entity{
 	private ComboManager comboManager;
 	private CopyOnWriteArrayList<StatusEffect> buffs = new CopyOnWriteArrayList<>();
 	private PlayerWeapon[] weapons = new PlayerWeapon[7];
-	private final int numberOfNormalWeapons = 4;
 	private int currentWeapon = 0;
 	private boolean invulnerable = false;
 	private boolean laserOn = false;
@@ -246,22 +245,29 @@ public class ShipEntity extends Entity{
 
 	private void drawWeaponUI(Graphics2D g) {
 		int baseX = ContentValues.WEAPON_UI_BASE_X;
+		int baseY = game.getHeight() - 130;
+		
+		// if the player ship is to the far left, draw the UI on the right
 		if (x < 180){
 			baseX = game.getWidth() - 150;
 		}
-		for (int i = 0; i < numberOfNormalWeapons; i++){
+		
+		for (int i = 0; i < ContentValues.NUM_NORMAL_WEAPONS; i++){
 			
 			int greenComponent = (int)(100 - weapons[i].getOverheatPercent())*255/100;
 			g.setColor(new Color(255, greenComponent, 0));
-			g.fillRect(baseX + i*35, (int)(game.getHeight() - 120 + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());
+			g.fillRect(baseX + i*35, (int)(baseY + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());
 			
 			// draw an exclamation mark over heat bar
 			if (weapons[i].getOverheatPercent() > 70) {
 				g.fillRect(baseX + i * 35 + 12,
-						game.getHeight() - 120 - 40, 6, 20);
+						baseY - 40, 6, 20);
 				g.fillRect(baseX + i * 35 + 12,
-						game.getHeight() - 120 - 15, 6, 5);
+						baseY - 15, 6, 5);
 			}
+			String iconName = "projectiles/shot" + (int)(i+1);
+			int iconX = baseX + i*35 + 15 - ImageManager.getImage(iconName).getWidth(null)/2;
+			g.drawImage(ImageManager.getImage(iconName), iconX, (int)(game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3), null);
 		}
 	}
 	

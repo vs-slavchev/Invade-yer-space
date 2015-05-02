@@ -6,7 +6,7 @@ package utility;
  * Boxes start under the screen and go up until they reach their targetY.
  * The x is never changed. Each new line of text is in a separate String
  * of the text array. A whole String is given to the constructor, but
- * it is split up (by commas) in separate lines.
+ * it is split up (by semicolon) in separate lines.
  */
 
 import java.awt.Color;
@@ -21,7 +21,7 @@ public class TextBox {
 	private int x, y, targetY, width, height, duration;
 	
 	public TextBox(String textString, int x, int targetY, int width, int duration){
-		this.text = textString.split(",");
+		this.text = textString.split(";");
 		this.x = x;
 		this.targetY = targetY;
 		this.width = width;

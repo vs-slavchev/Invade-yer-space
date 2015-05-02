@@ -42,6 +42,7 @@ public class ImageManager {
 		imageNames.add("text/deathText");
 		imageNames.add("text/titleText");
 		imageNames.add("text/comboText");
+		imageNames.add("text/comboDigits");
 		imageNames.add("text/pausedText");
 		imageNames.add("projectiles/laser");
 		imageNames.add("effects/sparks");

@@ -3,6 +3,7 @@ package main;
 import utility.ContentValues;
 import utility.InputController;
 import utility.TextBoxManager;
+import utility.TutorialManager;
 import utility.image.AnimationManager;
 import utility.image.BackgroundImageManager;
 import utility.image.ImageManager;
@@ -101,6 +102,7 @@ public class Game extends Canvas {
 		
 		entityManager.initEntities();
 		soundManager.initSoundManager();
+		TutorialManager.initTutorialList();
 
 		// start playing background music
 		musicManager.loopBackgroundMusic();
@@ -134,6 +136,7 @@ public class Game extends Canvas {
 				if (!waitingForKeyPress) {
 					entityManager.moveEntities(delta);
 					BackgroundImageManager.update();
+					TutorialManager.updateTutorials();
 				}
 
 				// collision detection: ship,shots are checked against the
@@ -399,20 +402,13 @@ public class Game extends Canvas {
 	/* TODO:
 	 * 
 	 * [-] level ending delay
-	 * [+] speaker icons x3 to show music volume
-	 * [+] song playing ( a text box; managed my a textBoxManager)
-	 * 		= song: Midnight sun
-	 * 		= artist: Marto
 	 * [-] low prio: fix showing healthbars while not playing
-	 * [-] place projectiles icon underneath the heat bars; write 1,2,3,4 on the lower part of each bar, small, not bold font
 	 * [-] pirate themed weapon/powerups names
 	 * [-] cooltext combo digits
 	 * [-] scoring mechanic: max combo achieved this level
 	 * [-] basic main menu; states: menu, credits, playing
 	 * [-] menu items: play, tutorials on/off, credits, exit
-	 * [-] tutoral style: "press 1, 2, 3 or 4 to switch to that weapon" a textBox
-	 *		= upgrades
-	 *		= keys: R, T, <, >
+	 * [+] tutoral style: "press 1, 2, 3 or 4 to switch to that weapon" a textBox
 	 * [-] refactoring:
 		 * 	= fix switch cases to look like StatusEffect constructor default
 	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests

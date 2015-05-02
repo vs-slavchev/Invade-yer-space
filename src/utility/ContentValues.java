@@ -9,9 +9,10 @@ public class ContentValues {
 	public static final int ACCELERATION = 25;
 	public static final int FRICTION = 12;
 	public static final int WEAPON_UI_BASE_X = 20;
+	public static final int NUM_NORMAL_WEAPONS = 4;
 	
 	// enemy related:
-	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 3;
+	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2; // 3
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 300;
 	public static final int MIN_ATTACK_INTERVAL = 250;

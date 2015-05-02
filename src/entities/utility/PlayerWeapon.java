@@ -22,7 +22,7 @@ public class PlayerWeapon {
 		switch(bulletName){
 		case "projectiles/shot1":
 			firingInterval = 100;
-			heatAmplifier = 1.8;
+			heatAmplifier = 1.75;
 			break;
 		case "projectiles/shot2":
 			firingInterval = 250;

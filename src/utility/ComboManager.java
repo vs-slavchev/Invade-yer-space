@@ -12,7 +12,7 @@ public class ComboManager {
 	
 	private Game game;
 	private long recentKillTime = 0;
-	private int recentKillCount = 0;
+	private int recentKillCount = 6;
 	private int recentKillTimeWindow = 5_000;
 	
 	private boolean shieldBonusReady = true;
@@ -68,7 +68,7 @@ public class ComboManager {
 	public void drawComboUI(Graphics2D g) {
 		if (recentKillCount > 5) {
 			int yBase = game.getHeight() - 430;
-			int xBase = (game.getEntityManager().getShip().getX() < game.getWidth() - 280) ? game.getWidth() - 180 : 25;
+			int xBase = (game.getEntityManager().getShip().getX() < game.getWidth() - 280) ? game.getWidth() - 200 : 25;
 			g.drawImage(ImageManager.getImage("text/comboText"), xBase - 25, yBase + 150, null);
 			
 			int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) / (double) recentKillTimeWindow) * 360);
@@ -78,14 +78,30 @@ public class ComboManager {
 			g.fillArc(xBase, yBase, 150, 150, 90, -arcLength);
 			g.setColor(Color.BLACK);
 			g.drawArc(xBase + 5, yBase + 5, 140, 140, 90, -arcLength);
+			
+			
+			
+			int digitWidth = ImageManager.getImage("text/comboDigits").getWidth(null) / 10;
+			int digitHeight = ImageManager.getImage("text/comboDigits").getHeight(null);
+			String scoreText = Integer.toString(recentKillCount);
+			int numbersX = xBase + 40 - (scoreText.length() - 1) * (digitWidth/2);
+			int numbersY = yBase + 23;
+			for (int i = 0; i < scoreText.length(); i++) {
+				int currentDigit = Integer.parseInt(Character
+						.toString(scoreText.charAt(i)));
+				g.drawImage(ImageManager.getImage("text/comboDigits"), numbersX + i
+						* digitWidth, numbersY, numbersX
+						+ i * digitWidth + digitWidth, numbersY + digitHeight, currentDigit * digitWidth, 0,
+						(currentDigit + 1) * digitWidth, digitHeight, null);
+			}
 
-			int secondGreenComponent = 255 - (int)((recentKillCount / 50.00) * 255);
+			/*int secondGreenComponent = 255 - (int)((recentKillCount / 50.00) * 255);
 			secondGreenComponent = ContentValues.controlMinMax(secondGreenComponent, 0, 255);
 			g.setColor(new Color(255, secondGreenComponent, 0));
 			g.setFont(new Font("Dialog", Font.BOLD, 60+recentKillCount*3/2));
 			g.drawString(String.valueOf(recentKillCount),
 					xBase + 75
-					- g.getFontMetrics().stringWidth(String.valueOf(recentKillCount)) / 2, (int)(yBase + 95 + recentKillCount/3.00));
+					- g.getFontMetrics().stringWidth(String.valueOf(recentKillCount)) / 2, (int)(yBase + 95 + recentKillCount/3.00));*/
 		}
 	}
 }
