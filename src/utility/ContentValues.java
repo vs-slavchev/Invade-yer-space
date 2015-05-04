@@ -1,10 +1,11 @@
 package utility;
 
 import java.awt.Color;
+import java.awt.Font;
 
 public class ContentValues {
 	// player related:
-	public static final int MAX_PLAYER_SHIELD_DURATION = 100_000; // 1_000
+	public static final int MAX_PLAYER_SHIELD_DURATION = 1_000;
 	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200};
 	public static final int ACCELERATION = 25;
 	public static final int FRICTION = 12;
@@ -12,7 +13,7 @@ public class ContentValues {
 	public static final int NUM_NORMAL_WEAPONS = 4;
 	
 	// enemy related:
-	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2; // 3
+	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2;
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 300;
 	public static final int MIN_ATTACK_INTERVAL = 250;
@@ -23,19 +24,21 @@ public class ContentValues {
 	public static final int ROCKET_EXPLOSION_RADIUS = 80;
 	
 	// sound and music
-	public static final float MUSIC_PER_TICK_MODIFIER = 0.002f;
+	public static final float MUSIC_PER_TICK_MODIFIER = 0.007f;
 	
 	// used colors
-	public static final Color COLOR_TEXT_BOX_FILL = new Color(80, 80, 255);
+	public static final Color COLOR_TEXT_BOX_FILL_TUTORIAL = new Color(80, 80, 255);
+	public static final Color COLOR_TEXT_BOX_FILL_SONG = new Color(66, 105, 140);
 	
 	// user interface
-	public static final int STUFF = 0;
+	public static final Font INFO_HEADING_FONT = new Font("Dialog", Font.ITALIC, 50);
+	public static final Font INFO_TEXT_FONT = new Font("Dialog", Font.BOLD, 40);
 	
 	
 	// utility method for values
 	public static int controlMinMax(final int i, final int min, final int max){
 		if (min >= max){
-			System.out.println(" min more than max: " + min + ">=" + max);
+			// min is more than max!
 			return i;
 		}
 		int result = i;

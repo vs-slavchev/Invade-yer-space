@@ -1,19 +1,15 @@
 package utility.sound;
 
 import java.io.IOException;
-import java.util.Random;
-
 import javax.swing.JOptionPane;
-
 import org.newdawn.easyogg.OggClip;
 
-import utility.ContentValues;
 import utility.TextBoxManager;
 
 public class MusicManager {
 	
 	private OggClip backgroundMusic;
-	private float gain = 0.60f; // 0.87
+	private float gain = 0.80f; // 0.87
 	
 	public MusicManager(){
 		try{
@@ -30,7 +26,7 @@ public class MusicManager {
 	public void loopBackgroundMusic(){
 			backgroundMusic.loop();
 			backgroundMusic.setGain(gain);
-			backgroundMusic.setBalance(0.0f); // -1.0f
+			backgroundMusic.setBalance(0.0f);
 			TextBoxManager.createTextBox("songPirateManol");
 	}
 	

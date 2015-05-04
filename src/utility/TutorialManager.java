@@ -8,7 +8,7 @@ public class TutorialManager {
 	private static Stack<String> tutorialNames = new Stack<>();
 	private static int timer = 0;
 	private static int numTutorials = 6;
-	private static int timeStep = 500;
+	private static int timeStep = 400;
 	
 	public static void initTutorialList(){
 		tutorialNames.push("tutorialCombos");

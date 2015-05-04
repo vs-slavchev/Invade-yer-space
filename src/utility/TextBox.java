@@ -26,7 +26,7 @@ public class TextBox {
 		this.targetY = targetY;
 		this.width = width;
 		this.height = text.length*30 + 20;
-		y = Game.getGameHeight();
+		y = (targetY > Game.getGameHeight()/2) ? Game.getGameHeight() : 0;
 		this.duration = duration;
 	}
 	
@@ -38,8 +38,16 @@ public class TextBox {
 		duration--;
 		if (y > targetY){
 			y -= (y - targetY)/20;
+		} else if (y < targetY){
+			y += (targetY - y)/20;
 		}
-		g.setColor(ContentValues.COLOR_TEXT_BOX_FILL);
+		
+		if (text[0].charAt(0) == 'S'){
+			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_SONG);
+		} else {
+			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
+		}
+		
 		g.fillRect(x, y, width, height);
 		g.setColor(Color.blue);
 		g.drawRect(x+2, y+2, width-4, height-4);

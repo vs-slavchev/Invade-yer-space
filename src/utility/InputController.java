@@ -14,7 +14,6 @@ public class InputController {
 	private boolean autoFirePressed = false;
 	private boolean musicDownPressed = false;
 	private boolean musicUpPressed = false;
-	private boolean pausePressed = false;
 	
 	public void reset(){
 		leftPressed = false;
@@ -29,15 +28,6 @@ public class InputController {
 		autoFirePressed = false;
 		musicDownPressed = false;
 		musicUpPressed = false;
-		pausePressed = false;
-	}
-
-	public boolean isPausePressed() {
-		return pausePressed;
-	}
-
-	public void setPausePressed(boolean pausePressed) {
-		this.pausePressed = pausePressed;
 	}
 
 	public boolean isMusicDownPressed() {

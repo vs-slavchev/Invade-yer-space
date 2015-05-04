@@ -25,11 +25,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import main.StateManager.States;
 import entities.ShipEntity;
 import entities.utility.EntityManager;
 
@@ -47,12 +47,10 @@ public class Game extends Canvas {
 	private int FPS = 60;
 	private volatile long delta = 1000 / this.FPS;
 	volatile boolean gameRunning = true;
-	private volatile boolean paused = false;
 	private boolean logicRequiredThisLoop = false;
-	boolean waitingForKeyPress = true;
+	static boolean waitingForKeyPress = false;
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
-	private SoundManager soundManager = SoundManager.getSoundManager();
 	InputController inputController;
 	private static boolean alienHPBarDrawn = false;
 	private String message = "startText";
@@ -101,7 +99,7 @@ public class Game extends Canvas {
 		ImageManager.initImages();
 		
 		entityManager.initEntities();
-		soundManager.initSoundManager();
+		SoundManager.initSoundManager();
 		TutorialManager.initTutorialList();
 
 		// start playing background music
@@ -129,23 +127,21 @@ public class Game extends Canvas {
 			if (minimumFPS > 1000.00f / delta) {
 				minimumFPS = 1000.00f / delta;
 			}
-			
-			
-			if (!paused) {
+				
+			if (StateManager.getState() == States.PLAY){
 				// cycle trough entities and move them
 				if (!waitingForKeyPress) {
 					entityManager.moveEntities(delta);
 					BackgroundImageManager.update();
 					TutorialManager.updateTutorials();
 				}
-
+	
 				// collision detection: ship,shots are checked against the
-				// aliens,
-				// alienShots
+				// aliens, alienShots
 				if (!waitingForKeyPress) {
 					entityManager.collideEntities();
 				}
-
+	
 				AnimationManager.getAnimationManager().updateAnimations();
 				// remove destroyed entities that are to be removed and clean up
 				entityManager.removeEntities();
@@ -159,22 +155,29 @@ public class Game extends Canvas {
 				// give the input to the ship to be processed
 				((ShipEntity) entityManager.getShip())
 						.processInput(inputController);
-
+				
+			} else if (StateManager.getState() == States.MENU){
+				updateMainMenu();
 			}
 			
-			controlPause();
 			controlMusicGain();
 			drawGame();
 
 			sleepAndFPSControl(lastLoopTime);
 		} // close while
-		soundManager.close();
+		SoundManager.close();
 	}
-
-	private void controlPause() {
-		if (inputController.isPausePressed()){
-			paused = !paused;
-			inputController.setPausePressed(false);
+	
+	private void updateMainMenu(){
+		if (inputController.isUpPressed()){
+			MainMenu.goUp();
+			inputController.setUpPressed(false);
+		} else if (inputController.isDownPressed()){
+			MainMenu.goDown();
+			inputController.setDownPressed(false);
+		} else if (inputController.isFirePressed()){
+			MainMenu.select();
+			inputController.setDownPressed(false);
 		}
 	}
 
@@ -205,39 +208,54 @@ public class Game extends Canvas {
 		Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
 		g.setColor(Color.black);
 		g.fillRect(0, 0, WIDTH, HEIGHT);
-		BackgroundImageManager.drawBackgroundObjects(g);
+		
+		if (StateManager.getState() == States.PLAY){
+			BackgroundImageManager.drawBackgroundObjects(g);
+			// draw cycle
+			entityManager.drawEntities(g);
+			AnimationManager.getAnimationManager().drawAnimations(g);
+			
+			// if game is waiting for "any key press" show message
+			if (waitingForKeyPress) {
+				g.drawImage(ImageManager.getImage("text/" + message),
+						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
+						(HEIGHT/2 - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
+				
+				// draw the combo score if needed
+				if (((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved() > 0){
+					g.drawImage(ImageManager.getImage("text/maxComboText"),
+							WIDTH/2 - ImageManager.getImage("text/maxComboText").getWidth(null)/2,
+							HEIGHT/2, null);
+					((ShipEntity) entityManager.getShip()).getComboManager().drawComboDigits(g,
+							((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved(),
+							WIDTH/2 - 30, HEIGHT*2/3 - 50);
+				}
+			}
+		} else if (StateManager.getState() == States.MENU){
+			MainMenu.drawMenu(g);
+		}
+			
 
-		// draw cycle
-		entityManager.drawEntities(g);
-		
-		AnimationManager.getAnimationManager().drawAnimations(g);
 		drawSpeakerIcon(g);
-		
 		TextBoxManager.drawTextBoxes(g);
 		
-		if (paused){
-			g.drawImage(ImageManager.getImage("text/pausedText"),
-					WIDTH/2 - ImageManager.getImage("text/pausedText").getWidth(null)/2,
-					HEIGHT/2 - ImageManager.getImage("text/pausedText").getHeight(null)/2, null);
-		}
-
-		// if game is waiting for "any key press" show message
-		if (waitingForKeyPress) {
-			g.drawImage(ImageManager.getImage("text/" + message),
-					(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
-					(HEIGHT - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
-		}
-
 		// after drawing clean up and flip the buffer
 		g.dispose();
 		strategy.show();
 	}
 
 	private void drawSpeakerIcon(Graphics2D g) {
+		int sX = 0;
+		boolean willDraw = false;
 		if (inputController.isMusicDownPressed()){
-			g.drawImage(ImageManager.getImage("effects/speakerUI"), WIDTH-90, 30, WIDTH-90+64, 30+64, 64, 0, 128, 64, null);
+			sX = 1;
+			willDraw = true;
 		}else if (inputController.isMusicUpPressed()){
-			g.drawImage(ImageManager.getImage("effects/speakerUI"), WIDTH-90, 30, WIDTH-90+64, 30+64, 0, 0, 64, 64, null);
+			willDraw = true;
+		}
+		if (willDraw) {
+			g.drawImage(ImageManager.getImage("effects/speakerUI"),
+					WIDTH - 90, 30, WIDTH - 90 + 64, 30 + 64, 64 * sX, 0, 64 * (sX + 1), 64, null);
 		}
 	}
 
@@ -295,8 +313,12 @@ public class Game extends Canvas {
 		return musicManager;
 	}
 	
-	public void drawStringCentered(Graphics2D g, String text, int x, int y){
+	public static void drawStringCentered(Graphics2D g, String text, int x, int y){
 		g.drawString(text, x - g.getFontMetrics().stringWidth(String.valueOf(text))/2, y);
+	}
+	
+	public static void setWaitingForKeyPress(boolean val){
+		waitingForKeyPress = val;
 	}
 
 	private class KeyInputHandler extends KeyAdapter {
@@ -318,7 +340,7 @@ public class Game extends Canvas {
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				inputController.setDownPressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
 				inputController.setFirePressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
@@ -327,14 +349,11 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_T) {
 				inputController.setAutoFirePressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+			if (e.getKeyCode() == KeyEvent.VK_COMMA || e.getKeyCode() == KeyEvent.VK_MINUS) {
 				inputController.setMusicDownPressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD || e.getKeyCode() == KeyEvent.VK_EQUALS) {
 				inputController.setMusicUpPressed(true);
-			}
-			if (e.getKeyCode() == KeyEvent.VK_P) {
-				inputController.setPausePressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
 				inputController.setOnePressed(true);
@@ -358,16 +377,16 @@ public class Game extends Canvas {
 			} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 				inputController.setDownPressed(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+			if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER) {
 				inputController.setFirePressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				Game.setAlienHPBarDrawn(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+			if (e.getKeyCode() == KeyEvent.VK_COMMA || e.getKeyCode() == KeyEvent.VK_MINUS) {
 				inputController.setMusicDownPressed(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD || e.getKeyCode() == KeyEvent.VK_EQUALS) {
 				inputController.setMusicUpPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
@@ -382,7 +401,7 @@ public class Game extends Canvas {
 		}
 
 		public void keyTyped(KeyEvent e) {
-			if (waitingForKeyPress && e.getKeyChar() == 32) {
+			if (waitingForKeyPress && (e.getKeyChar() == 32 || e.getKeyChar() == 10)) { // space and enter
 				inputController.setFirePressed(false); // added to cancel instant shooting
 				if (pressCount == 1) {
 					waitingForKeyPress = false;
@@ -400,17 +419,13 @@ public class Game extends Canvas {
 }
 	
 	/* TODO:
-	 * 
-	 * [-] level ending delay
 	 * [-] low prio: fix showing healthbars while not playing
-	 * [-] pirate themed weapon/powerups names
-	 * [-] cooltext combo digits
-	 * [-] scoring mechanic: max combo achieved this level
-	 * [-] basic main menu; states: menu, credits, playing
-	 * [-] menu items: play, tutorials on/off, credits, exit
-	 * [+] tutoral style: "press 1, 2, 3 or 4 to switch to that weapon" a textBox
-	 * [-] refactoring:
+	 * [+] scoring mechanic: max combo achieved this level
+	 * [-] basic main menu; states: menu, info, playing; info = controls + credits
+	 * [-] menu items: play, controls, credits, exit
+	 * [+] refactoring:
 		 * 	= fix switch cases to look like StatusEffect constructor default
+	 * [-] pirate themed weapon/powerups names
 	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
 		 * 	= yarr!; on powerup pickup
 		 * 	= random pirate swears on events
@@ -421,5 +436,11 @@ public class Game extends Canvas {
 		 *  = more explosions sfx
 		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
 		 *  = shield buff goes up/down (powerups sound)
+	 * [-] value tweaks:
+	 	 * = laser duration
+	 	 * = rand alien explosion chance
+	 	 * = aliens' hp
+	 	 * = tutorial Y coords
+	 	 * = tutorial timestep
  	 */
 

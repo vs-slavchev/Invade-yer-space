@@ -265,9 +265,9 @@ public class ShipEntity extends Entity{
 				g.fillRect(baseX + i * 35 + 12,
 						baseY - 15, 6, 5);
 			}
-			String iconName = "projectiles/shot" + (int)(i+1);
+			String iconName = "projectiles/shot" + (i+1);
 			int iconX = baseX + i*35 + 15 - ImageManager.getImage(iconName).getWidth(null)/2;
-			g.drawImage(ImageManager.getImage(iconName), iconX, (int)(game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3), null);
+			g.drawImage(ImageManager.getImage(iconName), iconX, game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3, null);
 		}
 	}
 	

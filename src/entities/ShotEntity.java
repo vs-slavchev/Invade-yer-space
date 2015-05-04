@@ -2,6 +2,8 @@ package entities;
 
 import java.awt.Graphics2D;
 
+import javax.swing.JOptionPane;
+
 import utility.ContentValues;
 import utility.image.AnimationManager;
 import utility.image.ImageManager;
@@ -48,6 +50,13 @@ public class ShotEntity extends Entity{
 		case "projectiles/shot7":
 			dy = ContentValues.BULLETS_VELOCITY[6];
 			this.dx = dx;
+			break;
+		default:
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + name + "\nnot supported by ShotEntity.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 			break;
 		}
 	}

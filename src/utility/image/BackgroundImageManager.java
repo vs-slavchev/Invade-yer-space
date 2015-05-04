@@ -63,7 +63,5 @@ public class BackgroundImageManager {
 			backgroundStars.add(new Particle(x, y, 0, new Color(128,128,128), 0));
 		}
 	}
-	
-	
 
 }

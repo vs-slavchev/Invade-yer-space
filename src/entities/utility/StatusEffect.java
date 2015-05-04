@@ -1,5 +1,7 @@
 package entities.utility;
 
+import javax.swing.JOptionPane;
+
 import utility.ContentValues;
 
 public class StatusEffect {
@@ -24,10 +26,16 @@ public class StatusEffect {
 		case "quadRockets":
 			duration = 10;
 			break;
-		default: // shield
+		case "shield":
 			duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
 			break;
-			
+		default:
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + name + "\nnot supported by StatusEffect.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
+			 break;
 		}
 	}
 	

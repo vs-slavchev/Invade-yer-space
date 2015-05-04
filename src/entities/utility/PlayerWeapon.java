@@ -1,5 +1,7 @@
 package entities.utility;
 
+import javax.swing.JOptionPane;
+
 import entities.ShipEntity;
 import entities.ShotEntity;
 import utility.image.ImageManager;
@@ -49,9 +51,11 @@ public class PlayerWeapon {
 			heatAmplifier = 0;
 			break;
 		default:
-			this.bulletName = "projectiles/shot1";
-			firingInterval = 100;
-			heatAmplifier = 1.8;
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + bulletName + "\nnot supported by PlayerWeapon.",
+				    "Error",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 			break;
 		}
 	}

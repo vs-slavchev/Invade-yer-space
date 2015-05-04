@@ -24,8 +24,8 @@ public class EntityManager {
 	private Entity ship;
 	private int alienCount = 0;
 	private final int maxAlienShipType = 8;
-	private final int maxRows = 8; // 8x20
-	private final int maxColumns = 20; //must be an even number
+	private final int maxRows = 8;
+	private final int maxColumns = 20; // MUST be an even number
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
 	private double levelDifficulty = 1.0;
@@ -33,9 +33,6 @@ public class EntityManager {
 	
 	public EntityManager(Game game){
 		this.game = game;
-		if (!(maxColumns % 2 == 0)){
-			System.out.println("maxColumns is not even!");
-		}
 		generateNewEntitiesMap();
 		if (entitiesLevelMap.length() != this.maxColumns*this.maxRows){
 			System.out.println("entitiesMap is not the exact size!");
@@ -269,12 +266,4 @@ public class EntityManager {
 	
 
 }
-
-
-
-
-
-
-
-
 

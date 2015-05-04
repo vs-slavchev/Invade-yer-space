@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.swing.JOptionPane;
+
 public class AnimationManager {
 	
 	private static AnimationManager animationManager;
@@ -32,9 +34,15 @@ public class AnimationManager {
 				break;
 			case "effects/explosion":
 				type += Integer.toString((int)Math.round(1 + Math.random()*3));
-				double randomScale = scale + Math.random();
 				anim = new Animation(x, y, 0.15, 7, type, false, true, scale);
 				break;
+				default:
+					JOptionPane.showMessageDialog(null,
+							"Error: \n" + type + "\nanimation not supported by AnimationManager.",
+						    "Error",
+						    JOptionPane.ERROR_MESSAGE);
+					 System.exit(0);
+					 break;
 		}
 		synchronized (animations) {
 			if (anim != null) {
@@ -52,12 +60,6 @@ public class AnimationManager {
 				animations.remove(anim);
 			}
 		}
-		/*for (Animation anim : animations ){
-			anim.update();
-			if (!anim.getActive()) {
-				animations.remove(anim);
-			}
-		}*/
 	}
 
 	public synchronized void drawAnimations(Graphics2D g) {

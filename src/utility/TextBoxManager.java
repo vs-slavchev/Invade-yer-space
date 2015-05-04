@@ -21,16 +21,16 @@ public class TextBoxManager {
 			textBoxes.add(new TextBox("Hold down the arrow keys;to move and space to shoot.", Game.getGameWidth()*2/3, Game.getGameHeight()-250, 285, 300));
 			break;
 		case "tutorialWeapons":
-			textBoxes.add(new TextBox("Using a weapon will cause;it to overheat! Press 1, 2, 3 or 4;to change your weapon.", Game.getGameWidth()/4, 300, 320, 400));
+			textBoxes.add(new TextBox("Using a weapon will cause it;to overheat! Press 1, 2, 3 or 4;to change your weapon.", Game.getGameWidth()/5, 300, 300, 400));
 			break;
 		case "tutorialAutofire":
 			textBoxes.add(new TextBox("Press T to toggle autofire.", Game.getGameWidth()*3/4, 200, 270, 300));
 			break;
 		case "tutorialMusicVolume":
-			textBoxes.add(new TextBox("Hold < or > to decrease;or increase the music volume.", Game.getGameWidth()/2, 50, 310, 400));
+			textBoxes.add(new TextBox("Hold < or > to decrease or;increase the music volume.", Game.getGameWidth()/2, 70, 280, 400));
 			break;
 		case "tutorialHealthbars":
-			textBoxes.add(new TextBox("Hold R pressed to show;aliens' healthbars.", 100, 50, 280, 350));
+			textBoxes.add(new TextBox("Hold R pressed to show;aliens' healthbars.", 100, 150, 260, 350));
 			break;
 		case "tutorialCombos":
 			textBoxes.add(new TextBox("High combos grant special;bonus effects!", Game.getGameWidth()*3/4, Game.getGameHeight()/2, 280, 300));

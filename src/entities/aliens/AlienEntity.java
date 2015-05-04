@@ -1,7 +1,6 @@
 package entities.aliens;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Random;
 
@@ -101,7 +100,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void takeDamage(){
-		SoundManager.getSoundManager().play("explosion");
+		SoundManager.play("explosion");
 		int sparksX = (int) (x + 10 + Math.random()*animation.getDimensionX()/2);
 		int sparksY = (int) (y + 10 + Math.random()*animation.getDimensionY()/2);
 		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", sparksX, sparksY, 1);

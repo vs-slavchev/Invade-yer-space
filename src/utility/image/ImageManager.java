@@ -37,13 +37,17 @@ public class ImageManager {
 		ArrayList<String> imageNames = new ArrayList<>();
 		
 		imageNames.add("mainShip");
+		imageNames.add("captainManol");
 		imageNames.add("text/winText");
 		imageNames.add("text/startText");
 		imageNames.add("text/deathText");
 		imageNames.add("text/titleText");
+		imageNames.add("text/selector");
+		imageNames.add("text/play");
+		imageNames.add("text/quit");
 		imageNames.add("text/comboText");
+		imageNames.add("text/maxComboText");
 		imageNames.add("text/comboDigits");
-		imageNames.add("text/pausedText");
 		imageNames.add("projectiles/laser");
 		imageNames.add("effects/sparks");
 		imageNames.add("effects/reflectionSparks");
@@ -73,11 +77,6 @@ public class ImageManager {
 		loadImages(imageNames);
 	}
 	
-	public static void loadImages(String[] fNames){
-		for (String s : fNames)
-			loadImage(s);
-	}
-
 	public static void loadImages(Iterable<String> fNames){
 		for (String s : fNames)
 			loadImage(s);
