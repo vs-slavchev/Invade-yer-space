@@ -16,8 +16,8 @@ public class ContentValues {
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2;
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 300;
-	public static final int MIN_ATTACK_INTERVAL = 250;
-	public static final int MAX_ATTACK_INTERVAL = 1500;
+	public static final int MIN_ATTACK_INTERVAL = 800; // 250-1500
+	public static final int MAX_ATTACK_INTERVAL = 1800;
 	public static final int BASE_BULLET_VELOCITY = 350;
 	
 	// effect related:
@@ -33,6 +33,17 @@ public class ContentValues {
 	// user interface
 	public static final Font INFO_HEADING_FONT = new Font("Dialog", Font.ITALIC, 50);
 	public static final Font INFO_TEXT_FONT = new Font("Dialog", Font.BOLD, 40);
+	
+	//visual effects
+	public static final int MAX_BACKGROUND_PLANETS = 7;
+	public static final int MAX_BACKGROUND_GEMS = 50;
+	public static final int NUM_BACKGROUND_STARS = 400;
+	public static final double PLANET_SPAWN_CHANCE = 0.0005;
+	public static final double GEM_SPAWN_CHANCE = 0.5;
+	public static final int NUMBER_DIFFERENT_PLANETS = 14;
+	public static final int NUMBER_DIFFERENT_GEMS = 8;
+	public static final int PLANET_Y_VEL = 1;
+	public static final int GEM_Y_VEL = 4;
 	
 	
 	// utility method for values

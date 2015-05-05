@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import utility.ContentValues;
+import utility.image.BackgroundImageManager;
 import utility.image.ImageManager;
 import main.StateManager.States;
 
@@ -11,6 +12,8 @@ import main.StateManager.States;
 public class MainMenu {
 	private static int currentOption = 0;
 	private static final String[] options = { "play", "quit" };
+	private static BackgroundImageManager gemsManager = new BackgroundImageManager(ContentValues.MAX_BACKGROUND_GEMS,
+			ContentValues.NUMBER_DIFFERENT_GEMS, ContentValues.GEM_SPAWN_CHANCE, "effects/gem", ContentValues.GEM_Y_VEL);
 	
 	public static void goUp() {
 		if (currentOption == 0) {
@@ -44,15 +47,17 @@ public class MainMenu {
 	}
 
 	private static void drawMenuBackground(Graphics2D g) {
-		int imgWidth = ImageManager.getImage("captainManol").getWidth(null);
-		int imgHeight = ImageManager.getImage("captainManol").getHeight(null);
-
+		g.drawImage(ImageManager.getImage("skyBackground"), 0, 0, null);
+		gemsManager.drawBackgroundObjects(g);
 		g.drawImage(ImageManager.getImage("captainManol"), 0, 0, null);
 
 	}
 
 	public static void drawMenu(Graphics2D g) {
+		gemsManager.update();
+		
 		drawMenuBackground(g);
+		
 		// draw title
 		g.drawImage(ImageManager.getImage("text/titleText"), Game.WIDTH/2
 				- ImageManager.getImage("text/titleText").getWidth(null) / 2,

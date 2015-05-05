@@ -15,7 +15,7 @@ public class StatusEffect {
 		this.name  = name;
 		switch(name){
 		case "laser":
-			duration = 100;
+			duration = 150;
 			break;
 		case "scatter":
 			duration = 150;

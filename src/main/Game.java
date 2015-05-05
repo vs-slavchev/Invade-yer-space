@@ -6,6 +6,7 @@ import utility.TextBoxManager;
 import utility.TutorialManager;
 import utility.image.AnimationManager;
 import utility.image.BackgroundImageManager;
+import utility.image.BackgroundPlanetManager;
 import utility.image.ImageManager;
 import utility.sound.MusicManager;
 import utility.sound.SoundManager;
@@ -51,6 +52,7 @@ public class Game extends Canvas {
 	static boolean waitingForKeyPress = false;
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
+	private BackgroundPlanetManager planetManager = new BackgroundPlanetManager();
 	InputController inputController;
 	private static boolean alienHPBarDrawn = false;
 	private String message = "startText";
@@ -104,8 +106,6 @@ public class Game extends Canvas {
 
 		// start playing background music
 		musicManager.loopBackgroundMusic();
-		BackgroundImageManager.generateBackgroundStars(400);
-
 	}
 
 	public static void main(String argv[]) {
@@ -132,7 +132,7 @@ public class Game extends Canvas {
 				// cycle trough entities and move them
 				if (!waitingForKeyPress) {
 					entityManager.moveEntities(delta);
-					BackgroundImageManager.update();
+					planetManager.update();
 					TutorialManager.updateTutorials();
 				}
 	
@@ -210,7 +210,7 @@ public class Game extends Canvas {
 		g.fillRect(0, 0, WIDTH, HEIGHT);
 		
 		if (StateManager.getState() == States.PLAY){
-			BackgroundImageManager.drawBackgroundObjects(g);
+			planetManager.drawBackgroundObjects(g);
 			// draw cycle
 			entityManager.drawEntities(g);
 			AnimationManager.getAnimationManager().drawAnimations(g);
@@ -420,11 +420,8 @@ public class Game extends Canvas {
 	
 	/* TODO:
 	 * [-] low prio: fix showing healthbars while not playing
-	 * [+] scoring mechanic: max combo achieved this level
 	 * [-] basic main menu; states: menu, info, playing; info = controls + credits
-	 * [-] menu items: play, controls, credits, exit
-	 * [+] refactoring:
-		 * 	= fix switch cases to look like StatusEffect constructor default
+	 * [-] difficulty defined in alien fire intervals: easy, normal, bullet hell
 	 * [-] pirate themed weapon/powerups names
 	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
 		 * 	= yarr!; on powerup pickup

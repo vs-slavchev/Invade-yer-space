@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import utility.ContentValues;
+
 public class ImageManager {
 
 	private final static String path = "images/";
@@ -38,6 +40,7 @@ public class ImageManager {
 		
 		imageNames.add("mainShip");
 		imageNames.add("captainManol");
+		imageNames.add("skyBackground");
 		imageNames.add("text/winText");
 		imageNames.add("text/startText");
 		imageNames.add("text/deathText");
@@ -54,9 +57,13 @@ public class ImageManager {
 		imageNames.add("effects/shield");
 		imageNames.add("effects/muzzleFlash");
 		imageNames.add("effects/speakerUI");
+		imageNames.add("effects/gems");
 		
-		for (int i = 14; i > 0; i--) {
+		for (int i = ContentValues.NUMBER_DIFFERENT_PLANETS; i > 0; i--) {
 			imageNames.add("planets/planet" + i);
+		}
+		for (int i = ContentValues.NUMBER_DIFFERENT_GEMS; i > 0; i--) {
+			imageNames.add("effects/gem" + i);
 		}
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/alienShot" + i);
@@ -69,9 +76,6 @@ public class ImageManager {
 		}
 		for (int i = 4; i > 0; i--) {
 			imageNames.add("effects/explosion" + i);
-		}
-		for (int i = 3; i > 0; i--) {
-			imageNames.add("effects/powerup" + i);
 		}
 
 		loadImages(imageNames);
