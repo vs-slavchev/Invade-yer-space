@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 import entities.ShipEntity;
 import entities.ShotEntity;
 import utility.image.ImageManager;
+import utility.sound.SoundManager;
 import main.Game;
 
 public class PlayerWeapon {
@@ -20,6 +21,7 @@ public class PlayerWeapon {
 	public PlayerWeapon(Game game, String bulletName){
 		this.game = game;
 		this.bulletName = bulletName;
+		lastFireTime = System.currentTimeMillis();
 		
 		switch(bulletName){
 		case "projectiles/shot1":
@@ -70,10 +72,14 @@ public class PlayerWeapon {
 	 */
 	public boolean tryToFire(){
 		if (overheatPercent >= 100){
+			if (!game.isWaitingForKeyPress()) {
+				SoundManager.play("meCannon");
+			}
 			return false;
 		}
-		if( System.currentTimeMillis() - lastFireTime < firingInterval)
+		if( System.currentTimeMillis() - lastFireTime < firingInterval || game.isWaitingForKeyPress()){
 			return false;
+		}
 		
 		lastFireTime = System.currentTimeMillis();
 		int x = game.getEntityManager().getShip().getX()
@@ -101,18 +107,22 @@ public class PlayerWeapon {
 		switch (bulletName) {
 		case "projectiles/shot1":
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+			SoundManager.play("frequentShoot");
 			break;
 		case "projectiles/shot2":
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-20, y, 0));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+20, y, 0));
+			SoundManager.play("sineShoot");
 			break;
 		case "projectiles/shot3":
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-15, y+20, -80));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+15, y+20, 80));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+			SoundManager.play("tripleShoot");
 			break;
 		case "projectiles/shot4":
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+			SoundManager.play("cannonShoot");
 			break;
 		case "projectiles/shot5":
 			for (int i = -800; i <= 800; i += 100) {

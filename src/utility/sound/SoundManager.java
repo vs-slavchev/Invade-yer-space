@@ -6,6 +6,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.FloatControl;
 import javax.swing.JOptionPane;
 
+import utility.ContentValues;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,29 +21,51 @@ public class SoundManager {
 
 	public static void initSoundManager() {
 
-		fileNames.add("beep");
-		fileNames.add("bigpowerup");
-		fileNames.add("explosion");
-		fileNames.add("warp");
-		fileNames.add("powerup3");
-		fileNames.add("powerup5");
-		fileNames.add("powerup6");
+		fileNames.add("shieldUp");
+		fileNames.add("menuSound");
+		fileNames.add("yarr");
+		fileNames.add("lazor");
+		fileNames.add("meCannon");
+		fileNames.add("rocket");
+		fileNames.add("nooo");
+		fileNames.add("reflectiveShield");
+		fileNames.add("lazorSfx");
+		fileNames.add("weaponSwitch");
+		fileNames.add("tutorialSound");
+		fileNames.add("manolWin");
+		fileNames.add("frequentShoot");
+		fileNames.add("cannonShoot");
+		fileNames.add("sineShoot");
+		fileNames.add("tripleShoot");
+		
+		for ( int i = 1; i <= 5; i++){
+			fileNames.add("explosion" + i);
+		}
 
 		for (String name : fileNames) {
 			Clip clip = getClip(name);
 			sounds.put(name, clip);
 
 			// decrease each clip's gain
-			FloatControl gainControl = (FloatControl) clip
-					.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(-20.0f);
+			if (ContentValues.DECREASE_CLIPS_GAIN){
+			decreaseGain(clip);
+			}
 		}
+	}
 
+	private static void decreaseGain(Clip clip) {
+		FloatControl gainControl = (FloatControl) clip
+				.getControl(FloatControl.Type.MASTER_GAIN);
+		gainControl.setValue(-10.0f);
 	}
 
 	public static void play(String name) {
 		if (!sounds.containsKey(name)){
-			System.out.println(" Sound not found in hashmap. name=\"" + name + "\"");
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + name + ".wav" + "\nnot found in SoundManager HashMap!",
+				    "Error playing sound!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 		}
 		if (!sounds.get(name).isActive()) {
 			sounds.get(name).setFramePosition(0);
@@ -69,6 +93,11 @@ public class SoundManager {
 		for (Clip clip : sounds.values()) {
 			clip.close();
 		}
+	}
+	
+	public static void playExplosionSfx(){
+		int type = (int) (1 + Math.round(Math.random()*4));
+		play("explosion" + type);
 	}
 
 }

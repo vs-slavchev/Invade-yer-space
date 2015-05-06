@@ -1,4 +1,4 @@
-package main;
+package main.states;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,16 +6,19 @@ import java.awt.Graphics2D;
 import utility.ContentValues;
 import utility.image.BackgroundImageManager;
 import utility.image.ImageManager;
-import main.StateManager.States;
+import utility.sound.SoundManager;
+import main.Game;
+import main.states.StateManager.States;
 
 
 public class MainMenu {
 	private static int currentOption = 0;
 	private static final String[] options = { "play", "quit" };
 	private static BackgroundImageManager gemsManager = new BackgroundImageManager(ContentValues.MAX_BACKGROUND_GEMS,
-			ContentValues.NUMBER_DIFFERENT_GEMS, ContentValues.GEM_SPAWN_CHANCE, "effects/gem", ContentValues.GEM_Y_VEL);
+			ContentValues.NUMBER_DIFFERENT_GEMS, ContentValues.GEM_SPAWN_CHANCE, "effects/gems/gem", ContentValues.GEM_Y_VEL);
 	
 	public static void goUp() {
+		
 		if (currentOption == 0) {
 			currentOption = options.length - 1;
 		} else {
@@ -32,12 +35,14 @@ public class MainMenu {
 	}
 
 	@SuppressWarnings("incomplete-switch")
-	public static void select() {
+	public static void select(Game game) {
 		String choice = options[currentOption];
 		switch (choice) {
 		case "play":
 			StateManager.setState(States.PLAY);
-			Game.setWaitingForKeyPress(true);
+			game.switchToInputKeyHandler();
+			game.setWaitingForKeyPress(true);
+			SoundManager.play("yarr");
 			break;
 		case "quit":
 			System.exit(0);
@@ -47,9 +52,9 @@ public class MainMenu {
 	}
 
 	private static void drawMenuBackground(Graphics2D g) {
-		g.drawImage(ImageManager.getImage("skyBackground"), 0, 0, null);
+		g.drawImage(ImageManager.getImage("text/skyBackground"), 0, 0, null);
 		gemsManager.drawBackgroundObjects(g);
-		g.drawImage(ImageManager.getImage("captainManol"), 0, 0, null);
+		g.drawImage(ImageManager.getImage("text/captainManol"), 0, 0, null);
 
 	}
 
@@ -78,21 +83,10 @@ public class MainMenu {
 					Game.HEIGHT * 4 / 10 + i * offset, null);
 		}
 		
-		int creditsY = Game.HEIGHT - 60;
+		int creditsX = Game.WIDTH - ImageManager.getImage("text/credits").getWidth(null);
+		int creditsY = Game.HEIGHT - ImageManager.getImage("text/credits").getHeight(null);
 		
-		// headings
-		g.setColor(Color.RED);
-		g.setFont(ContentValues.INFO_HEADING_FONT);
-		Game.drawStringCentered(g, "Programming:", Game.WIDTH/2, creditsY);
-		Game.drawStringCentered(g, "Soundtrack:", Game.WIDTH/2, creditsY + 50);
-
-		// text
-		g.setColor(Color.ORANGE);
-		g.setFont(ContentValues.INFO_TEXT_FONT);
-		Game.drawStringCentered(g, "Veselin Slavchev", (Game.WIDTH * 3 / 4) - 100,
-				creditsY);
-		Game.drawStringCentered(g, "Marto D", (Game.WIDTH * 3 / 4) - 100, creditsY + 50);
-
+		g.drawImage(ImageManager.getImage("text/credits"), creditsX, creditsY, null);
 	}
 
 }

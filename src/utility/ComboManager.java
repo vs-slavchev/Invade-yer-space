@@ -3,6 +3,7 @@ package utility;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import entities.ShipEntity;
 import entities.utility.StatusEffect;
 import main.Game;
 import utility.image.ImageManager;
@@ -53,7 +54,7 @@ public class ComboManager {
 			spearsBonusReady = false;
 			return new StatusEffect("spears");
 		}
-		else if (laserBonusReady && recentKillCount >= 90){
+		else if (laserBonusReady && recentKillCount >= 85){
 			laserBonusReady = false;
 			return new StatusEffect("laser");
 		}
@@ -73,11 +74,14 @@ public class ComboManager {
 		if (recentKillCount > 5) {
 			// prepare the bases for the X and Y
 			int yBase = game.getHeight() - 430;
-			int xBase = (game.getEntityManager().getShip().getX() < game.getWidth() - 280) ? game.getWidth() - 200 : 35;
-			g.drawImage(ImageManager.getImage("text/comboText"), xBase - 25, yBase + 150, null);
+			int xBase = (game.getEntityManager().getShip().getX() < game.getWidth() - 280) ?
+					game.getWidth() - 200 : 35;
+			g.drawImage(ImageManager.getImage("text/comboText"),
+					xBase - 25, yBase + 150, null);
 			
 			// draw the revolving circle
-			int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) / (double) recentKillTimeWindow) * 360);
+			int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) /
+					(double) recentKillTimeWindow) * 360);
 			int greenComponent = 255 - (int)((arcLength/360.00)*255);
 			greenComponent = ContentValues.controlMinMax(greenComponent, 0, 255);
 			g.setColor(new Color(0, greenComponent, 255));
@@ -85,10 +89,10 @@ public class ComboManager {
 			g.setColor(Color.BLACK);
 			g.drawArc(xBase + 5, yBase + 5, 140, 140, 90, -arcLength);
 			
-			// prepare values for drawing ingame; this preparation is not needed when drawing the digits in the menu
+			/*	prepare values for drawing ingame; this preparation is not
+				needed when drawing the digits in the menu */
 			xBase += 40;
 			yBase += 23;
-			// draw the combo digits
 			drawComboDigits(g, recentKillCount, xBase, yBase);
 		}
 	}
@@ -107,6 +111,18 @@ public class ComboManager {
 					* digitWidth, yBase, xBase
 					+ i * digitWidth + digitWidth, yBase + digitHeight, currentDigit * digitWidth, 0,
 					(currentDigit + 1) * digitWidth, digitHeight, null);
+		}
+	}
+	
+	// draw the combo score if needed
+	public void drawComboScore(Graphics2D g) {
+		if (maxComboAchieved > 0) {
+			g.drawImage(ImageManager.getImage("text/maxComboText"),
+					Game.WIDTH	/ 2	- ImageManager.getImage("text/maxComboText")
+					.getWidth(null) / 2, Game.HEIGHT / 2, null);
+			
+			drawComboDigits(g, Game.getScore(), Game.WIDTH / 2 - 30,
+					Game.HEIGHT * 2 / 3 - 50);
 		}
 	}
 	

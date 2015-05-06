@@ -3,6 +3,7 @@ package entities.utility;
 import javax.swing.JOptionPane;
 
 import utility.ContentValues;
+import utility.sound.SoundManager;
 
 public class StatusEffect {
 	
@@ -16,6 +17,8 @@ public class StatusEffect {
 		switch(name){
 		case "laser":
 			duration = 150;
+			SoundManager.play("lazor");
+			SoundManager.play("lazorSfx");
 			break;
 		case "scatter":
 			duration = 150;
@@ -25,9 +28,11 @@ public class StatusEffect {
 			break;
 		case "quadRockets":
 			duration = 10;
+			SoundManager.play("rocket");
 			break;
 		case "shield":
 			duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
+			SoundManager.play("reflectiveShield");
 			break;
 		default:
 			JOptionPane.showMessageDialog(null,

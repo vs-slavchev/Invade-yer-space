@@ -1,4 +1,4 @@
-package main;
+package main.states;
 
 public class StateManager {
 

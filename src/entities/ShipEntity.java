@@ -16,6 +16,7 @@ import utility.ComboManager;
 import utility.ContentValues;
 import utility.InputController;
 import utility.image.ParticleEmitter;
+import utility.sound.SoundManager;
 
 public class ShipEntity extends Entity{
 
@@ -34,7 +35,7 @@ public class ShipEntity extends Entity{
 		super(x, y);
 		this.game = game;
 		comboManager = new ComboManager(game);
-		animation = new Animation( x, y, 0.5, 6, "mainShip", true, false, 1);
+		animation = new Animation( x, y, 0.5, 6, "text/mainShip", true, false, 1);
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
 		for ( int i = 0; i < weapons.length; i++){
@@ -67,9 +68,6 @@ public class ShipEntity extends Entity{
 			return;
 		}
 		super.move(delta);
-		
-		
-		
 	}
 
 	private void updateStatusEffects() {
@@ -112,6 +110,7 @@ public class ShipEntity extends Entity{
 	public void collidedWith(Entity other){
 		if( other instanceof AlienEntity){
 			this.game.notifyDeath();
+			autoFireOn = false;
 		}
 	}
 	
@@ -174,21 +173,25 @@ public class ShipEntity extends Entity{
 			if (currentWeapon != 0) {
 				currentWeapon = 0;
 				weapons[currentWeapon].resetFireTimer();
+				SoundManager.play("weaponSwitch");
 			}
 		} else if (inputController.isTwoPressed()) {
 			if (currentWeapon != 1) {
 				currentWeapon = 1;
 				weapons[currentWeapon].resetFireTimer();
+				SoundManager.play("weaponSwitch");
 			}
 		} else if (inputController.isThreePressed()) {
 			if (currentWeapon != 2) {
 				currentWeapon = 2;
 				weapons[currentWeapon].resetFireTimer();
+				SoundManager.play("weaponSwitch");
 			}
 		} else if (inputController.isFourPressed()) {
 			if (currentWeapon != 3) {
 				currentWeapon = 3;
 				weapons[currentWeapon].resetFireTimer();
+				SoundManager.play("weaponSwitch");
 			}
 		}
 	}
@@ -202,6 +205,13 @@ public class ShipEntity extends Entity{
 		particleEmitter.drawParticles(g);
 		animation.drawAnimation(g);
 		
+		drawLaser(g);
+		drawShield(g);
+		drawWeaponUI(g);
+		comboManager.drawComboUI(g);
+	}
+
+	private void drawLaser(Graphics2D g) {
 		if (laserOn){
 			g.drawImage(ImageManager.getImage("projectiles/laser"),
 					(int)x + animation.getDimensionX()/2 - ImageManager.getImage("projectiles/laser").getWidth(null)/2,
@@ -214,10 +224,6 @@ public class ShipEntity extends Entity{
 					0, 0,
 					ImageManager.getImage("projectiles/laser").getWidth(null), 2, null);
 		}
-		
-		drawShield(g);
-		drawWeaponUI(g);
-		comboManager.drawComboUI(g);
 	}
 
 	private void drawShield(Graphics2D g) {

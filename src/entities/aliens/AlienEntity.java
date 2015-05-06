@@ -15,19 +15,20 @@ import utility.sound.SoundManager;
 public class AlienEntity extends Entity{
 	
 	private int type;
-	private int healthPoints = 1;
-	private long shootTimeInterval = 200;
+	private int healthPoints;
+	private long shootTimeInterval;
 	private long lastShotTime = 60;
 	private Random random = new Random();
 	private final String spriteName;
 	private Animation animation;
 
-	public AlienEntity(Game game, int type, int x, int y, int healthPoints) {
+	public AlienEntity(Game game, int type, int x, int y) {
 		super(game, x, y);
 		this.game = game;
 		this.type = type;
 		this.spriteName = "aliens/alienShip" + type;
-		this.healthPoints = healthPoints;
+		// related: alien draw health bar
+		this.healthPoints = ContentValues.ENEMY_HP_BASE + type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER;
 		this.animation = new Animation( x, y, 0.07, 5, spriteName, true, false, 1);
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
@@ -80,7 +81,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void reduceShootTimeInterval(){
-		shootTimeInterval *= 0.99;
+		shootTimeInterval *= 0.995; // 0.99
 	}
 	
 	public int getrandom( int min, int max ){
@@ -89,18 +90,21 @@ public class AlienEntity extends Entity{
 	
 	public void draw(Graphics2D g){
 		animation.drawAnimation(g);
+		
+		// draw the health bar
 		if (game.isAlienHPBarDrawn()) {
 			g.setColor(Color.red);
 			g.fillRect((int) x, (int) y - 7, animation.getDimensionX(), 7);
 			g.setColor(Color.green);
-			int fillerBarWidth = (int) (((double) healthPoints / (double) (type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER)) * (animation
-					.getDimensionX() - 2));
+			int fillerBarWidth = (int) (((double) healthPoints
+					/ (double) (ContentValues.ENEMY_HP_BASE + type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER))
+					* (animation.getDimensionX() - 2));
 			g.fillRect((int) x + 1, (int) y - 6, fillerBarWidth, 5);
 		}
 	}
 	
 	public void takeDamage(){
-		SoundManager.play("explosion");
+		SoundManager.playExplosionSfx();
 		int sparksX = (int) (x + 10 + Math.random()*animation.getDimensionX()/2);
 		int sparksY = (int) (y + 10 + Math.random()*animation.getDimensionY()/2);
 		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", sparksX, sparksY, 1);

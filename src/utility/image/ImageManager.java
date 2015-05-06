@@ -38,9 +38,9 @@ public class ImageManager {
 	public static void initImages(){
 		ArrayList<String> imageNames = new ArrayList<>();
 		
-		imageNames.add("mainShip");
-		imageNames.add("captainManol");
-		imageNames.add("skyBackground");
+		imageNames.add("text/mainShip");
+		imageNames.add("text/captainManol");
+		imageNames.add("text/skyBackground");
 		imageNames.add("text/winText");
 		imageNames.add("text/startText");
 		imageNames.add("text/deathText");
@@ -48,6 +48,7 @@ public class ImageManager {
 		imageNames.add("text/selector");
 		imageNames.add("text/play");
 		imageNames.add("text/quit");
+		imageNames.add("text/credits");
 		imageNames.add("text/comboText");
 		imageNames.add("text/maxComboText");
 		imageNames.add("text/comboDigits");
@@ -57,13 +58,12 @@ public class ImageManager {
 		imageNames.add("effects/shield");
 		imageNames.add("effects/muzzleFlash");
 		imageNames.add("effects/speakerUI");
-		imageNames.add("effects/gems");
 		
 		for (int i = ContentValues.NUMBER_DIFFERENT_PLANETS; i > 0; i--) {
 			imageNames.add("planets/planet" + i);
 		}
 		for (int i = ContentValues.NUMBER_DIFFERENT_GEMS; i > 0; i--) {
-			imageNames.add("effects/gem" + i);
+			imageNames.add("effects/gems/gem" + i);
 		}
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/alienShot" + i);

@@ -188,13 +188,11 @@ public class EntityManager {
 	}
 	
 	private AlienEntity produceAlien( int type, int row, int col){
-		int healthPoints = type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER;
-		
 		/* aliens are centered according to their image; aliens are created first,
 		 * so their image is not null, and then according to the image dimensions
 		 * their position is set correctly */
 		// spawn off the screen
-		AlienEntity alien = new AlienEntity( game, type, -100, -100, healthPoints);
+		AlienEntity alien = new AlienEntity( game, type, -100, -100);
 		int offsetX = alien.getAnimation().getDimensionX()/2;
 		int offsetY = alien.getAnimation().getDimensionY()/2;
 		// set to the correct position, after having access to the animation

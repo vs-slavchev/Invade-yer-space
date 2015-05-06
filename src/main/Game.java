@@ -2,6 +2,7 @@ package main;
 
 import utility.ContentValues;
 import utility.InputController;
+import utility.MenuKeys;
 import utility.TextBoxManager;
 import utility.TutorialManager;
 import utility.image.AnimationManager;
@@ -30,7 +31,9 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import main.StateManager.States;
+import main.states.MainMenu;
+import main.states.StateManager;
+import main.states.StateManager.States;
 import entities.ShipEntity;
 import entities.utility.EntityManager;
 
@@ -45,17 +48,22 @@ public class Game extends Canvas {
 	public static final int WIDTH = RECTANGLE.width; 
 	public static final int HEIGHT = RECTANGLE.height; 
 	
-	private int FPS = 60;
+	private int FPS = 90;
 	private volatile long delta = 1000 / this.FPS;
 	volatile boolean gameRunning = true;
 	private boolean logicRequiredThisLoop = false;
-	static boolean waitingForKeyPress = false;
+	private boolean waitingForKeyPress = false;
+	InputController inputController;
+	private MenuKeys menuKeys = new MenuKeys(this);
+	private KeyInputHandler keyInputHandler = new KeyInputHandler();
+	
+	
 	private EntityManager entityManager = new EntityManager(this);
 	private MusicManager musicManager = new MusicManager();
 	private BackgroundPlanetManager planetManager = new BackgroundPlanetManager();
-	InputController inputController;
 	private static boolean alienHPBarDrawn = false;
 	private String message = "startText";
+	private static int score = 0;
 
 	public Game() {
 
@@ -88,8 +96,9 @@ public class Game extends Canvas {
 		});
 
 		// add input key system; InputKeyHandler class defined in Game class
-		addKeyListener(new KeyInputHandler());
-
+		//addKeyListener(new KeyInputHandler());
+		addKeyListener(menuKeys);
+		
 		requestFocus();
 
 		// use BufferStrategy class to manage buffers for the accelerated
@@ -105,7 +114,7 @@ public class Game extends Canvas {
 		TutorialManager.initTutorialList();
 
 		// start playing background music
-		musicManager.loopBackgroundMusic();
+		getMusicManager().loopBackgroundMusic();
 	}
 
 	public static void main(String argv[]) {
@@ -116,7 +125,6 @@ public class Game extends Canvas {
 	public void gameLoop() {
 
 		long lastLoopTime = System.currentTimeMillis();
-		float minimumFPS = 100.00f;
 
 		while (gameRunning) {
 
@@ -124,9 +132,6 @@ public class Game extends Canvas {
 			// time since last update
 			delta = System.currentTimeMillis() - lastLoopTime;
 			lastLoopTime = System.currentTimeMillis();
-			if (minimumFPS > 1000.00f / delta) {
-				minimumFPS = 1000.00f / delta;
-			}
 				
 			if (StateManager.getState() == States.PLAY){
 				// cycle trough entities and move them
@@ -146,8 +151,7 @@ public class Game extends Canvas {
 				// remove destroyed entities that are to be removed and clean up
 				entityManager.removeEntities();
 				// if we need to do logic go through alienEntities only, since
-				// only
-				// aliens have a doLogic() implemented
+				// only aliens have a doLogic() implemented
 				if (logicRequiredThisLoop) {
 					entityManager.forceLogic();
 					logicRequiredThisLoop = false;
@@ -156,29 +160,15 @@ public class Game extends Canvas {
 				((ShipEntity) entityManager.getShip())
 						.processInput(inputController);
 				
-			} else if (StateManager.getState() == States.MENU){
-				updateMainMenu();
+				controlMusicGain();
+				
 			}
 			
-			controlMusicGain();
 			drawGame();
 
 			sleepAndFPSControl(lastLoopTime);
 		} // close while
 		SoundManager.close();
-	}
-	
-	private void updateMainMenu(){
-		if (inputController.isUpPressed()){
-			MainMenu.goUp();
-			inputController.setUpPressed(false);
-		} else if (inputController.isDownPressed()){
-			MainMenu.goDown();
-			inputController.setDownPressed(false);
-		} else if (inputController.isFirePressed()){
-			MainMenu.select();
-			inputController.setDownPressed(false);
-		}
 	}
 
 	private void controlMusicGain() {
@@ -189,7 +179,9 @@ public class Game extends Canvas {
 		}
 	}
 
-	// pause and fps control
+	/* pause and fps control:
+	 * The more time it took to update and draw the less time the game
+	 * sleeps; this way a fairly constant FPS is achieved. */
 	private void sleepAndFPSControl(long lastLoopTime) {
 		try {
 			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
@@ -221,23 +213,18 @@ public class Game extends Canvas {
 						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
 						(HEIGHT/2 - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
 				
-				// draw the combo score if needed
-				if (((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved() > 0){
-					g.drawImage(ImageManager.getImage("text/maxComboText"),
-							WIDTH/2 - ImageManager.getImage("text/maxComboText").getWidth(null)/2,
-							HEIGHT/2, null);
-					((ShipEntity) entityManager.getShip()).getComboManager().drawComboDigits(g,
-							((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved(),
-							WIDTH/2 - 30, HEIGHT*2/3 - 50);
-				}
+				((ShipEntity) entityManager.getShip()).getComboManager().drawComboScore(g);
+				
+			} else {
+				TextBoxManager.drawTextBoxes(g);
 			}
+			
 		} else if (StateManager.getState() == States.MENU){
 			MainMenu.drawMenu(g);
 		}
 			
 
 		drawSpeakerIcon(g);
-		TextBoxManager.drawTextBoxes(g);
 		
 		// after drawing clean up and flip the buffer
 		g.dispose();
@@ -258,16 +245,30 @@ public class Game extends Canvas {
 					WIDTH - 90, 30, WIDTH - 90 + 64, 30 + 64, 64 * sX, 0, 64 * (sX + 1), 64, null);
 		}
 	}
+	
+	public void switchToMenuKeyHandler(){
+		removeKeyListener(keyInputHandler);
+		addKeyListener(menuKeys);
+	}
+	
+	public void switchToInputKeyHandler(){
+		removeKeyListener(menuKeys);
+		addKeyListener(keyInputHandler);
+	}
 
 	public void notifyDeath() {
 		message = "deathText";
 		waitingForKeyPress = true;
+		SoundManager.play("nooo");
+		score += ((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved();
 	}
 
 	public void notifyWin() {
 		message = "winText";
 		waitingForKeyPress = true;
+		SoundManager.play("manolWin");
 		entityManager.generateNewEntitiesMap();
+		score += ((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved();
 	}
 
 	public void notifyAlienKilled() {
@@ -304,20 +305,36 @@ public class Game extends Canvas {
 	public static int getGameHeight() {
 		return HEIGHT;
 	}
+	
+	public static int getScore(){
+		return score;
+	}
+	
+	public void setGameRunning(boolean gameRunning) {
+		this.gameRunning = gameRunning;
+	}
+
+	public MusicManager getMusicManager() {
+		return musicManager;
+	}
 
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
 
 	public MusicManager getSoundManager() {
-		return musicManager;
+		return getMusicManager();
+	}
+
+	public boolean isWaitingForKeyPress() {
+		return waitingForKeyPress;
 	}
 	
 	public static void drawStringCentered(Graphics2D g, String text, int x, int y){
 		g.drawString(text, x - g.getFontMetrics().stringWidth(String.valueOf(text))/2, y);
 	}
 	
-	public static void setWaitingForKeyPress(boolean val){
+	public void setWaitingForKeyPress(boolean val){
 		waitingForKeyPress = val;
 	}
 
@@ -349,10 +366,10 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_T) {
 				inputController.setAutoFirePressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_COMMA || e.getKeyCode() == KeyEvent.VK_MINUS) {
+			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
 				inputController.setMusicDownPressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_PERIOD || e.getKeyCode() == KeyEvent.VK_EQUALS) {
+			if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
 				inputController.setMusicUpPressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
@@ -363,6 +380,17 @@ public class Game extends Canvas {
 				inputController.setThreePressed(true);
 			}else if (e.getKeyCode() == KeyEvent.VK_4) {
 				inputController.setFourPressed(true);
+			}
+			
+			// REMOVE
+			if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+				FPS = 30;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
+				FPS = 60;
+			}
+			if (e.getKeyCode() == KeyEvent.VK_NUMPAD9) {
+				FPS = 90;
 			}
 		}
 
@@ -383,10 +411,10 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				Game.setAlienHPBarDrawn(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_COMMA || e.getKeyCode() == KeyEvent.VK_MINUS) {
+			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
 				inputController.setMusicDownPressed(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_PERIOD || e.getKeyCode() == KeyEvent.VK_EQUALS) {
+			if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
 				inputController.setMusicUpPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
@@ -402,42 +430,27 @@ public class Game extends Canvas {
 
 		public void keyTyped(KeyEvent e) {
 			if (waitingForKeyPress && (e.getKeyChar() == 32 || e.getKeyChar() == 10)) { // space and enter
-				inputController.setFirePressed(false); // added to cancel instant shooting
 				if (pressCount == 1) {
-					waitingForKeyPress = false;
+					setWaitingForKeyPress(false);
+					inputController.setFirePressed(false);
+					if (message.equals("deathText")){
+						score = 0;
+					}
 					startGame();
 					pressCount = 1;
 				} else {
 					pressCount++;
 				}
 			}
-			if (e.getKeyChar() == 27) { // escape
-				gameRunning = false;
+			if (e.getKeyChar() == 27) { // escape to menu
+				StateManager.setState(States.MENU);
+				switchToMenuKeyHandler();
 			}
 		}
 	}// close KeyInputHandler class
 }
 	
 	/* TODO:
-	 * [-] low prio: fix showing healthbars while not playing
-	 * [-] basic main menu; states: menu, info, playing; info = controls + credits
-	 * [-] difficulty defined in alien fire intervals: easy, normal, bullet hell
-	 * [-] pirate themed weapon/powerups names
-	 * [-] sfx - only 1 Manol response active at any time; if Manol is talking ignore new response requests
-		 * 	= yarr!; on powerup pickup
-		 * 	= random pirate swears on events
-		 * 	= yarr! me cannon is too hot'h!
-		 *  = yarr! i got shield
-		 *  = shooting sfx for diff weapons - dr.petter
-		 *  = reflecting the shots sfx
-		 *  = more explosions sfx
-		 *  = weapon switch sound (responsiveness: every keypress should be indicated by a sound)
-		 *  = shield buff goes up/down (powerups sound)
-	 * [-] value tweaks:
-	 	 * = laser duration
-	 	 * = rand alien explosion chance
-	 	 * = aliens' hp
-	 	 * = tutorial Y coords
-	 	 * = tutorial timestep
+	 * 
  	 */
 

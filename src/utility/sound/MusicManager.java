@@ -1,15 +1,18 @@
 package utility.sound;
 
 import java.io.IOException;
+
 import javax.swing.JOptionPane;
+
 import org.newdawn.easyogg.OggClip;
 
+import utility.TextBox;
 import utility.TextBoxManager;
 
 public class MusicManager {
 	
 	private OggClip backgroundMusic;
-	private float gain = 0.80f; // 0.87
+	private float gain = 0.78f;
 	
 	public MusicManager(){
 		try{
@@ -27,7 +30,7 @@ public class MusicManager {
 			backgroundMusic.loop();
 			backgroundMusic.setGain(gain);
 			backgroundMusic.setBalance(0.0f);
-			TextBoxManager.createTextBox("songPirateManol");
+			TextBoxManager.showTextBox(new TextBox("Song: Captain Manol;Artist: Marto D;MnM Studios", 20, 800, 220, 250));
 	}
 	
 	public void modifyGain(float value){
