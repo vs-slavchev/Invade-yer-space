@@ -164,10 +164,7 @@ public class EntityManager {
 	
 	public void initEntities(){
 		//clear the ArrayLists before using them
-		entities.clear();
-		alienEntities.clear();
-		// after clearing up the big collections request a GC; changing levels happens rarely and minor lag is unnoticed
-		System.gc();
+		cleanUpEntities();
 		
 		ship = new ShipEntity( this.game, Game.getGameWidth()/2, Game.getGameHeight()*5/6);
 		entities.add(this.ship);
@@ -185,6 +182,13 @@ public class EntityManager {
 				}
 			}
 		}
+	}
+
+	public void cleanUpEntities() {
+		entities.clear();
+		alienEntities.clear();
+		// after clearing up the big collections request a GC; changing levels happens rarely and minor lag is unnoticed
+		System.gc();
 	}
 	
 	private AlienEntity produceAlien( int type, int row, int col){

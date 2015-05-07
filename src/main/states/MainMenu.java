@@ -39,10 +39,18 @@ public class MainMenu {
 		String choice = options[currentOption];
 		switch (choice) {
 		case "play":
+			SoundManager.play("yarr");
+			Game.getMusicManager().loopBackgroundMusic(1);
+			/* sleep to let the sound and music
+			 * threads start and get running */
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			StateManager.setState(States.PLAY);
 			game.switchToInputKeyHandler();
 			game.setWaitingForKeyPress(true);
-			SoundManager.play("yarr");
 			break;
 		case "quit":
 			System.exit(0);

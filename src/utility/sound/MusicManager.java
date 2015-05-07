@@ -10,27 +10,62 @@ import utility.TextBox;
 import utility.TextBoxManager;
 
 public class MusicManager {
+
+	private final String path = "music/";
+	private final String extension = ".ogg";
+	private final int numberOfSongs = 2;
 	
+	private String[] songNames = new String[numberOfSongs];
+	private OggClip[] songs = new OggClip[numberOfSongs];
 	private OggClip backgroundMusic;
 	private float gain = 0.78f;
 	
-	public MusicManager(){
+	public MusicManager() {
+		songNames[0] = "Wrath of Manol";
+		songNames[1] = "Captain Manol";
+
+		for (int i = 0; i < numberOfSongs; i++) {
+			loadSong(i, songNames[i]);
+		}
+		backgroundMusic = songs[0];
+	}
+	
+	private void loadSong(int index, String name){
+		validateIndex(index);
+		String fileName = path + name + extension;
 		try{
-			backgroundMusic = new OggClip("music/captain_Manol.ogg");
-		} catch (IOException e) {
+			songs[index] = new OggClip(fileName);
+		} catch (IOException e){
 			JOptionPane.showMessageDialog(null,
-					"Error: \n" + "music/captain_Manol.ogg" + "\nmissing!",
+					"Error: \n" + fileName + "\nmissing!",
 				    "Error loading music!",
 				    JOptionPane.ERROR_MESSAGE);
 			 System.exit(0);
 		}
+		
 	}
 	
-	public void loopBackgroundMusic(){
-			backgroundMusic.loop();
-			backgroundMusic.setGain(gain);
-			backgroundMusic.setBalance(0.0f);
-			TextBoxManager.showTextBox(new TextBox("Song: Captain Manol;Artist: Marto D;MnM Studios", 20, 800, 220, 250));
+	public void loopBackgroundMusic(int index) {
+		validateIndex(index);
+		backgroundMusic.stop();
+		backgroundMusic = songs[index];
+		backgroundMusic.loop();
+		backgroundMusic.setGain(gain);
+		backgroundMusic.setBalance(0.0f);
+		TextBoxManager.showTextBox(new TextBox(
+				"Song: " + songNames[index] + ";Artist: Marto D;MnM Studios",
+				20, 800, 220, 250));
+	}
+	
+	private void validateIndex(int index) {
+		if (index >= numberOfSongs){
+			JOptionPane.showMessageDialog(null,
+					"Error: song index not supported.\nindex = "
+				+ index + "\nmax index = " + (numberOfSongs-1),
+					"Error indexing music!",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
 	}
 	
 	public void modifyGain(float value){

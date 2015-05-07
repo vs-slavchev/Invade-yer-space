@@ -59,7 +59,7 @@ public class Game extends Canvas {
 	
 	
 	private EntityManager entityManager = new EntityManager(this);
-	private MusicManager musicManager = new MusicManager();
+	private static MusicManager musicManager = new MusicManager();
 	private BackgroundPlanetManager planetManager = new BackgroundPlanetManager();
 	private static boolean alienHPBarDrawn = false;
 	private String message = "startText";
@@ -114,7 +114,7 @@ public class Game extends Canvas {
 		TutorialManager.initTutorialList();
 
 		// start playing background music
-		getMusicManager().loopBackgroundMusic();
+		musicManager.loopBackgroundMusic(0);
 	}
 
 	public static void main(String argv[]) {
@@ -221,6 +221,7 @@ public class Game extends Canvas {
 			
 		} else if (StateManager.getState() == States.MENU){
 			MainMenu.drawMenu(g);
+			TextBoxManager.drawTextBoxes(g);
 		}
 			
 
@@ -294,8 +295,8 @@ public class Game extends Canvas {
 	}
 
 	void startGame() {
-		entityManager.initEntities();
 		inputController.reset();
+		entityManager.initEntities();
 	}
 
 	public static int getGameWidth() {
@@ -314,7 +315,7 @@ public class Game extends Canvas {
 		this.gameRunning = gameRunning;
 	}
 
-	public MusicManager getMusicManager() {
+	public static MusicManager getMusicManager() {
 		return musicManager;
 	}
 
@@ -381,17 +382,6 @@ public class Game extends Canvas {
 			}else if (e.getKeyCode() == KeyEvent.VK_4) {
 				inputController.setFourPressed(true);
 			}
-			
-			// REMOVE
-			if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
-				FPS = 30;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
-				FPS = 60;
-			}
-			if (e.getKeyCode() == KeyEvent.VK_NUMPAD9) {
-				FPS = 90;
-			}
 		}
 
 		public void keyReleased(KeyEvent e) {
@@ -444,13 +434,20 @@ public class Game extends Canvas {
 			}
 			if (e.getKeyChar() == 27) { // escape to menu
 				StateManager.setState(States.MENU);
+				getMusicManager().loopBackgroundMusic(0);
 				switchToMenuKeyHandler();
 			}
 		}
 	}// close KeyInputHandler class
 }
 	
-	/* TODO:
-	 * 
- 	 */
+/*
+ * TODO:
+ *  - increase ship mobulity; incr accel?
+ *  - combos after lazor: more weapons
+ *  - T fire bug
+ *  - shield duration 2 revolving circles; remove opacity
+ *  - diagnostics
+ *  - textboxes colors
+ */
 

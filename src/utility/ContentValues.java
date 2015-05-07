@@ -8,13 +8,13 @@ public class ContentValues {
 	public static final int MAX_PLAYER_SHIELD_DURATION = 700;
 	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200};
 	public static final int ACCELERATION = 25;
-	public static final int FRICTION = 16;
+	public static final int FRICTION = 18;
 	public static final int WEAPON_UI_BASE_X = 20;
 	public static final int NUM_NORMAL_WEAPONS = 4;
 	
 	// enemy related:
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2;
-	public static final int ENEMY_HP_BASE = 2;
+	public static final int ENEMY_HP_BASE = 1;
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 250;
 	public static final int MIN_ATTACK_INTERVAL = 500;
