@@ -5,9 +5,11 @@ import java.awt.Font;
 
 public class ContentValues {
 	// player related:
-	public static final int MAX_PLAYER_SHIELD_DURATION = 700;
-	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200};
-	public static final int ACCELERATION = 25;
+	public static final int MAX_PLAYER_SHIELD_DURATION = 800;
+	public static final int MAX_PLAYER_LASER_DURATION = 170;
+	public static final int KILL_TIME_WINDOW = 5_500;
+	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200, -400};
+	public static final int ACCELERATION = 30;
 	public static final int FRICTION = 18;
 	public static final int WEAPON_UI_BASE_X = 20;
 	public static final int NUM_NORMAL_WEAPONS = 4;
@@ -19,7 +21,7 @@ public class ContentValues {
 	public static final int X_SHOOT_RANGE = 250;
 	public static final int MIN_ATTACK_INTERVAL = 500;
 	public static final int MAX_ATTACK_INTERVAL = 2200;
-	public static final int BASE_BULLET_VELOCITY = 320;
+	public static final int BASE_BULLET_VELOCITY = 270;
 	
 	// effect related:
 	public static final int ROCKET_EXPLOSION_RADIUS = 80;
@@ -33,8 +35,9 @@ public class ContentValues {
 	public static final Color COLOR_TEXT_BOX_FILL_SONG = new Color(66, 105, 140);
 	
 	// user interface
-	public static final Font INFO_HEADING_FONT = new Font("Dialog", Font.ITALIC, 50);
-	public static final Font INFO_TEXT_FONT = new Font("Dialog", Font.BOLD, 40);
+	public static final Font INFO_FONT = new Font("Monospaced", Font.BOLD, 18);
+	public static final Font TEXT_BOX_FONT = new Font("Dialog", Font.BOLD, 20);
+	public static final Font QUESTION_FONT = new Font("Dialog", Font.BOLD, 48);
 	
 	//visual effects
 	public static final int NUM_BACKGROUND_STARS = 400;

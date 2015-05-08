@@ -54,7 +54,7 @@ public class MusicManager {
 		backgroundMusic.setBalance(0.0f);
 		TextBoxManager.showTextBox(new TextBox(
 				"Song: " + songNames[index] + ";Artist: Marto D;MnM Studios",
-				20, 800, 220, 250));
+				20, 800, 240, 400));
 	}
 	
 	private void validateIndex(int index) {

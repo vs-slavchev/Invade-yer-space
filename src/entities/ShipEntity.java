@@ -1,6 +1,5 @@
 package entities;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,7 +24,7 @@ public class ShipEntity extends Entity{
 	private ParticleEmitter particleEmitter = new ParticleEmitter(40, 6);
 	private ComboManager comboManager;
 	private CopyOnWriteArrayList<StatusEffect> buffs = new CopyOnWriteArrayList<>();
-	private PlayerWeapon[] weapons = new PlayerWeapon[7];
+	private PlayerWeapon[] weapons = new PlayerWeapon[8];
 	private int currentWeapon = 0;
 	private boolean invulnerable = false;
 	private boolean laserOn = false;
@@ -94,6 +93,8 @@ public class ShipEntity extends Entity{
 					int laserWidth = ImageManager.getImage("projectiles/laser").getWidth(null);
 					game.getEntityManager().createAoEObject((int)x + animation.getDimensionX()/2 - laserWidth/2, 0, laserWidth, (int)y);
 					laserOn = true;
+				} else if (statusEffect.getName().equals("flakes")) {
+					weapons[7].tryToFire();
 				}
 			}
 		}
@@ -228,24 +229,21 @@ public class ShipEntity extends Entity{
 
 	private void drawShield(Graphics2D g) {
 		if (invulnerable) {
-			
-			float opacity = 1.0f;
+			int angle = 0;
 			if (!buffs.isEmpty()) {
 				for (StatusEffect statusEffect : buffs) {
 					 if (statusEffect.getName().equals("shield")) {
-						 // 1/4 + 3/4 = 1; 3/4 = maxDuration/MAX_PLAYER_SHIELD_DURATION*1.34
-						opacity = (float) (0.25 + statusEffect.getDuration()/(float)(ContentValues.MAX_PLAYER_SHIELD_DURATION*1.34));
+						angle = (int) (((double)statusEffect.getDuration()/(double)(ContentValues.MAX_PLAYER_SHIELD_DURATION)) * (double)360);
+						//angle -= ContentValues.MAX_PLAYER_SHIELD_DURATION;
 					}
 				}
 			}
-			
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
-			g.drawImage(ImageManager.getImage("effects/shield"),
-					getCenteredX() - ImageManager.getImage("effects/shield").getWidth(null),
-					(int) y - 10,
-					ImageManager.getImage("effects/shield").getWidth(null)*2,
-					ImageManager.getImage("effects/shield").getHeight(null)*2, null);
-			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+
+			int arcOrigin = 90 - angle/2;
+			g.setColor(Color.CYAN);
+			g.drawArc((int)x - 7, (int)y - 10, 46, 76, arcOrigin, angle);
+			g.drawArc((int)x - 3, (int)y - 6, 38, 68, arcOrigin, angle);
+			g.drawArc((int)x + 1, (int)y - 2, 30, 60, arcOrigin, angle);
 		}
 	}
 

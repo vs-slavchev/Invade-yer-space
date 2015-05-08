@@ -52,6 +52,10 @@ public class PlayerWeapon {
 			firingInterval = 1_000;
 			heatAmplifier = 0;
 			break;
+		case "projectiles/shot8":
+			firingInterval = 400;
+			heatAmplifier = 0;
+			break;
 		default:
 			JOptionPane.showMessageDialog(null,
 					"Error: \n" + bulletName + "\nnot supported by PlayerWeapon.",
@@ -139,6 +143,12 @@ public class PlayerWeapon {
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y+15, 0));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x+90, y+50, 30));
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x-90, y+50, -30));
+			break;
+		case "projectiles/shot8":
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x - 160, y, 100));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x - 80, y, 80));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x + 160, y, -100));
+			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x + 80, y, -80));
 			break;
 		default:
 			game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));

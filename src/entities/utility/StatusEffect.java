@@ -16,7 +16,7 @@ public class StatusEffect {
 		this.name  = name;
 		switch(name){
 		case "laser":
-			duration = 150;
+			duration = ContentValues.MAX_PLAYER_LASER_DURATION;
 			SoundManager.play("lazor");
 			SoundManager.play("lazorSfx");
 			break;
@@ -33,6 +33,9 @@ public class StatusEffect {
 		case "shield":
 			duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
 			SoundManager.play("reflectiveShield");
+			break;
+		case "flakes":
+			duration = 500;
 			break;
 		default:
 			JOptionPane.showMessageDialog(null,

@@ -19,6 +19,7 @@ public class TextBox {
 
 	private String[] text;
 	private int x, y, targetY, width, height, duration;
+	private boolean isTutorial;
 	
 	public TextBox(String textString, int x, int targetY, int width, int duration){
 		this.text = textString.split(";");
@@ -28,6 +29,7 @@ public class TextBox {
 		this.height = text.length*30 + 20;
 		y = (targetY > Game.getGameHeight()/2) ? Game.getGameHeight() : 0;
 		this.duration = duration;
+		isTutorial = text[0].charAt(0) == 'S' ? false : true;
 	}
 	
 	public int getDuration(){
@@ -42,20 +44,34 @@ public class TextBox {
 			y += (targetY - y)/20;
 		}
 		
-		if (text[0].charAt(0) == 'S'){
-			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_SONG);
-		} else {
+		if (isTutorial){
 			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
+		} else {
+			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_SONG);
 		}
 		
 		g.fillRect(x, y, width, height);
 		g.setColor(Color.blue);
 		g.drawRect(x+2, y+2, width-4, height-4);
-		g.setColor(Color.RED);
-		g.setFont(new Font("Dialog", Font.BOLD, 20));
+		g.setColor(Color.yellow);
+		g.setFont(ContentValues.TEXT_BOX_FONT);
 		for (int i = 0; i < text.length; i++) {
 			g.drawString(text[i], x + 10, y + (i+1)*30);
 		}
+		
+		if (isTutorial){
+			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
+			g.fillRect(x - 40, y - 20, 45, 45);
+			g.setColor(Color.blue);
+			g.drawRect(x - 40, y - 20, 45, 45);
+			g.setColor(Color.yellow);
+			g.setFont(ContentValues.QUESTION_FONT);
+			g.drawString("?", x - 30, y + 20);
+		}
+	}
+
+	public boolean isTutorial() {
+		return isTutorial;
 	}
 }
 

@@ -95,6 +95,10 @@ public class MainMenu {
 		int creditsY = Game.HEIGHT - ImageManager.getImage("text/credits").getHeight(null);
 		
 		g.drawImage(ImageManager.getImage("text/credits"), creditsX, creditsY, null);
+		
+		g.setFont(ContentValues.INFO_FONT);
+		g.setColor(Color.BLACK);
+		g.drawString("v1.18 beta", 100, Game.getGameHeight() - 10);
 	}
 
 }

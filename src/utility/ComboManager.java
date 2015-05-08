@@ -14,13 +14,14 @@ public class ComboManager {
 	private long recentKillTime = 0;
 	private int recentKillCount = 0;
 	private int maxComboAchieved = 0;
-	private int recentKillTimeWindow = 5_000;
+	private int recentKillTimeWindow = ContentValues.KILL_TIME_WINDOW;
 	
 	private boolean shieldBonusReady = true;
 	private boolean spearsBonusReady = true;
 	private boolean scatterBonusReady = true;
 	private boolean quadRocketsBonusReady = true;
 	private boolean laserBonusReady = true;
+	private boolean flakesBonusReady = true;
 	
 	public ComboManager(Game game){
 		this.game = game;
@@ -34,6 +35,7 @@ public class ComboManager {
 			scatterBonusReady = true;
 			quadRocketsBonusReady = true;
 			laserBonusReady = true;
+			flakesBonusReady = true;
 		}
 	}
 	
@@ -57,6 +59,10 @@ public class ComboManager {
 		else if (laserBonusReady && recentKillCount >= 85){
 			laserBonusReady = false;
 			return new StatusEffect("laser");
+		}
+		else if (flakesBonusReady && recentKillCount >= 120){
+			flakesBonusReady = false;
+			return new StatusEffect("flakes");
 		}
 		return null;
 	}

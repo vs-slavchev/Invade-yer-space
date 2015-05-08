@@ -6,7 +6,6 @@ import utility.MenuKeys;
 import utility.TextBoxManager;
 import utility.TutorialManager;
 import utility.image.AnimationManager;
-import utility.image.BackgroundImageManager;
 import utility.image.BackgroundPlanetManager;
 import utility.image.ImageManager;
 import utility.sound.MusicManager;
@@ -15,7 +14,6 @@ import utility.sound.SoundManager;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -94,9 +92,8 @@ public class Game extends Canvas {
 				System.exit(0);
 			}
 		});
-
+		
 		// add input key system; InputKeyHandler class defined in Game class
-		//addKeyListener(new KeyInputHandler());
 		addKeyListener(menuKeys);
 		
 		requestFocus();
@@ -221,10 +218,9 @@ public class Game extends Canvas {
 			
 		} else if (StateManager.getState() == States.MENU){
 			MainMenu.drawMenu(g);
-			TextBoxManager.drawTextBoxes(g);
+			TextBoxManager.drawSongTextBoxes(g);
 		}
-			
-
+		
 		drawSpeakerIcon(g);
 		
 		// after drawing clean up and flip the buffer
@@ -419,12 +415,19 @@ public class Game extends Canvas {
 		}
 
 		public void keyTyped(KeyEvent e) {
-			if (waitingForKeyPress && (e.getKeyChar() == 32 || e.getKeyChar() == 10)) { // space and enter
+			// 32 = space; 10 = enter
+			if (waitingForKeyPress && (e.getKeyChar() == 32 || e.getKeyChar() == 10)) {
 				if (pressCount == 1) {
 					setWaitingForKeyPress(false);
 					inputController.setFirePressed(false);
 					if (message.equals("deathText")){
 						score = 0;
+						// sleep to allow clean up after previous level to catch up
+						try {
+							Thread.sleep(20);
+						} catch (InterruptedException ex) {
+							ex.printStackTrace();
+						}
 					}
 					startGame();
 					pressCount = 1;
@@ -443,11 +446,9 @@ public class Game extends Canvas {
 	
 /*
  * TODO:
- *  - increase ship mobulity; incr accel?
- *  - combos after lazor: more weapons
- *  - T fire bug
- *  - shield duration 2 revolving circles; remove opacity
- *  - diagnostics
- *  - textboxes colors
+ *  
+ *  wrapping up:
+ *  - update menu version
+ *  - add credits to kevin glass in main comments
  */
 

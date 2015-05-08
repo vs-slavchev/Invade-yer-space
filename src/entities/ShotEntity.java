@@ -51,6 +51,10 @@ public class ShotEntity extends Entity{
 			dy = ContentValues.BULLETS_VELOCITY[6];
 			this.dx = dx;
 			break;
+		case "projectiles/shot8":
+			dy = ContentValues.BULLETS_VELOCITY[7];
+			this.dx = dx;
+			break;
 		default:
 			JOptionPane.showMessageDialog(null,
 					"Error: \n" + name + "\nnot supported by ShotEntity.",

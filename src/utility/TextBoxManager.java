@@ -13,6 +13,7 @@ public class TextBoxManager {
 		textBoxes.add(textBox);
 	}
 	
+	// used in the play state
 	public static void drawTextBoxes(Graphics2D g){
 		if (!textBoxes.isEmpty()) {
 			for (TextBox textBox : textBoxes) {
@@ -21,6 +22,21 @@ public class TextBoxManager {
 					continue;
 				}
 				textBox.draw(g);
+			}
+		}
+	}
+	
+	// used in the menu state
+	public static void drawSongTextBoxes(Graphics2D g) {
+		if (!textBoxes.isEmpty()) {
+			for (TextBox textBox : textBoxes) {
+				if (!textBox.isTutorial()) {
+					if (textBox.getDuration() <= 0) {
+						textBoxes.remove(textBox);
+						continue;
+					}
+					textBox.draw(g);
+				}
 			}
 		}
 	}

@@ -55,7 +55,6 @@ public class ImageManager {
 		imageNames.add("projectiles/laser");
 		imageNames.add("effects/sparks");
 		imageNames.add("effects/reflectionSparks");
-		imageNames.add("effects/shield");
 		imageNames.add("effects/muzzleFlash");
 		imageNames.add("effects/speakerUI");
 		
@@ -68,7 +67,7 @@ public class ImageManager {
 		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/alienShot" + i);
 		}
-		for (int i = 7; i > 0; i--) {
+		for (int i = 8; i > 0; i--) {
 			imageNames.add("projectiles/shot" + i);
 		}
 		for (int i = 8; i > 0; i--) {
