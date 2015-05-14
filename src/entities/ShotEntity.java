@@ -99,7 +99,7 @@ public class ShotEntity extends Entity{
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
 			// the scale is = explosion radius/image raduis
-			AnimationManager.getAnimationManager().spawnAnimation("effects/explosion",
+			AnimationManager.spawnAnimation("effects/explosion",
 					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
 		}

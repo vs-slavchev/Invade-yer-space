@@ -163,7 +163,7 @@ public class ShipEntity extends Entity{
 				if (y > Game.getGameHeight() - collisionHeight) {
 					y = Game.getGameHeight() - collisionHeight;
 				}
-				AnimationManager.getAnimationManager().spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
+				AnimationManager.spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}
 		}
 		if( inputController.isAutoFirePressed()){

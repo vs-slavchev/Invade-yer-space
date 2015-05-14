@@ -18,7 +18,9 @@ public class MusicManager {
 	private String[] songNames = new String[numberOfSongs];
 	private OggClip[] songs = new OggClip[numberOfSongs];
 	private OggClip backgroundMusic;
-	private float gain = 0.78f;
+	private float gain = 0.72f;
+	private int delay = 210;
+	private boolean delayActive = false;
 	
 	public MusicManager() {
 		songNames[0] = "Wrath of Manol";
@@ -76,6 +78,23 @@ public class MusicManager {
 			gain = 1.0f;
 		}
 		backgroundMusic.setGain(gain);
+	}
+	
+	public void temporaryDecreaseGain(){
+		backgroundMusic.setGain(0.5f);
+		delayActive = true;
+		update();
+	}
+	
+	public void update(){
+		if (delayActive) {
+			delay--;
+		}
+		
+		if (delay < 0) {
+			delayActive = false;
+			backgroundMusic.setGain(gain);
+		}
 	}
 	
 	public void stopBackgroundMusic(){

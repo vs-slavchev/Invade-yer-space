@@ -72,7 +72,7 @@ public class AlienEntity extends Entity{
 				Entity alienShot = new AlienShotEntity(game,
 						(int) (x + collisionWidth / 2), (int) (y + 5), type);
 				game.getEntityManager().addToAlienEntities(alienShot);
-				AnimationManager.getAnimationManager().spawnAnimation(
+				AnimationManager.spawnAnimation(
 						"effects/muzzleFlash",
 						(int) x - 8 + animation.getDimensionX(),
 						(int) y - 8 + animation.getDimensionY(), 1);
@@ -107,7 +107,7 @@ public class AlienEntity extends Entity{
 		SoundManager.playExplosionSfx();
 		int sparksX = (int) (x + 10 + Math.random()*animation.getDimensionX()/2);
 		int sparksY = (int) (y + 10 + Math.random()*animation.getDimensionY()/2);
-		AnimationManager.getAnimationManager().spawnAnimation("effects/sparks", sparksX, sparksY, 1);
+		AnimationManager.spawnAnimation("effects/sparks", sparksX, sparksY, 1);
 		healthPoints--;
 	}
 	
@@ -123,11 +123,11 @@ public class AlienEntity extends Entity{
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
 			// the scale is = explosion radius/image raduis
-			AnimationManager.getAnimationManager().spawnAnimation("effects/explosion",
+			AnimationManager.spawnAnimation("effects/explosion",
 					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
 		} else {
-			AnimationManager.getAnimationManager().spawnAnimation(
+			AnimationManager.spawnAnimation(
 					"effects/explosion", (int) x, (int) y, 1);
 		}
 	}

@@ -9,32 +9,24 @@ import javax.swing.JOptionPane;
 
 public class AnimationManager {
 	
-	private static AnimationManager animationManager;
 	private static List<Animation> animations = new CopyOnWriteArrayList<>();
-	
-	public static AnimationManager getAnimationManager(){
-		if (animationManager == null) {
-			animationManager = new AnimationManager();
-			}
-			return animationManager;
-	}
 
-	public void spawnAnimation(String type, int x, int y, double scale) {
+	public static void spawnAnimation(String type, int x, int y, double scale) {
 
 		Animation anim = null;
 		switch (type) {
 			case "effects/sparks":
-				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
 				break;
 			case "effects/reflectionSparks":
-				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
 				break;
 			case "effects/muzzleFlash":
-				anim = new Animation(x, y, 0.7, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
 				break;
 			case "effects/explosion":
 				type += Integer.toString((int)Math.round(1 + Math.random()*3));
-				anim = new Animation(x, y, 0.15, 7, type, false, true, scale);
+				anim = new Animation(x, y, 0.12, 7, type, false, true, scale);
 				break;
 				default:
 					JOptionPane.showMessageDialog(null,
@@ -51,7 +43,7 @@ public class AnimationManager {
 		}
 	}
 
-	public synchronized void updateAnimations() {
+	public static synchronized void updateAnimations() {
 		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
 			Animation anim = iterator.next();
@@ -62,7 +54,7 @@ public class AnimationManager {
 		}
 	}
 
-	public synchronized void drawAnimations(Graphics2D g) {
+	public static synchronized void drawAnimations(Graphics2D g) {
 		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
 			Animation anim = iterator.next();
@@ -70,5 +62,9 @@ public class AnimationManager {
 				anim.drawAnimation(g);
 			}
 		}
+	}
+	
+	public static void clearAll(){
+		animations.clear();
 	}
 }

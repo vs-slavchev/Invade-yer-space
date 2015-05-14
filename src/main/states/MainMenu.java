@@ -98,7 +98,7 @@ public class MainMenu {
 		
 		g.setFont(ContentValues.INFO_FONT);
 		g.setColor(Color.BLACK);
-		g.drawString("v1.18 beta", 100, Game.getGameHeight() - 10);
+		g.drawString("v1.19 - 05.2015", 100, Game.getGameHeight() - 10);
 	}
 
 }

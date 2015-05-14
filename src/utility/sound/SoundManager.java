@@ -72,6 +72,26 @@ public class SoundManager {
 			sounds.get(name).start();
 		}
 	}
+	
+	public static void playOnly(String name) {
+		if (!sounds.containsKey(name)){
+			JOptionPane.showMessageDialog(null,
+					"Error: \n" + name + ".wav" + "\nnot found in SoundManager HashMap!",
+				    "Error playing sound!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
+		}
+		
+		// stop all sounds
+		for (Clip clip : sounds.values()) {
+			if (clip.isActive()) {
+				clip.stop();
+				clip.setFramePosition(0);
+			}
+		}
+		// play the sound
+		sounds.get(name).start();
+	}
 
 	private static Clip getClip(final String filename) {
 		Clip clip = null;

@@ -7,7 +7,7 @@ public class ContentValues {
 	// player related:
 	public static final int MAX_PLAYER_SHIELD_DURATION = 800;
 	public static final int MAX_PLAYER_LASER_DURATION = 170;
-	public static final int KILL_TIME_WINDOW = 5_500;
+	public static final int KILL_TIME_WINDOW = 7_000;
 	public static final int[] BULLETS_VELOCITY = {-700, -500, -600, -250, -550, -500, -200, -400};
 	public static final int ACCELERATION = 30;
 	public static final int FRICTION = 18;
@@ -16,7 +16,7 @@ public class ContentValues {
 	
 	// enemy related:
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2;
-	public static final int ENEMY_HP_BASE = 1;
+	public static final int ENEMY_HP_BASE = 0;
 	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 250;
 	public static final int MIN_ATTACK_INTERVAL = 500;
@@ -28,7 +28,7 @@ public class ContentValues {
 	
 	// sound and music
 	public static final float MUSIC_PER_TICK_MODIFIER = 0.007f;
-	public static final boolean DECREASE_CLIPS_GAIN = false;
+	public static final boolean DECREASE_CLIPS_GAIN = true;
 	
 	// used colors
 	public static final Color COLOR_TEXT_BOX_FILL_TUTORIAL = new Color(80, 80, 255);

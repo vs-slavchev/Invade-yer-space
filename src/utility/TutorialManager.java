@@ -21,7 +21,7 @@ public class TutorialManager {
 		tutorials.push(new TextBox("Hold - or + to decrease or;increase the music volume.", Game.getGameWidth()/2, 70, 280, 420));
 		tutorials.push(new TextBox("Press T to toggle autofire.", Game.getGameWidth()*3/4, 200, 270, 400));
 		tutorials.push(new TextBox("Using a weapon will cause it;to overheat! Press 1, 2, 3 or 4;to switch between weapons.", Game.getGameWidth()/5, 300, 300, 500));
-		tutorials.push(new TextBox("Hold down the arrow keys;to move and space to shoot.", Game.getGameWidth()*2/3, Game.getGameHeight()-250, 285, 400));
+		tutorials.push(new TextBox("Hold down the space bar;to shoot.", Game.getGameWidth()*2/3, Game.getGameHeight()-250, 285, 400));
 	}
 	
 	public static void updateTutorials(){

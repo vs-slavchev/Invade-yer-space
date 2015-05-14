@@ -38,7 +38,7 @@ public class AlienShotEntity extends Entity{
 					dx = (x - ((ShipEntity) other).getCenteredX())*10;
 					dy = -dy;
 					reflected = true;
-					AnimationManager.getAnimationManager().spawnAnimation("effects/reflectionSparks", (int)x-10, (int)y-15, 2.0);
+					AnimationManager.spawnAnimation("effects/reflectionSparks", (int)x-10, (int)y-15, 2.0);
 				}
 				return;
 			}

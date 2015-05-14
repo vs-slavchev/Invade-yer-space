@@ -215,8 +215,8 @@ public class EntityManager {
 	public void speedUpAlienEntities(){
 		for( int i = 0; i < alienEntities.size(); i++){
 			Entity entity = alienEntities.get(i);
-			if( entity instanceof AlienEntity){
-				entity.setHorizontalMovement( entity.getHorizontalMovement() * 1.013 );
+			if (entity instanceof AlienEntity){
+				entity.setHorizontalMovement( entity.getHorizontalMovement() * 1.01 );
 				((AlienEntity) entity).reduceShootTimeInterval();
 			}
 		}

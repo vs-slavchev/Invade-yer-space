@@ -10,8 +10,8 @@ import main.states.MainMenu;
 public class MenuKeys extends KeyAdapter {
 
 	private Game game;
-	
-	public MenuKeys(Game game){
+
+	public MenuKeys(Game game) {
 		this.game = game;
 	}
 
@@ -38,7 +38,21 @@ public class MenuKeys extends KeyAdapter {
 		case KeyEvent.VK_ESCAPE:
 			game.setGameRunning(false);
 			break;
+		case KeyEvent.VK_COMMA:
+			game.getInputController().setMusicDownPressed(true);
+			break;
+		case KeyEvent.VK_PERIOD:
+			game.getInputController().setMusicUpPressed(true);
+			break;
 		}
 	}
 
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_COMMA) {
+			game.getInputController().setMusicDownPressed(false);
+		}
+		if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
+			game.getInputController().setMusicUpPressed(false);
+		}
+	}
 }

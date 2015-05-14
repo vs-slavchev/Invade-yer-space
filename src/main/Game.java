@@ -144,7 +144,7 @@ public class Game extends Canvas {
 					entityManager.collideEntities();
 				}
 	
-				AnimationManager.getAnimationManager().updateAnimations();
+				AnimationManager.updateAnimations();
 				// remove destroyed entities that are to be removed and clean up
 				entityManager.removeEntities();
 				// if we need to do logic go through alienEntities only, since
@@ -157,9 +157,8 @@ public class Game extends Canvas {
 				((ShipEntity) entityManager.getShip())
 						.processInput(inputController);
 				
-				controlMusicGain();
-				
 			}
+			controlMusicGain();
 			
 			drawGame();
 
@@ -169,11 +168,12 @@ public class Game extends Canvas {
 	}
 
 	private void controlMusicGain() {
-		if (inputController.isMusicDownPressed()){
-			musicManager.modifyGain( -ContentValues.MUSIC_PER_TICK_MODIFIER);
-		}else if (inputController.isMusicUpPressed()){
+		if (inputController.isMusicDownPressed()) {
+			musicManager.modifyGain(-ContentValues.MUSIC_PER_TICK_MODIFIER);
+		} else if (inputController.isMusicUpPressed()) {
 			musicManager.modifyGain(ContentValues.MUSIC_PER_TICK_MODIFIER);
 		}
+		musicManager.update();
 	}
 
 	/* pause and fps control:
@@ -202,7 +202,7 @@ public class Game extends Canvas {
 			planetManager.drawBackgroundObjects(g);
 			// draw cycle
 			entityManager.drawEntities(g);
-			AnimationManager.getAnimationManager().drawAnimations(g);
+			AnimationManager.drawAnimations(g);
 			
 			// if game is waiting for "any key press" show message
 			if (waitingForKeyPress) {
@@ -242,7 +242,7 @@ public class Game extends Canvas {
 					WIDTH - 90, 30, WIDTH - 90 + 64, 30 + 64, 64 * sX, 0, 64 * (sX + 1), 64, null);
 		}
 	}
-	
+
 	public void switchToMenuKeyHandler(){
 		removeKeyListener(keyInputHandler);
 		addKeyListener(menuKeys);
@@ -263,7 +263,8 @@ public class Game extends Canvas {
 	public void notifyWin() {
 		message = "winText";
 		waitingForKeyPress = true;
-		SoundManager.play("manolWin");
+		musicManager.temporaryDecreaseGain();
+		SoundManager.playOnly("manolWin");
 		entityManager.generateNewEntitiesMap();
 		score += ((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved();
 	}
@@ -291,6 +292,7 @@ public class Game extends Canvas {
 	}
 
 	void startGame() {
+		AnimationManager.clearAll();
 		inputController.reset();
 		entityManager.initEntities();
 	}
@@ -301,6 +303,10 @@ public class Game extends Canvas {
 
 	public static int getGameHeight() {
 		return HEIGHT;
+	}
+	
+	public InputController getInputController() {
+		return inputController;
 	}
 	
 	public static int getScore(){
@@ -363,10 +369,10 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_T) {
 				inputController.setAutoFirePressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
+			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
 				inputController.setMusicDownPressed(true);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
 				inputController.setMusicUpPressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
@@ -397,10 +403,10 @@ public class Game extends Canvas {
 			if (e.getKeyCode() == KeyEvent.VK_R) {
 				Game.setAlienHPBarDrawn(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_MINUS) {
+			if (e.getKeyCode() == KeyEvent.VK_COMMA) {
 				inputController.setMusicDownPressed(false);
 			}
-			if (e.getKeyCode() == KeyEvent.VK_EQUALS) {
+			if (e.getKeyCode() == KeyEvent.VK_PERIOD) {
 				inputController.setMusicUpPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
@@ -424,7 +430,7 @@ public class Game extends Canvas {
 						score = 0;
 						// sleep to allow clean up after previous level to catch up
 						try {
-							Thread.sleep(20);
+							Thread.sleep(100);
 						} catch (InterruptedException ex) {
 							ex.printStackTrace();
 						}
@@ -443,12 +449,3 @@ public class Game extends Canvas {
 		}
 	}// close KeyInputHandler class
 }
-	
-/*
- * TODO:
- *  
- *  wrapping up:
- *  - update menu version
- *  - add credits to kevin glass in main comments
- */
-
