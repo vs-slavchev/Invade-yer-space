@@ -57,10 +57,10 @@ public class ShipEntity extends Entity{
 		if( dx < 0 && x < 10 ){
 			return;
 		}
-		if( dx > 0 && x > Game.getGameWidth() - 50 ){
+		if( dx > 0 && x > Game.getGameWidth() - collisionWidth - 15 ){
 			return;
 		}
-		if( dy > 0 && y >= Game.getGameHeight() - collisionHeight ){
+		if( dy > 0 && y >= Game.getGameHeight() - collisionHeight - 50){
 			return;
 		}
 		if( dy < 0 && y < 10 ){
@@ -160,8 +160,8 @@ public class ShipEntity extends Entity{
 			if (weapons[currentWeapon].tryToFire()) {
 				// if successfully shot then get knocked back as a result
 				y += 2;
-				if (y > Game.getGameHeight() - collisionHeight) {
-					y = Game.getGameHeight() - collisionHeight;
+				if (y > Game.getGameHeight() - collisionHeight - 50) {
+					y = Game.getGameHeight() - collisionHeight - 50;
 				}
 				AnimationManager.spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}

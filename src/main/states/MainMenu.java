@@ -14,8 +14,8 @@ import main.states.StateManager.States;
 public class MainMenu {
 	private static int currentOption = 0;
 	private static final String[] options = { "play", "quit" };
-	private static BackgroundImageManager gemsManager = new BackgroundImageManager(ContentValues.MAX_BACKGROUND_GEMS,
-			ContentValues.NUMBER_DIFFERENT_GEMS, ContentValues.GEM_SPAWN_CHANCE, "effects/gems/gem", ContentValues.GEM_Y_VEL);
+	private static BackgroundImageManager gemsManager = new BackgroundImageManager(ContentValues.NUMBER_DIFFERENT_GEMS,
+			ContentValues.GEM_SPAWN_CHANCE, "effects/gems/gem", ContentValues.GEM_Y_VEL, ContentValues.GEM_SPACING);
 	
 	public static void goUp() {
 		
@@ -41,13 +41,6 @@ public class MainMenu {
 		case "play":
 			SoundManager.play("yarr");
 			Game.getMusicManager().loopBackgroundMusic(1);
-			/* sleep to let the sound and music
-			 * threads start and get running */
-			try {
-				Thread.sleep(250);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			StateManager.setState(States.PLAY);
 			game.switchToInputKeyHandler();
 			game.setWaitingForKeyPress(true);
@@ -98,7 +91,7 @@ public class MainMenu {
 		
 		g.setFont(ContentValues.INFO_FONT);
 		g.setColor(Color.BLACK);
-		g.drawString("v1.19 - 05.2015", 100, Game.getGameHeight() - 10);
+		g.drawString("v1.21 - 28.09.2015", 100, Game.getGameHeight() - 10);
 	}
 
 }

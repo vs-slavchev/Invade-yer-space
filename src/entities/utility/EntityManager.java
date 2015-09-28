@@ -101,7 +101,7 @@ public class EntityManager {
 		}
 	}
 	
-	public synchronized void drawEntities(Graphics2D g){
+	public /*synchronized*/ void drawEntities(Graphics2D g){
 		for( int i = 0; i < alienEntities.size(); i++){
 			Entity entity = alienEntities.get(i);
 			if (!(entity == null)) {
@@ -191,7 +191,7 @@ public class EntityManager {
 		System.gc();
 	}
 	
-	private AlienEntity produceAlien( int type, int row, int col){
+	private AlienEntity produceAlien(int type, int row, int col){
 		/* aliens are centered according to their image; aliens are created first,
 		 * so their image is not null, and then according to the image dimensions
 		 * their position is set correctly */
@@ -226,13 +226,14 @@ public class EntityManager {
 		aoeObjects.add(new Rectangle(x, y, width, height));
 	}
 	
-	// 2 methods for debugging
+	// used for debugging
 	public void printEntitiesMapInfo(){
 		for( int i = 1; i < 9; i++){
 			occurencesOfNumber(Integer.toString(i));
 		}
 	}
-
+	
+	// used for debugging
 	private void occurencesOfNumber(String ch) {
 		int occursOfOne = 0;
 		int index = entitiesLevelMap.indexOf(ch);

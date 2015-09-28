@@ -2,9 +2,9 @@ package utility;
 
 public class InputController {
 	
+	private volatile boolean firePressed = false;
 	private boolean leftPressed = false;
 	private boolean rightPressed = false;
-	private boolean firePressed = false;
 	private boolean upPressed = false;
 	private boolean downPressed = false;
 	private boolean onePressed = false;

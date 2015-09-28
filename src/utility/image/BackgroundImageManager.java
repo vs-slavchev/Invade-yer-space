@@ -8,37 +8,36 @@ import main.Game;
 
 public class BackgroundImageManager {
 	private CopyOnWriteArrayList<Animation> backgroundObjects = new CopyOnWriteArrayList<>();
-	private int maxObjects;
 	private int numberOfDifferentAnimations;
 	private int yVel;
 	private double chanceToSpawn;
+	private int spacing;
 	private String imageName;
 	
-	public BackgroundImageManager(int maxObjects, int numAnims, double chanceToSpawn, String imageName, int yVel){
-		this.maxObjects = maxObjects;
-		numberOfDifferentAnimations = numAnims;
+	public BackgroundImageManager(int numAnims, double chanceToSpawn, String imageName, int yVel, int spacing){
+		this.numberOfDifferentAnimations = numAnims;
 		this.chanceToSpawn = chanceToSpawn;
 		this.imageName = imageName;
 		this.yVel = yVel;
+		this.spacing = spacing;
 	}
 	
 	public void update(){
 		for (Animation animation : backgroundObjects) {
-			// move animation lower: x+0,y+1
+			// move animation lower: x+0,y+yVel
 			animation.modifyPosition(0, yVel);
+			// if object is off the screen, replace it with a new one
 			if( animation.getY() > Game.HEIGHT){
 				animation = generateBackgroundObject();
 			}
 		}
-		generateNewObjects(maxObjects);
+		generateNewObjects();
 	}
 
-	protected void generateNewObjects(int max) {
-		if (backgroundObjects.size() < max){
-			Animation newBackgroundObj = generateBackgroundObject();
-			if (!(newBackgroundObj == null)) {
-				backgroundObjects.add(newBackgroundObj);
-			}
+	protected void generateNewObjects() {
+		Animation newBackgroundObj = generateBackgroundObject();
+		if (newBackgroundObj != null) {
+			backgroundObjects.add(newBackgroundObj);
 		}
 	}
 	
@@ -53,10 +52,9 @@ public class BackgroundImageManager {
 		}
 		if (Math.random() < chanceToSpawn && minY > 0) {
 			int x = (int) (-30 + Math.random() * Game.WIDTH);
-			int y = -200;
 			String name = imageName + (int) (1 + Math.random() * (numberOfDifferentAnimations - 1));
 			double scale = 1 + Math.random();
-			return new Animation(x, y, 0, 1, name, false, false, scale);
+			return new Animation(x, spacing, 0, 1, name, false, false, scale);
 		}
 		return null;
 	}

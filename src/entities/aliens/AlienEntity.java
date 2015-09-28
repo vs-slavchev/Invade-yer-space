@@ -81,7 +81,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void reduceShootTimeInterval(){
-		shootTimeInterval *= 0.995; // 0.99
+		shootTimeInterval *= 0.988; //0.995
 	}
 	
 	public int getrandom( int min, int max ){
@@ -112,8 +112,9 @@ public class AlienEntity extends Entity{
 	}
 	
 	public boolean isDead(){
-		if( healthPoints <= 0 )
+		if( healthPoints <= 0 ){
 			return true;
+		}
 		return false;
 	}
 	
