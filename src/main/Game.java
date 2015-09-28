@@ -115,14 +115,15 @@ public class Game extends Canvas {
 	}
 
 	public static void main(String argv[]) {
-		(new Game()).gameLoop();
+		(new Game()).playGame();
 		System.exit(0);
 	}
 
-	public void gameLoop() {
+	public void playGame() {
 
 		long lastLoopTime = System.currentTimeMillis();
 
+		// main game loop
 		while (gameRunning) {
 
 			// calculate how far entities should move this loop, based on the
@@ -182,11 +183,7 @@ public class Game extends Canvas {
 	private void sleepAndFPSControl(long lastLoopTime) {
 		try {
 			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
-			if (sleepTime <= 1){
-				sleepTime = 1000 / FPS;
-			}
-			Thread.sleep(sleepTime);
-			//Thread.sleep(1000 / FPS);
+			Thread.sleep(sleepTime > 0 ? sleepTime : 1);
 		} catch (InterruptedException e) {
 			System.out.println("mainThread.sleep was interrupted!");
 		}
@@ -254,6 +251,8 @@ public class Game extends Canvas {
 	}
 
 	public void notifyDeath() {
+		// turn autoFire off to prevent from shooting in the next game
+		((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
 		message = "deathText";
 		waitingForKeyPress = true;
 		SoundManager.play("nooo");
@@ -261,6 +260,8 @@ public class Game extends Canvas {
 	}
 
 	public void notifyWin() {
+		// turn autoFire off to prevent from shooting in the next game
+		((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
 		message = "winText";
 		waitingForKeyPress = true;
 		musicManager.temporaryDecreaseGain();
@@ -292,8 +293,8 @@ public class Game extends Canvas {
 	}
 
 	void startGame() {
-		AnimationManager.clearAll();
 		inputController.reset();
+		AnimationManager.clearAll();
 		entityManager.initEntities();
 	}
 
@@ -421,19 +422,13 @@ public class Game extends Canvas {
 		}
 
 		public void keyTyped(KeyEvent e) {
-			// 32 = space; 10 = enter
+			// keyCodes: 32 = space; 10 = enter
 			if (waitingForKeyPress && (e.getKeyChar() == 32 || e.getKeyChar() == 10)) {
 				if (pressCount == 1) {
 					setWaitingForKeyPress(false);
 					inputController.setFirePressed(false);
 					if (message.equals("deathText")){
 						score = 0;
-						// sleep to allow clean up after previous level to catch up
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException ex) {
-							ex.printStackTrace();
-						}
 					}
 					startGame();
 					pressCount = 1;
@@ -442,6 +437,8 @@ public class Game extends Canvas {
 				}
 			}
 			if (e.getKeyChar() == 27) { // escape to menu
+				// turn autoFire off to prevent from shooting in the next game
+				((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
 				StateManager.setState(States.MENU);
 				getMusicManager().loopBackgroundMusic(0);
 				switchToMenuKeyHandler();
