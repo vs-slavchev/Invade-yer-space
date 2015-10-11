@@ -14,11 +14,10 @@ import utility.sound.SoundManager;
 
 public class AlienEntity extends Entity{
 	
-	private int type;
+	private final int type;
 	private int healthPoints;
 	private long shootTimeInterval;
 	private long lastShotTime = 60;
-	private Random random = new Random();
 	private final String spriteName;
 	private Animation animation;
 
@@ -84,8 +83,8 @@ public class AlienEntity extends Entity{
 		shootTimeInterval *= 0.988; //0.995
 	}
 	
-	public int getrandom( int min, int max ){
-		return min + random.nextInt( max - min );
+	public int getrandom(int min, int max){
+		return min + new Random().nextInt(max - min);
 	}
 	
 	public void draw(Graphics2D g){
@@ -123,13 +122,13 @@ public class AlienEntity extends Entity{
 			game.getEntityManager().createAoEObject((int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
-			// the scale is = explosion radius/image raduis
+			// the scale is equal to explosion radius/image radius
 			AnimationManager.spawnAnimation("effects/explosion",
 					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
-					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
+					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
+					ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
 		} else {
-			AnimationManager.spawnAnimation(
-					"effects/explosion", (int) x, (int) y, 1);
+			AnimationManager.spawnAnimation("effects/explosion", (int) x, (int) y, 1);
 		}
 	}
 	

@@ -43,34 +43,36 @@ public class Game extends Canvas {
 	public final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public final static GraphicsDevice device = env.getScreenDevices()[0]; 
 	public static final Rectangle RECTANGLE = device.getDefaultConfiguration().getBounds(); 
-	public static final int WIDTH = RECTANGLE.width; 
-	public static final int HEIGHT = RECTANGLE.height; 
+	public static final int SCREEN_WIDTH = RECTANGLE.width; 
+	public static final int SCREEN_HEIGHT = RECTANGLE.height; 
 	
-	private int FPS = 90;
+	private final int FPS = 90;
 	private volatile long delta = 1000 / this.FPS;
 	volatile boolean gameRunning = true;
 	private boolean logicRequiredThisLoop = false;
-	private boolean waitingForKeyPress = false;
+	boolean waitingForKeyPress = false;
 	InputController inputController;
 	private MenuKeys menuKeys = new MenuKeys(this);
 	private KeyInputHandler keyInputHandler = new KeyInputHandler();
 	
-	
-	private EntityManager entityManager = new EntityManager(this);
+	EntityManager entityManager = new EntityManager(this);
 	private static MusicManager musicManager = new MusicManager();
-	private BackgroundPlanetManager planetManager = new BackgroundPlanetManager();
 	private static boolean alienHPBarDrawn = false;
-	private String message = "startText";
-	private static int score = 0;
+	String message = "startText";
+	static int score = 0;
+	private BackgroundPlanetManager planetManager =
+			new BackgroundPlanetManager(ContentValues.NUMBER_DIFFERENT_PLANETS,
+					ContentValues.PLANET_SPAWN_CHANCE, "planets/planet",
+					ContentValues.PLANET_Y_VEL, ContentValues.PLANET_SPACING);
 
 	public Game() {
 
 		JFrame container = new JFrame("Invade yer space ye scurvy dog!");
 		JPanel panel = (JPanel) container.getContentPane();
-		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		panel.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		panel.setLayout(null);
 
-		setBounds(0, 0, WIDTH , HEIGHT);
+		setBounds(0, 0, SCREEN_WIDTH , SCREEN_HEIGHT);
 		setLocation(0, 0);
 		container.setUndecorated(true);
 		panel.add(this);
@@ -109,6 +111,7 @@ public class Game extends Canvas {
 		entityManager.initEntities();
 		SoundManager.initSoundManager();
 		TutorialManager.initTutorialList();
+		MainMenu.initGems();
 
 		// start playing background music
 		musicManager.loopBackgroundMusic(0);
@@ -164,6 +167,7 @@ public class Game extends Canvas {
 			drawGame();
 
 			sleepAndFPSControl(lastLoopTime);
+			
 		} // close while
 		SoundManager.close();
 	}
@@ -180,7 +184,7 @@ public class Game extends Canvas {
 	/* pause and fps control:
 	 * The more time it took to update and draw the less time the game
 	 * sleeps; this way a fairly constant FPS is achieved. */
-	private void sleepAndFPSControl(long lastLoopTime) {
+	private void sleepAndFPSControl(final long lastLoopTime) {
 		try {
 			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
 			Thread.sleep(sleepTime > 0 ? sleepTime : 1);
@@ -193,7 +197,7 @@ public class Game extends Canvas {
 		// get a graphics context for the accelerated surface and blank it
 		Graphics2D g = (Graphics2D) this.strategy.getDrawGraphics();
 		g.setColor(Color.black);
-		g.fillRect(0, 0, WIDTH, HEIGHT);
+		g.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		
 		if (StateManager.getState() == States.PLAY){
 			planetManager.drawBackgroundObjects(g);
@@ -204,8 +208,8 @@ public class Game extends Canvas {
 			// if game is waiting for "any key press" show message
 			if (waitingForKeyPress) {
 				g.drawImage(ImageManager.getImage("text/" + message),
-						(WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
-						(HEIGHT/2 - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
+						(SCREEN_WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
+						(SCREEN_HEIGHT/2 - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
 				
 				((ShipEntity) entityManager.getShip()).getComboManager().drawComboScore(g);
 				
@@ -236,7 +240,7 @@ public class Game extends Canvas {
 		}
 		if (willDraw) {
 			g.drawImage(ImageManager.getImage("effects/speakerUI"),
-					WIDTH - 90, 30, WIDTH - 90 + 64, 30 + 64, 64 * sX, 0, 64 * (sX + 1), 64, null);
+					SCREEN_WIDTH - 90, 30, SCREEN_WIDTH - 90 + 64, 30 + 64, 64 * sX, 0, 64 * (sX + 1), 64, null);
 		}
 	}
 
@@ -299,11 +303,11 @@ public class Game extends Canvas {
 	}
 
 	public static int getGameWidth() {
-		return WIDTH;
+		return SCREEN_WIDTH;
 	}
 
 	public static int getGameHeight() {
-		return HEIGHT;
+		return SCREEN_HEIGHT;
 	}
 	
 	public InputController getInputController() {

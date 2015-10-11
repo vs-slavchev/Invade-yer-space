@@ -15,14 +15,17 @@ public class Animation {
 	private boolean active = true;
 	// running: the current frame is changing over time
 	private boolean running = false;
+	// if does loop is false then the animation is played once and paused on the first frame
 	private boolean doesLoop = false;
 	private volatile double currentFrame = 0.0;
+	// controls how long a frame is shown
 	private double frameModifier;
 	private int numFrame;
 	private String name;
 	private double scale;
 	
-	public Animation(int x, int y, double frameModifier, int numFrame, String name, boolean doesLoop,boolean running, double scale){
+	public Animation(int x, int y, double frameModifier, int numFrame,
+			String name, boolean doesLoop,boolean running, double scale){
 		this.x = x;
 		this.y = y;
 		this.frameModifier = frameModifier;

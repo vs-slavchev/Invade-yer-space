@@ -6,18 +6,23 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import utility.ContentValues;
+import javax.swing.JOptionPane;
+
 import entities.Entity;
 import entities.ShipEntity;
 import entities.aliens.AlienEntity;
 import main.Game;
+import utility.ContentValues;
 
 public class EntityManager {
 	
 	private Game game;
-	private CopyOnWriteArrayList<Entity> alienEntities = new CopyOnWriteArrayList<>(); // aliens and alienShots
-	private ArrayList<Entity> entities = new ArrayList<>(); // ship and playerProjectiles
-	private HashSet<Entity> removeList = new HashSet<>(); // set of entities to be removed
+	// aliens and alienShots
+	private CopyOnWriteArrayList<Entity> alienEntities = new CopyOnWriteArrayList<>();
+	// ship and playerProjectiles
+	private ArrayList<Entity> entities = new ArrayList<>();
+	// set of unique entities to be removed
+	private HashSet<Entity> removeList = new HashSet<>();
 	// list manages the AoE objects: explosions and lasers
 	// that affect more than 1 entity at the same time
 	private ArrayList<Rectangle> aoeObjects = new ArrayList<>();
@@ -25,7 +30,8 @@ public class EntityManager {
 	private int alienCount = 0;
 	private final int maxAlienShipType = 8;
 	private final int maxRows = 8;
-	private final int maxColumns = 20; // MUST be an even number
+	// MUST be an even number
+	private final int maxColumns = ContentValues.ALIENS_MAX_COLUMNS;
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
 	private double levelDifficulty = 1.0;
@@ -36,6 +42,11 @@ public class EntityManager {
 		generateNewEntitiesMap();
 		if (entitiesLevelMap.length() != this.maxColumns*this.maxRows){
 			System.out.println("entitiesMap is not the exact size!");
+			JOptionPane.showMessageDialog(null,
+					"Error: \nentitiesMap is not the exacty correct size!",
+				    "Error setting up entityManager!",
+				    JOptionPane.ERROR_MESSAGE);
+			 System.exit(0);
 		}
 	}
 	
@@ -101,7 +112,7 @@ public class EntityManager {
 		}
 	}
 	
-	public /*synchronized*/ void drawEntities(Graphics2D g){
+	public void drawEntities(Graphics2D g){
 		for( int i = 0; i < alienEntities.size(); i++){
 			Entity entity = alienEntities.get(i);
 			if (!(entity == null)) {
@@ -208,8 +219,10 @@ public class EntityManager {
 		alienEntities.add(entity);
 	}
 	
-	public void addToEntities(Entity entity){
+	/* Method returns the entity manager so we can chain calls. */
+	public EntityManager addToEntities(Entity entity){
 		entities.add(entity);
+		return this;
 	}
 	
 	public void speedUpAlienEntities(){

@@ -15,7 +15,7 @@ public class AlienShotEntity extends Entity{
 	// reflected by the player shield; reflected bullets cannot be reflected again
 	private boolean reflected = false;
 	
-	public AlienShotEntity(Game game, int x, int y, int type){
+	public AlienShotEntity(Game game, final int x, final int y, final int type){
 		super(x, y);
 		this.game = game;
 		this.dy = ContentValues.BASE_BULLET_VELOCITY + type*50;
@@ -24,7 +24,7 @@ public class AlienShotEntity extends Entity{
 		this.collisionHeight = ImageManager.getImage("projectiles/alienShot" + type).getHeight(null);
 	}
 	
-	public void move(long delta){
+	public void move(final long delta){
 		super.move(delta);
 		if( y > Game.getGameHeight() + 20  || y < -20){
 			game.getEntityManager().removeEntity(this);

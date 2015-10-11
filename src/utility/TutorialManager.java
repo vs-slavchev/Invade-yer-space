@@ -9,9 +9,9 @@ public class TutorialManager {
 
 	private static boolean tutorialsOn = true;
 	private static Stack<TextBox> tutorials = new Stack<>();
-	private static int timer = -70; // 70 steps delay before the 1st tutorial
-	private static int numTutorials = 7;
-	private static int timeStep = 400;
+	private static int timer = -70; // steps delay before the 1st tutorial
+	private static final int numTutorials = 7;
+	private static final int timeStep = 400; // timeframe between tutorials
 	
 	// the first tutorials are at the bottom of the method; top of the stack
 	public static void initTutorialList(){

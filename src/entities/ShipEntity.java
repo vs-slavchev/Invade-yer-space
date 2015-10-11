@@ -38,11 +38,11 @@ public class ShipEntity extends Entity{
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
 		for ( int i = 0; i < weapons.length; i++){
-			weapons[i] = new PlayerWeapon(game, "projectiles/shot" + (i+1));
+			weapons[i] = new PlayerWeapon(game, this, "projectiles/shot" + (i+1));
 		}
 	}
 	
-	public void move(long delta){
+	public void move(final long delta){
 		particleEmitter.emittParticle((int)x + animation.getDimensionX()/2, (int)y + animation.getDimensionY());
 		animation.update();
 		animation.setPosition((int)x, (int)y);
@@ -108,7 +108,7 @@ public class ShipEntity extends Entity{
 		}
 	}
 	
-	public void collidedWith(Entity other){
+	public void collidedWith(final Entity other){
 		if( other instanceof AlienEntity){
 			this.game.notifyDeath();
 			autoFireOn = false;
@@ -233,8 +233,7 @@ public class ShipEntity extends Entity{
 			if (!buffs.isEmpty()) {
 				for (StatusEffect statusEffect : buffs) {
 					 if (statusEffect.getName().equals("shield")) {
-						angle = (int) (((double)statusEffect.getDuration()/(double)(ContentValues.MAX_PLAYER_SHIELD_DURATION)) * (double)360);
-						//angle -= ContentValues.MAX_PLAYER_SHIELD_DURATION;
+						angle = (int) (((double)statusEffect.getDuration()/(double)(ContentValues.MAX_PLAYER_SHIELD_DURATION)) * 360);
 					}
 				}
 			}
@@ -257,7 +256,6 @@ public class ShipEntity extends Entity{
 		}
 		
 		for (int i = 0; i < ContentValues.NUM_NORMAL_WEAPONS; i++){
-			
 			int greenComponent = (int)(100 - weapons[i].getOverheatPercent())*255/100;
 			g.setColor(new Color(255, greenComponent, 0));
 			g.fillRect(baseX + i*35, (int)(baseY + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());

@@ -12,18 +12,18 @@ public abstract class Entity {
 	protected Rectangle collisionRectangle = new Rectangle();
 	protected int collisionWidth, collisionHeight;
 	
-	public Entity( int x, int y){
+	public Entity(final int x, final int y){
 		this.x = x;
 		this.y = y;
 	}
 	
-	public Entity(Game game,int x, int y){
+	public Entity(Game game,final int x, final int y){
 		this.game = game;
 		this.x = x;
 		this.y = y;
 	}
 	
-	public void move(long delta){
+	public void move(final long delta){
 		x += (delta * dx)/1000;
 		y += (delta * dy)/1000;
 	}

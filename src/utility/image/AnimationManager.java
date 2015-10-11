@@ -7,30 +7,36 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JOptionPane;
 
+/* The AnimationManager class controls the explosion, muzzle flash
+ * and sparks animations.Those do not belong to a game world object
+ * and therefore need a manager.
+ */
+
 public class AnimationManager {
 	
 	private static List<Animation> animations = new CopyOnWriteArrayList<>();
 
-	public static void spawnAnimation(String type, int x, int y, double scale) {
+	public static void spawnAnimation(final String type, final int x, final int y, final double scale) {
 
 		Animation anim = null;
+		String modified_type = type;
 		switch (type) {
 			case "effects/sparks":
-				anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.2, 4, modified_type, false, true, scale);
 				break;
 			case "effects/reflectionSparks":
-				anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.2, 4, modified_type, false, true, scale);
 				break;
 			case "effects/muzzleFlash":
-				anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
+				anim = new Animation(x, y, 0.5, 4, modified_type, false, true, scale);
 				break;
 			case "effects/explosion":
-				type += Integer.toString((int)Math.round(1 + Math.random()*3));
-				anim = new Animation(x, y, 0.12, 7, type, false, true, scale);
+				modified_type += Integer.toString((int)Math.round(1 + Math.random()*3));
+				anim = new Animation(x, y, 0.12, 7, modified_type, false, true, scale);
 				break;
 				default:
 					JOptionPane.showMessageDialog(null,
-							"Error: \n" + type + "\nanimation not supported by AnimationManager.",
+							"Error: \n" + modified_type + "\nanimation not supported by AnimationManager.",
 						    "Error",
 						    JOptionPane.ERROR_MESSAGE);
 					 System.exit(0);
@@ -54,7 +60,7 @@ public class AnimationManager {
 		}
 	}
 
-	public static synchronized void drawAnimations(Graphics2D g) {
+	public static void drawAnimations(Graphics2D g) {
 		for (final Iterator<Animation> iterator = animations.iterator(); iterator
 				.hasNext();) {
 			Animation anim = iterator.next();

@@ -11,11 +11,12 @@ import entities.aliens.AlienEntity;
 import main.Game;
 
 public class ShotEntity extends Entity{
-	
+
+	// name is required for drawing and explosions
+	private final String name;
 	private boolean used = false;
-	private String name;
 	
-	public ShotEntity(Game game, String name, int x, int y, int dx){
+	public ShotEntity(Game game, final String name, final int x, final int y, final int dx){
 		super(x, y);
 		this.game = game;
 		this.name = name;
@@ -65,7 +66,7 @@ public class ShotEntity extends Entity{
 		}
 	}
 	
-	public void move(long delta){
+	public void move(final long delta){
 		super.move(delta);
 		if (name.equals("projectiles/shot2")){
 			dx += Math.sin(y)*20;

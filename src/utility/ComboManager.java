@@ -3,7 +3,6 @@ package utility;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import entities.ShipEntity;
 import entities.utility.StatusEffect;
 import main.Game;
 import utility.image.ImageManager;
@@ -103,18 +102,18 @@ public class ComboManager {
 		}
 	}
 
-	public void drawComboDigits(Graphics2D g, int value, int xBase, int yBase) {
+	public void drawComboDigits(Graphics2D g, final int value, final int xBase, final int yBase) {
 		
 		int digitWidth = ImageManager.getImage("text/comboDigits").getWidth(null) / 10;
 		int digitHeight = ImageManager.getImage("text/comboDigits").getHeight(null);
 		String scoreText = Integer.toString(value);
-		xBase -= (scoreText.length() - 1) * (digitWidth/2);
+		int modified_xBase = xBase - (scoreText.length() - 1) * (digitWidth/2);
 
 		for (int i = 0; i < scoreText.length(); i++) {
 			int currentDigit = Integer.parseInt(Character
 					.toString(scoreText.charAt(i)));
-			g.drawImage(ImageManager.getImage("text/comboDigits"), xBase + i
-					* digitWidth, yBase, xBase
+			g.drawImage(ImageManager.getImage("text/comboDigits"), modified_xBase + i
+					* digitWidth, yBase, modified_xBase
 					+ i * digitWidth + digitWidth, yBase + digitHeight, currentDigit * digitWidth, 0,
 					(currentDigit + 1) * digitWidth, digitHeight, null);
 		}
@@ -124,11 +123,11 @@ public class ComboManager {
 	public void drawComboScore(Graphics2D g) {
 		if (maxComboAchieved > 0) {
 			g.drawImage(ImageManager.getImage("text/maxComboText"),
-					Game.WIDTH	/ 2	- ImageManager.getImage("text/maxComboText")
-					.getWidth(null) / 2, Game.HEIGHT / 2, null);
+					Game.SCREEN_WIDTH	/ 2	- ImageManager.getImage("text/maxComboText")
+					.getWidth(null) / 2, Game.SCREEN_HEIGHT / 2, null);
 			
-			drawComboDigits(g, Game.getScore(), Game.WIDTH / 2 - 30,
-					Game.HEIGHT * 2 / 3 - 50);
+			drawComboDigits(g, Game.getScore(), Game.SCREEN_WIDTH / 2 - 30,
+					Game.SCREEN_HEIGHT * 2 / 3 - 50);
 		}
 	}
 	

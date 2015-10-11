@@ -8,12 +8,12 @@ import utility.sound.SoundManager;
 public class StatusEffect {
 	
 	private int duration;
-	private String name;
+	private final String name;
 	private boolean active;
 	
 	public StatusEffect(String name){
-		active = true;
 		this.name  = name;
+		active = true;
 		switch(name){
 		case "laser":
 			duration = ContentValues.MAX_PLAYER_LASER_DURATION;

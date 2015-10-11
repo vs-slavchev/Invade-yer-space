@@ -43,6 +43,7 @@ public class SoundManager {
 		}
 
 		for (String name : fileNames) {
+			@SuppressWarnings("resource")
 			Clip clip = getClip(name);
 			sounds.put(name, clip);
 
@@ -97,6 +98,7 @@ public class SoundManager {
 		Clip clip = null;
 		try {
 			clip = AudioSystem.getClip();
+			@SuppressWarnings("resource")
 			AudioInputStream sample = AudioSystem.getAudioInputStream(new File(path + filename + ".wav"));
 			clip.open(sample);
 		} catch (Exception e) {

@@ -8,8 +8,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ParticleEmitter {
 	
 	private CopyOnWriteArrayList<Particle> particles = new CopyOnWriteArrayList<>();
-	private int numMaxParticles;
-	private int particlePositionOffset;
+	private final int numMaxParticles;
+	private final int particlePositionOffset;
 	private int currentIndex;
 	
 	public ParticleEmitter(int numMaxParticles, int particlePositionOffset){
@@ -18,7 +18,7 @@ public class ParticleEmitter {
 		this.currentIndex = 0;
 	}
 	
-	public void emittParticle(int x, int y) {
+	public void emittParticle(final int x, final int y) {
 		Color randomColor = new Color((int) (200 + Math.random() * 55),
 				(int) (128 + Math.random() * 127), 0);
 		

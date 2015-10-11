@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class ContentValues {
+	
+	public static final String GAME_VERSION = "v1.22 - 11.10.2015";
+	
 	// player related:
 	public static final int MAX_PLAYER_SHIELD_DURATION = 800;
 	public static final int MAX_PLAYER_LASER_DURATION = 170;
@@ -15,13 +18,14 @@ public class ContentValues {
 	public static final int NUM_NORMAL_WEAPONS = 4;
 	
 	// enemy related:
+	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int ENEMY_HP_PER_LVL_MULTIPLIER = 2;
 	public static final int ENEMY_HP_BASE = 0;
-	public static final double CHANCE_TO_EXPLODE_ALIEN = 0.1;
 	public static final int X_SHOOT_RANGE = 250;
 	public static final int MIN_ATTACK_INTERVAL = 900;
 	public static final int MAX_ATTACK_INTERVAL = 2_000;
 	public static final int BASE_BULLET_VELOCITY = 270;
+	public static final int ALIENS_MAX_COLUMNS = 20; // MUST be an even number
 	
 	// effect related:
 	public static final int ROCKET_EXPLOSION_RADIUS = 80;
@@ -40,15 +44,13 @@ public class ContentValues {
 	public static final Font QUESTION_FONT = new Font("Dialog", Font.BOLD, 48);
 	
 	//visual effects
-	public static final int NUM_BACKGROUND_STARS = 400;
 	public static final double PLANET_SPAWN_CHANCE = 0.0005;
-	public static final double GEM_SPAWN_CHANCE = 0.5;
 	public static final int	PLANET_SPACING = -300;
-	public static final int GEM_SPACING = -100;
 	public static final int NUMBER_DIFFERENT_PLANETS = 14;
-	public static final int NUMBER_DIFFERENT_GEMS = 11;
 	public static final int PLANET_Y_VEL = 1;
-	public static final int GEM_Y_VEL = 4;
+	public static final int NUMBER_DIFFERENT_GEMS = 11;
+	public static final int MAX_GEMS = 64;
+	public static final int NUM_BACKGROUND_STARS = 400;
 	
 	
 	// utility method for values

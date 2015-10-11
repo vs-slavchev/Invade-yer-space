@@ -10,11 +10,17 @@ package utility;
  */
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 
 import main.Game;
 
+/* TextBox class defines the tutorial or music
+ * boxes of information. The constructor is called
+ * in the TutorialManager class for tutorials; and
+ * in the MusicManager class for the songs. 
+ * Song texts have "Song:" on the 1st row, so a
+ * check in the constructor sets the boolean
+ * isTutorial accordingly. */
 public class TextBox {
 
 	private String[] text;

@@ -37,7 +37,6 @@ public class ImageManager {
 
 	public static void initImages(){
 		ArrayList<String> imageNames = new ArrayList<>();
-		
 		imageNames.add("text/mainShip");
 		imageNames.add("text/captainManol");
 		imageNames.add("text/skyBackground");
