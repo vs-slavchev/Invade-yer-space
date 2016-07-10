@@ -53,7 +53,7 @@ public class MainMenu {
 					"Error: \n" + choice + "\nnot a valid menu choice!",
 				    "Error in menu!",
 				    JOptionPane.ERROR_MESSAGE);
-			 System.exit(0);
+			System.exit(0);
 			break;
 		}
 	}
@@ -62,19 +62,18 @@ public class MainMenu {
 		g.drawImage(ImageManager.getImage("text/skyBackground"), 0, 0, null);
 		drawGems(g);
 		g.drawImage(ImageManager.getImage("text/captainManol"), 0, 0, null);
-
 	}
 	
 	public static void initGems(){
 		for (int i = 0; i < ContentValues.MAX_GEMS; i++){
-			// the Gem constructor assigns all fields random values
 			gems[i] = new Gem();
 		}
 	}
 
 	private static void drawGems(Graphics2D g) {
 		for (Gem gem : gems){
-			g.drawImage(ImageManager.getImage("effects/gems/gem" + gem.type), (int)gem.x, (int)gem.y, null);
+			g.drawImage(ImageManager.getImage("effects/gems/gem" + gem.type),
+					(int)gem.x, (int)gem.y, null);
 		}
 	}
 	
@@ -89,37 +88,36 @@ public class MainMenu {
 
 	public static void drawMenu(Graphics2D g) {
 		updateGems();
-		
 		drawMenuBackground(g);
 		
-		// draw title
-		g.drawImage(ImageManager.getImage("text/titleText"), Game.SCREEN_WIDTH/2
-				- ImageManager.getImage("text/titleText").getWidth(null) / 2,
+		String path = "text/";
+		
+		g.drawImage(ImageManager.getImage(path + "titleText"), Game.SCREEN_WIDTH/2
+				- ImageManager.getImage(path + "titleText").getWidth(null) / 2,
 				Game.SCREEN_HEIGHT / 9, null);
 		
 		int baseX = 300;
 		int offset = Game.SCREEN_HEIGHT / 9;
 		for (int i = 0; i < options.length; i++) {
-			int imgWidth = ImageManager.getImage("text/" + options[i]).getWidth(null);
+			int imgWidth = ImageManager.getImage(path + options[i]).getWidth(null);
 
 			if (i == currentOption) {
-				g.drawImage(ImageManager.getImage("text/selector"),
+				g.drawImage(ImageManager.getImage(path + "selector"),
 						baseX - imgWidth / 2 + 180,
 								Game.SCREEN_HEIGHT * 4 / 10 + i * offset - 5*i, null);
 			}
-			g.drawImage(ImageManager.getImage("text/" + options[i]),
+			g.drawImage(ImageManager.getImage(path + options[i]),
 					baseX - imgWidth / 2,
 					Game.SCREEN_HEIGHT * 4 / 10 + i * offset, null);
 		}
 		
-		int creditsX = Game.SCREEN_WIDTH - ImageManager.getImage("text/credits").getWidth(null);
-		int creditsY = Game.SCREEN_HEIGHT - ImageManager.getImage("text/credits").getHeight(null);
+		int creditsX = Game.SCREEN_WIDTH - ImageManager.getImage(path + "credits").getWidth(null);
+		int creditsY = Game.SCREEN_HEIGHT - ImageManager.getImage(path + "credits").getHeight(null);
 		
-		g.drawImage(ImageManager.getImage("text/credits"), creditsX, creditsY, null);
+		g.drawImage(ImageManager.getImage(path + "credits"), creditsX, creditsY, null);
 		
 		g.setFont(ContentValues.INFO_FONT);
 		g.setColor(Color.BLACK);
-		//TODO correct version
 		g.drawString(ContentValues.GAME_VERSION, 100, Game.getGameHeight() - 10);
 	}
 

@@ -54,11 +54,11 @@ public class ContentValues {
 	
 	
 	// utility method for values
-	public static int controlMinMax(final int i, final int min, final int max){
+	public static int controlMinMax(final int value, final int min, final int max){
 		if (min >= max){
-			return i;
+			return value;
 		}
-		int result = i;
+		int result = value;
 		if(result < min){
 			result = min; 
 		}else if(result > max){

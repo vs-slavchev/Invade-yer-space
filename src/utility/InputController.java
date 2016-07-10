@@ -125,7 +125,4 @@ public class InputController {
 	public void setFourPressed(boolean fourPressed) {
 		this.fourPressed = fourPressed;
 	}
-	
-	
-	
 }

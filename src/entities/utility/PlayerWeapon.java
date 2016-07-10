@@ -59,7 +59,6 @@ public class PlayerWeapon {
 			heatAmplifier = 0;
 			break;
 		default:
-			// assignment to disable compiler errors
 			firingInterval = 0;
 			heatAmplifier = 0;
 			JOptionPane.showMessageDialog(null, "Error: \n" + bulletName + "\nnot supported by PlayerWeapon.", "Error",
@@ -73,9 +72,6 @@ public class PlayerWeapon {
 		lastFireTime = System.currentTimeMillis();
 	}
 
-	/*
-	 * returns true on successful shooting false when not allowed to shoot
-	 */
 	public boolean tryToFire() {
 		if (overheatPercent >= 100) {
 			if (!game.isWaitingForKeyPress()) {
@@ -95,7 +91,7 @@ public class PlayerWeapon {
 		createShot(x, y);
 
 		overheatPercent += heatAmplifier;
-		overheatCoolingSpeed = 0.0000001; // same for all weapons
+		overheatCoolingSpeed = 0.0000001;
 		return true;
 	}
 

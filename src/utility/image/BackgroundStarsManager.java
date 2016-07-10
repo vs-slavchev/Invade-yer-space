@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import utility.ContentValues;
 import main.Game;
 
-/*Class manages the background 1 pixel sized stars. */
 public class BackgroundStarsManager {
 
 	private ArrayList<Particle> backgroundStars = new ArrayList<>();
@@ -25,5 +24,4 @@ public class BackgroundStarsManager {
 			backgroundStars.add(new Particle(x, y, 0, new Color(128,128,128), 0));
 		}
 	}
-	
 }

@@ -7,18 +7,13 @@ import utility.image.ImageManager;
 /* Some instances of this class can be independent: they are not stored in the AnimationManager.
  * example is the AlienShip animation. It belongs to the alienShip instance and its management is
  * handled by the alienShip.
-*/
+ */
 public class Animation {
-	// x,y - center of the animation
 	private int x, y;
-	// active: the object is being used, not to be gc'd
 	private boolean active = true;
-	// running: the current frame is changing over time
 	private boolean running = false;
-	// if does loop is false then the animation is played once and paused on the first frame
 	private boolean doesLoop = false;
 	private volatile double currentFrame = 0.0;
-	// controls how long a frame is shown
 	private double frameModifier;
 	private int numFrame;
 	private String name;
@@ -51,6 +46,21 @@ public class Animation {
 		}
 	}
 	
+	public void drawAnimation(Graphics2D g){
+		if (!active){
+			return;
+		}
+		g.drawImage(ImageManager.getImage(name),
+				x, y,
+				x + (int)(getDimensionX()*scale),
+				y + (int)(getDimensionY()*scale),
+				(int)currentFrame*getDimensionX(),
+				0,
+				(int)(currentFrame+1)*getDimensionX(),
+				getDimensionY(),
+				null);
+	}
+	
 	public void setRunning(boolean running){
 		this.running = running;
 	}
@@ -73,23 +83,6 @@ public class Animation {
 		this.y += modY;
 	}
 	
-	public void drawAnimation(Graphics2D g){
-		
-		if (!active){
-			return;
-		}
-		
-		g.drawImage(ImageManager.getImage(name),
-				x, y,
-				x + (int)(getDimensionX()*scale),
-				y + (int)(getDimensionY()*scale),
-				(int)currentFrame*getDimensionX(),
-				0,
-				(int)(currentFrame+1)*getDimensionX(),
-				getDimensionY(),
-				null);
-	}
-	
 	public int getDimensionX(){
 		return ImageManager.getImage(name).getWidth(null) / numFrame;
 	}
@@ -105,5 +98,4 @@ public class Animation {
 	public int getNumberFrames(){
 		return numFrame;
 	}
-	
 }

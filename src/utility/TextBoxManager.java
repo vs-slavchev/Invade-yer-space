@@ -11,11 +11,9 @@ public class TextBoxManager {
 		textBoxes.add(textBox);
 	}
 	
-	// used in the play state
 	public static void drawTextBoxes(Graphics2D g){
 		if (!textBoxes.isEmpty()) {
 			for (TextBox textBox : textBoxes) {
-				// remove if duration expired
 				if (textBox.getDuration() <= 0) {
 					textBoxes.remove(textBox);
 					continue;
@@ -25,7 +23,6 @@ public class TextBoxManager {
 		}
 	}
 	
-	// used in the menu state
 	public static void drawSongTextBoxes(Graphics2D g) {
 		if (!textBoxes.isEmpty()) {
 			for (TextBox textBox : textBoxes) {
@@ -39,6 +36,4 @@ public class TextBoxManager {
 			}
 		}
 	}
-	
-
 }

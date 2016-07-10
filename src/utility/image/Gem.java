@@ -5,10 +5,7 @@ import utility.ContentValues;
 
 /* The Gem class does not use setters or getters
  * or any good practices because it doesn't
- * need to. This is a simple class containing
- * not so important information about small images,
- * and corruption would be irrelevant and
- * unrecognizable. */
+ * need to. */
 public class Gem {
 	public float x, y;
 	public byte type;

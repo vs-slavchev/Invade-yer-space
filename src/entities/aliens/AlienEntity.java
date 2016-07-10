@@ -26,13 +26,14 @@ public class AlienEntity extends Entity{
 		this.game = game;
 		this.type = type;
 		this.spriteName = "aliens/alienShip" + type;
-		// related: alien draw health bar
-		this.healthPoints = ContentValues.ENEMY_HP_BASE + type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER;
+		this.healthPoints = ContentValues.ENEMY_HP_BASE
+				+ type * ContentValues.ENEMY_HP_PER_LVL_MULTIPLIER;
 		this.animation = new Animation( x, y, 0.07, 5, spriteName, true, false, 1);
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
 		this.dx = -150;
-		this.shootTimeInterval = getrandom(ContentValues.MIN_ATTACK_INTERVAL, ContentValues.MAX_ATTACK_INTERVAL);
+		this.shootTimeInterval = getrandom(ContentValues.MIN_ATTACK_INTERVAL,
+				ContentValues.MAX_ATTACK_INTERVAL);
 	}
 
 	public void move(long delta){
@@ -58,15 +59,11 @@ public class AlienEntity extends Entity{
 		}
 	}
 	
-	/* if alien can shoot transition to firing animation and
-	 *  after it ends transition to default still animation
-	 */
 	public void tryToShoot(){
 		lastShotTime++;
 		if(lastShotTime >= shootTimeInterval){
 			lastShotTime = 0;
 			if (Math.abs(game.getEntityManager().getShip().getX() - x) < ContentValues.X_SHOOT_RANGE) {
-				// set the animation to start running the shoot animation
 				animation.setRunning(true);
 				Entity alienShot = new AlienShotEntity(game,
 						(int) (x + collisionWidth / 2), (int) (y + 5), type);
@@ -80,7 +77,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public void reduceShootTimeInterval(){
-		shootTimeInterval *= 0.988; //0.995
+		shootTimeInterval *= 0.988;
 	}
 	
 	public int getrandom(int min, int max){
@@ -90,7 +87,6 @@ public class AlienEntity extends Entity{
 	public void draw(Graphics2D g){
 		animation.drawAnimation(g);
 		
-		// draw the health bar
 		if (game.isAlienHPBarDrawn()) {
 			g.setColor(Color.red);
 			g.fillRect((int) x, (int) y - 7, animation.getDimensionX(), 7);
@@ -122,7 +118,6 @@ public class AlienEntity extends Entity{
 			game.getEntityManager().createAoEObject((int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
-			// the scale is equal to explosion radius/image radius
 			AnimationManager.spawnAnimation("effects/explosion",
 					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
 					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,

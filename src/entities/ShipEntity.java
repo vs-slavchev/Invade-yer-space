@@ -37,7 +37,7 @@ public class ShipEntity extends Entity{
 		animation = new Animation( x, y, 0.5, 6, "text/mainShip", true, false, 1);
 		this.collisionWidth = animation.getDimensionX();
 		this.collisionHeight = animation.getDimensionY();
-		for ( int i = 0; i < weapons.length; i++){
+		for (int i = 0; i < weapons.length; i++){
 			weapons[i] = new PlayerWeapon(game, this, "projectiles/shot" + (i+1));
 		}
 	}
@@ -126,7 +126,7 @@ public class ShipEntity extends Entity{
 			if (dx < moveSpeed){
 				dx += ContentValues.ACCELERATION;
 			}
-		}else{ // apply horizontal friction
+		}else{
 			if (dx > ContentValues.FRICTION){
 				dx -= ContentValues.FRICTION;
 			}else if (dx < -ContentValues.FRICTION){
@@ -155,7 +155,6 @@ public class ShipEntity extends Entity{
 			}
 		}
 		
-		
 		if( inputController.isFirePressed() || autoFireOn ){
 			if (weapons[currentWeapon].tryToFire()) {
 				// if successfully shot then get knocked back as a result
@@ -166,7 +165,7 @@ public class ShipEntity extends Entity{
 				AnimationManager.spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}
 		}
-		if( inputController.isAutoFirePressed()){
+		if (inputController.isAutoFirePressed()){
 			autoFireOn = !autoFireOn;
 			inputController.setAutoFirePressed(false);
 		}
@@ -215,15 +214,16 @@ public class ShipEntity extends Entity{
 	private void drawLaser(Graphics2D g) {
 		if (laserOn){
 			g.drawImage(ImageManager.getImage("projectiles/laser"),
-					(int)x + animation.getDimensionX()/2 - ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					(int)x + animation.getDimensionX()/2
+						- ImageManager.getImage("projectiles/laser").getWidth(null)/2,
 					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)), null);
 			g.drawImage(ImageManager.getImage("projectiles/laser"),
-					(int)x + animation.getDimensionX()/2 - ImageManager.getImage("projectiles/laser").getWidth(null)/2,
-					0,
-					(int)x + animation.getDimensionX()/2 + ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					(int)x + animation.getDimensionX()/2
+						- ImageManager.getImage("projectiles/laser").getWidth(null)/2,
+					0, (int)x + animation.getDimensionX()/2
+						+ ImageManager.getImage("projectiles/laser").getWidth(null)/2,
 					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)),
-					0, 0,
-					ImageManager.getImage("projectiles/laser").getWidth(null), 2, null);
+					0, 0, ImageManager.getImage("projectiles/laser").getWidth(null), 2, null);
 		}
 	}
 
@@ -233,7 +233,8 @@ public class ShipEntity extends Entity{
 			if (!buffs.isEmpty()) {
 				for (StatusEffect statusEffect : buffs) {
 					 if (statusEffect.getName().equals("shield")) {
-						angle = (int) (((double)statusEffect.getDuration()/(double)(ContentValues.MAX_PLAYER_SHIELD_DURATION)) * 360);
+						angle = (int) (((double)statusEffect.getDuration()
+								/ (double)(ContentValues.MAX_PLAYER_SHIELD_DURATION)) * 360);
 					}
 				}
 			}

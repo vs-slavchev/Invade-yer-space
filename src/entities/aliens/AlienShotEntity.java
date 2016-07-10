@@ -12,7 +12,6 @@ import main.Game;
 public class AlienShotEntity extends Entity{
 
 	private int type;
-	// reflected by the player shield; reflected bullets cannot be reflected again
 	private boolean reflected = false;
 	
 	public AlienShotEntity(Game game, final int x, final int y, final int type){

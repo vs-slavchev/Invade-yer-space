@@ -4,13 +4,7 @@ import java.awt.Graphics2D;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.swing.JOptionPane;
-
-/* The AnimationManager class controls the explosion, muzzle flash
- * and sparks animations.Those do not belong to a game world object
- * and therefore need a manager.
- */
 
 public class AnimationManager {
 	

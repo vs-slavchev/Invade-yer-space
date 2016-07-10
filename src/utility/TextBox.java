@@ -1,5 +1,10 @@
 package utility;
 
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import main.Game;
+
 /*
  * The TextBoxes are used to display some information for a short time;
  * examples: the name of the song that started playing; small tutorials.
@@ -8,19 +13,6 @@ package utility;
  * of the text array. A whole String is given to the constructor, but
  * it is split up (by semicolon) in separate lines.
  */
-
-import java.awt.Color;
-import java.awt.Graphics2D;
-
-import main.Game;
-
-/* TextBox class defines the tutorial or music
- * boxes of information. The constructor is called
- * in the TutorialManager class for tutorials; and
- * in the MusicManager class for the songs. 
- * Song texts have "Song:" on the 1st row, so a
- * check in the constructor sets the boolean
- * isTutorial accordingly. */
 public class TextBox {
 
 	private String[] text;
@@ -80,9 +72,3 @@ public class TextBox {
 		return isTutorial;
 	}
 }
-
-
-
-
-
-

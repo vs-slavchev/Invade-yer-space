@@ -42,9 +42,9 @@ public class Game extends Canvas {
 	
 	public final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public final static GraphicsDevice device = env.getScreenDevices()[0]; 
-	public static final Rectangle RECTANGLE = device.getDefaultConfiguration().getBounds(); 
-	public static final int SCREEN_WIDTH = RECTANGLE.width; 
-	public static final int SCREEN_HEIGHT = RECTANGLE.height; 
+	public static final Rectangle SCREEN_RECTANGLE = device.getDefaultConfiguration().getBounds(); 
+	public static final int SCREEN_WIDTH = SCREEN_RECTANGLE.width; 
+	public static final int SCREEN_HEIGHT = SCREEN_RECTANGLE.height; 
 	
 	private final int FPS = 90;
 	private volatile long delta = 1000 / this.FPS;
@@ -61,9 +61,7 @@ public class Game extends Canvas {
 	String message = "startText";
 	static int score = 0;
 	private BackgroundPlanetManager planetManager =
-			new BackgroundPlanetManager(ContentValues.NUMBER_DIFFERENT_PLANETS,
-					ContentValues.PLANET_SPAWN_CHANCE, "planets/planet",
-					ContentValues.PLANET_Y_VEL, ContentValues.PLANET_SPACING);
+			new BackgroundPlanetManager("planets/planet");
 
 	public Game() {
 
@@ -80,28 +78,24 @@ public class Game extends Canvas {
 		// make the cursor transparent
 		container.setCursor( container.getToolkit().createCustomCursor(
 				new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null ) );
-		// tell awt not to repaint the canvas since I am doing it myself in
-		// accelerated mode
+		/* tell awt not to repaint the canvas since I am doing it myself in
+		 * accelerated mode */
 		setIgnoreRepaint(true);
 
 		container.pack();
 		container.setResizable(false);
 		container.setVisible(true);
 
-		// add a listener to respond to closing the window
 		container.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
 		});
 		
-		// add input key system; InputKeyHandler class defined in Game class
 		addKeyListener(menuKeys);
 		
 		requestFocus();
 
-		// use BufferStrategy class to manage buffers for the accelerated
-		// graphics
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
 
@@ -113,7 +107,6 @@ public class Game extends Canvas {
 		TutorialManager.initTutorialList();
 		MainMenu.initGems();
 
-		// start playing background music
 		musicManager.loopBackgroundMusic(0);
 	}
 
@@ -126,49 +119,37 @@ public class Game extends Canvas {
 
 		long lastLoopTime = System.currentTimeMillis();
 
-		// main game loop
 		while (gameRunning) {
-
-			// calculate how far entities should move this loop, based on the
-			// time since last update
 			delta = System.currentTimeMillis() - lastLoopTime;
 			lastLoopTime = System.currentTimeMillis();
 				
 			if (StateManager.getState() == States.PLAY){
-				// cycle trough entities and move them
 				if (!waitingForKeyPress) {
 					entityManager.moveEntities(delta);
 					planetManager.update();
 					TutorialManager.updateTutorials();
 				}
 	
-				// collision detection: ship,shots are checked against the
-				// aliens, alienShots
 				if (!waitingForKeyPress) {
 					entityManager.collideEntities();
 				}
 	
 				AnimationManager.updateAnimations();
-				// remove destroyed entities that are to be removed and clean up
 				entityManager.removeEntities();
-				// if we need to do logic go through alienEntities only, since
-				// only aliens have a doLogic() implemented
 				if (logicRequiredThisLoop) {
 					entityManager.forceLogic();
 					logicRequiredThisLoop = false;
 				}
-				// give the input to the ship to be processed
 				((ShipEntity) entityManager.getShip())
 						.processInput(inputController);
 				
 			}
-			controlMusicGain();
-			
-			drawGame();
 
+			controlMusicGain();
+			drawGame();
 			sleepAndFPSControl(lastLoopTime);
 			
-		} // close while
+		}
 		SoundManager.close();
 	}
 
@@ -181,9 +162,6 @@ public class Game extends Canvas {
 		musicManager.update();
 	}
 
-	/* pause and fps control:
-	 * The more time it took to update and draw the less time the game
-	 * sleeps; this way a fairly constant FPS is achieved. */
 	private void sleepAndFPSControl(final long lastLoopTime) {
 		try {
 			long sleepTime = lastLoopTime +  (1000 / FPS) - System.currentTimeMillis();
@@ -201,11 +179,9 @@ public class Game extends Canvas {
 		
 		if (StateManager.getState() == States.PLAY){
 			planetManager.drawBackgroundObjects(g);
-			// draw cycle
 			entityManager.drawEntities(g);
 			AnimationManager.drawAnimations(g);
 			
-			// if game is waiting for "any key press" show message
 			if (waitingForKeyPress) {
 				g.drawImage(ImageManager.getImage("text/" + message),
 						(SCREEN_WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
@@ -280,7 +256,6 @@ public class Game extends Canvas {
 		if (entityManager.getAlienCount() < 1){
 			notifyWin();
 		}
-		// speed up the remaining aliens by 1%
 		entityManager.speedUpAlienEntities();
 	}
 	
@@ -448,5 +423,5 @@ public class Game extends Canvas {
 				switchToMenuKeyHandler();
 			}
 		}
-	}// close KeyInputHandler class
+	}
 }

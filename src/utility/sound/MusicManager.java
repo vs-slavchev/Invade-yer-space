@@ -1,11 +1,8 @@
 package utility.sound;
 
 import java.io.IOException;
-
 import javax.swing.JOptionPane;
-
 import org.newdawn.easyogg.OggClip;
-
 import utility.TextBox;
 import utility.TextBoxManager;
 
@@ -42,7 +39,6 @@ public class MusicManager {
 					JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
-
 	}
 
 	public void loopBackgroundMusic(int index) {
@@ -65,7 +61,6 @@ public class MusicManager {
 		}
 	}
 
-	/* Called when adjusting the volume. */
 	public void modifyGain(float value) {
 		gain += value;
 		if (gain < 0.3f) {
@@ -76,7 +71,6 @@ public class MusicManager {
 		backgroundMusic.setGain(gain);
 	}
 
-	/* Called when other music/sounds should be audible alone. */
 	public void temporaryDecreaseGain() {
 		backgroundMusic.setGain(0.5f);
 		delayActive = true;

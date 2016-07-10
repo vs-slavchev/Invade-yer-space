@@ -47,7 +47,6 @@ public class SoundManager {
 			Clip clip = getClip(name);
 			sounds.put(name, clip);
 
-			// decrease each clip's gain
 			if (ContentValues.DECREASE_CLIPS_GAIN){
 			decreaseGain(clip);
 			}
@@ -83,14 +82,12 @@ public class SoundManager {
 			 System.exit(0);
 		}
 		
-		// stop all sounds
 		for (Clip clip : sounds.values()) {
 			if (clip.isActive()) {
 				clip.stop();
 				clip.setFramePosition(0);
 			}
 		}
-		// play the sound
 		sounds.get(name).start();
 	}
 
@@ -121,5 +118,4 @@ public class SoundManager {
 		int type = (int) (1 + Math.round(Math.random()*4));
 		play("explosion" + type);
 	}
-
 }

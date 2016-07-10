@@ -28,6 +28,23 @@ public abstract class Entity {
 		y += (delta * dy)/1000;
 	}
 	
+	public boolean checkCollisionWith(Entity other){
+		collisionRectangle.setBounds((int) this.x, (int) this.y, this.collisionWidth, this.collisionHeight );
+		return collisionRectangle.intersects( other.getCollisionRectangle() );
+	}
+	
+	public Rectangle getCollisionRectangle(){
+		collisionRectangle.setBounds((int) x, (int)y, collisionWidth, collisionHeight );
+		return collisionRectangle;
+	}
+	
+	public abstract void draw(Graphics2D g);
+	
+	public abstract void collidedWith(Entity other);
+	
+	public void doLogic(){ // implemented in subclasses
+	}
+	
 	public void setHorizontalMovement(double dx){
 		this.dx = dx;
 	}
@@ -50,25 +67,5 @@ public abstract class Entity {
 	public double getVerticalMovement(){
 		return dy;
 	}
-	
-	public abstract void draw(Graphics2D g);
-	
-	//collision detection
-	public boolean checkCollisionWith(Entity other){
-		collisionRectangle.setBounds((int) this.x, (int) this.y, this.collisionWidth, this.collisionHeight );
-		return collisionRectangle.intersects( other.getCollisionRectangle() );
-	}
-	
-	public Rectangle getCollisionRectangle(){
-		collisionRectangle.setBounds((int) x, (int)y, collisionWidth, collisionHeight );
-		return collisionRectangle;
-	}
-	
-	public abstract void collidedWith(Entity other);
-	
-	public void doLogic(){ // implemented in subclasses
-	}
-	
-	
 	
 }

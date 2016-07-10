@@ -2,7 +2,6 @@ package utility;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-
 import entities.utility.StatusEffect;
 import main.Game;
 import utility.image.ImageManager;
@@ -77,29 +76,29 @@ public class ComboManager {
 	
 	public void drawComboUI(Graphics2D g) {
 		if (recentKillCount > 5) {
-			// prepare the bases for the X and Y
 			int yBase = game.getHeight() - 430;
 			int xBase = (game.getEntityManager().getShip().getX() < game.getWidth() - 280) ?
 					game.getWidth() - 200 : 35;
 			g.drawImage(ImageManager.getImage("text/comboText"),
 					xBase - 25, yBase + 150, null);
 			
-			// draw the revolving circle
-			int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) /
-					(double) recentKillTimeWindow) * 360);
-			int greenComponent = 255 - (int)((arcLength/360.00)*255);
-			greenComponent = ContentValues.controlMinMax(greenComponent, 0, 255);
-			g.setColor(new Color(0, greenComponent, 255));
-			g.fillArc(xBase, yBase, 150, 150, 90, -arcLength);
-			g.setColor(Color.BLACK);
-			g.drawArc(xBase + 5, yBase + 5, 140, 140, 90, -arcLength);
+			drawRevolvingCircle(g, yBase, xBase);
 			
-			/*	prepare values for drawing ingame; this preparation is not
-				needed when drawing the digits in the menu */
 			xBase += 40;
 			yBase += 23;
 			drawComboDigits(g, recentKillCount, xBase, yBase);
 		}
+	}
+
+	private void drawRevolvingCircle(Graphics2D g, int yBase, int xBase) {
+		int arcLength = (int) (((double) (System.currentTimeMillis() - recentKillTime) /
+				(double) recentKillTimeWindow) * 360);
+		int greenComponent = 255 - (int)((arcLength/360.00)*255);
+		greenComponent = ContentValues.controlMinMax(greenComponent, 0, 255);
+		g.setColor(new Color(0, greenComponent, 255));
+		g.fillArc(xBase, yBase, 150, 150, 90, -arcLength);
+		g.setColor(Color.BLACK);
+		g.drawArc(xBase + 5, yBase + 5, 140, 140, 90, -arcLength);
 	}
 
 	public void drawComboDigits(Graphics2D g, final int value, final int xBase, final int yBase) {
@@ -119,7 +118,6 @@ public class ComboManager {
 		}
 	}
 	
-	// draw the combo score if needed
 	public void drawComboScore(Graphics2D g) {
 		if (maxComboAchieved > 0) {
 			g.drawImage(ImageManager.getImage("text/maxComboText"),
@@ -134,5 +132,4 @@ public class ComboManager {
 	public int getMaxComboAchieved() {
 		return maxComboAchieved;
 	}
-	
 }

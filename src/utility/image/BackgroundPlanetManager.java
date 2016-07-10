@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import main.Game;
+import utility.ContentValues;
 
-/*Class manages the background planets. */
 public class BackgroundPlanetManager{
 	
 	private BackgroundStarsManager starsManager = new BackgroundStarsManager();
@@ -13,24 +13,21 @@ public class BackgroundPlanetManager{
 	private int numberOfDifferentAnimations;
 	private int yVel;
 	private double chanceToSpawn;
-	// required to prevent overlapping of images
 	private int spacing;
 	private String imageName;
 	
-	public BackgroundPlanetManager(int numAnims, double chanceToSpawn, String imageName, int yVel, int spacing) {
-		this.numberOfDifferentAnimations = numAnims;
-		this.chanceToSpawn = chanceToSpawn;
+	public BackgroundPlanetManager(String imageName) {
+		this.numberOfDifferentAnimations = ContentValues.NUMBER_DIFFERENT_PLANETS;
+		this.chanceToSpawn = ContentValues.PLANET_SPAWN_CHANCE;
 		this.imageName = imageName;
-		this.yVel = yVel;
-		this.spacing = spacing;
+		this.yVel = ContentValues.PLANET_Y_VEL;
+		this.spacing = ContentValues.PLANET_SPACING;
 		starsManager.generateBackgroundStars();
 	}
 	
 	public void update(){
 		for (Animation animation : backgroundObjects) {
-			// move animation lower: x+0,y+yVel
 			animation.modifyPosition(0, yVel);
-			// if object is off the screen, replace it with a new one
 			if( animation.getY() > Game.SCREEN_HEIGHT){
 				animation = generateBackgroundObject();
 			}
@@ -45,9 +42,6 @@ public class BackgroundPlanetManager{
 		}
 	}
 	
-	/* Called in the method "generateNewObjects()".
-	 * Creates 1 concrete background object.
-	 */
 	private Animation generateBackgroundObject(){
 		int minY = Game.SCREEN_HEIGHT;
 		if (!backgroundObjects.isEmpty()){
@@ -67,11 +61,9 @@ public class BackgroundPlanetManager{
 	}
 
 	public void drawBackgroundObjects(Graphics2D g){
-		// stars are drawn first; they are farther away
 		starsManager.drawStars(g);
 		for (Animation animation : backgroundObjects) {
 			animation.drawAnimation(g);
 		}
 	}
-
 }

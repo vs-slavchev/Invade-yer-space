@@ -9,11 +9,10 @@ public class TutorialManager {
 
 	private static boolean tutorialsOn = true;
 	private static Stack<TextBox> tutorials = new Stack<>();
-	private static int timer = -70; // steps delay before the 1st tutorial
+	private static int timer = -70;
 	private static final int numTutorials = 7;
-	private static final int timeStep = 400; // timeframe between tutorials
+	private static final int timeStep = 400;
 	
-	// the first tutorials are at the bottom of the method; top of the stack
 	public static void initTutorialList(){
 		tutorials.push(new TextBox("Esc returns you to the menu.", Game.getGameWidth()*2/3, Game.getGameHeight()-250, 350, 250));
 		tutorials.push(new TextBox("High combos grant special;bonus effects!", Game.getGameWidth()*3/4, Game.getGameHeight()/2, 320, 300));
@@ -34,7 +33,6 @@ public class TutorialManager {
 	}
 
 	private static void showNextTutorial() {
-		// show next tutorial
 		if (!tutorials.isEmpty() && tutorialsOn) {
 			TextBoxManager.showTextBox(tutorials.pop());
 			SoundManager.play("tutorialSound");

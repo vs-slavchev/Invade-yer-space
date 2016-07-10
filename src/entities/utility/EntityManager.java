@@ -17,20 +17,14 @@ import utility.ContentValues;
 public class EntityManager {
 	
 	private Game game;
-	// aliens and alienShots
 	private CopyOnWriteArrayList<Entity> alienEntities = new CopyOnWriteArrayList<>();
-	// ship and playerProjectiles
 	private ArrayList<Entity> entities = new ArrayList<>();
-	// set of unique entities to be removed
 	private HashSet<Entity> removeList = new HashSet<>();
-	// list manages the AoE objects: explosions and lasers
-	// that affect more than 1 entity at the same time
 	private ArrayList<Rectangle> aoeObjects = new ArrayList<>();
 	private Entity ship;
 	private int alienCount = 0;
 	private final int maxAlienShipType = 8;
 	private final int maxRows = 8;
-	// MUST be an even number
 	private final int maxColumns = ContentValues.ALIENS_MAX_COLUMNS;
 	private String entitiesLevelMap;
 	private int typesArray[] = new int[maxRows*maxColumns/2];
@@ -50,8 +44,6 @@ public class EntityManager {
 		}
 	}
 	
-	/* generates a symmetric map of entities that is random
-	 * but also near the difficulty of the level */
 	public void generateNewEntitiesMap(){
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < maxRows; i++){
@@ -67,14 +59,9 @@ public class EntityManager {
 			sb.append(innerSb.reverse());
 		}
 		entitiesLevelMap  = sb.toString();
-		//printEntitiesMapInfo();
 		levelDifficulty += levelDifficultyModifier;
 	}
 	
-	/* method balances the alien type according to the mean
-	 * of so far created alien types. Returned int is to be used
-	 * to modify the currentType of the newly created alien
-	 */
 	private int balanceAccordingToMean(int size) {
 		return (int) (levelDifficulty - calculateMean(size));
 	}
@@ -99,7 +86,6 @@ public class EntityManager {
 		}
 		return type;
 	}
-
 	
 	public void moveEntities(long delta){
 		for( int i = 0; i < alienEntities.size(); i++ ){
@@ -139,7 +125,6 @@ public class EntityManager {
 			}
 		}
 		
-		// collide alienEntities with aoeObjects
 		if (!aoeObjects.isEmpty()) {
 			for (int i = 0; i < alienEntities.size(); i++) {
 				for (int j = 0; j < aoeObjects.size(); j++) {
@@ -150,7 +135,6 @@ public class EntityManager {
 				}
 			}
 		}
-		// clear the list after the AoE collision checks have been performed
 		aoeObjects.clear();
 	}
 	
@@ -174,13 +158,11 @@ public class EntityManager {
 	}
 	
 	public void initEntities(){
-		//clear the ArrayLists before using them
 		cleanUpEntities();
 		
 		ship = new ShipEntity( this.game, Game.getGameWidth()/2, Game.getGameHeight()*5/6);
 		entities.add(this.ship);
 		
-		//create a block of aliens by getting a char id of the alien from the entitiesLevelMap Array of Strings
 		alienCount = 0;
 		int type = 0;
 		for( int row = 0; row < maxRows; row++){
@@ -198,19 +180,13 @@ public class EntityManager {
 	public void cleanUpEntities() {
 		entities.clear();
 		alienEntities.clear();
-		// after clearing up the big collections request a GC; changing levels happens rarely and minor lag is unnoticed
 		System.gc();
 	}
 	
 	private AlienEntity produceAlien(int type, int row, int col){
-		/* aliens are centered according to their image; aliens are created first,
-		 * so their image is not null, and then according to the image dimensions
-		 * their position is set correctly */
-		// spawn off the screen
 		AlienEntity alien = new AlienEntity( game, type, -100, -100);
 		int offsetX = alien.getAnimation().getDimensionX()/2;
 		int offsetY = alien.getAnimation().getDimensionY()/2;
-		// set to the correct position, after having access to the animation
 		alien.setXY(100+(col*Game.getGameWidth()/30) - offsetX, 20+(row*Game.getGameHeight()/20) - offsetY);
 		return alien;
 	}
@@ -219,7 +195,6 @@ public class EntityManager {
 		alienEntities.add(entity);
 	}
 	
-	/* Method returns the entity manager so we can chain calls. */
 	public EntityManager addToEntities(Entity entity){
 		entities.add(entity);
 		return this;
@@ -239,7 +214,6 @@ public class EntityManager {
 		aoeObjects.add(new Rectangle(x, y, width, height));
 	}
 	
-	// used for debugging
 	public void printEntitiesMapInfo(){
 		for( int i = 1; i < 9; i++){
 			occurencesOfNumber(Integer.toString(i));
@@ -279,7 +253,4 @@ public class EntityManager {
 		}
 		return true;
 	}
-	
-
 }
-

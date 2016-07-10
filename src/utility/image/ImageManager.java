@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-
 import utility.ContentValues;
 
 public class ImageManager {
@@ -75,7 +73,6 @@ public class ImageManager {
 		for (int i = 4; i > 0; i--) {
 			imageNames.add("effects/explosion" + i);
 		}
-
 		loadImages(imageNames);
 	}
 	
@@ -90,5 +87,4 @@ public class ImageManager {
 		}
 		return images.get(s);
 	}
-
 }

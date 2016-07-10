@@ -42,6 +42,4 @@ public class ParticleEmitter {
 			iterator.next().drawParticle(g);
 		}
 	}
-
 }
-
