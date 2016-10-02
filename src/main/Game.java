@@ -137,7 +137,7 @@ public class Game extends Canvas {
 				AnimationManager.updateAnimations();
 				entityManager.removeEntities();
 				if (logicRequiredThisLoop) {
-					entityManager.forceLogic();
+					entityManager.applyLogic();
 					logicRequiredThisLoop = false;
 				}
 				((ShipEntity) entityManager.getShip())
@@ -187,7 +187,7 @@ public class Game extends Canvas {
 						(SCREEN_WIDTH - ImageManager.getImage("text/" + message).getWidth(null))/2,
 						(SCREEN_HEIGHT/2 - ImageManager.getImage("text/" + message).getHeight(null))/2, null);
 				
-				((ShipEntity) entityManager.getShip()).getComboManager().drawComboScore(g);
+				entityManager.getShip().getComboManager().drawComboScore(g);
 				
 			} else {
 				TextBoxManager.drawTextBoxes(g);
@@ -232,27 +232,28 @@ public class Game extends Canvas {
 
 	public void notifyDeath() {
 		// turn autoFire off to prevent from shooting in the next game
-		((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
+		ShipEntity ship =  entityManager.getShip();
+		ship.setAutoFireOn(false);
 		message = "deathText";
 		waitingForKeyPress = true;
 		SoundManager.play("nooo");
-		score += ((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved();
+		score += ship.getComboManager().getMaxComboAchieved();
 	}
 
 	public void notifyWin() {
 		// turn autoFire off to prevent from shooting in the next game
-		((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
+		entityManager.getShip().setAutoFireOn(false);
 		message = "winText";
 		waitingForKeyPress = true;
 		musicManager.temporaryDecreaseGain();
 		SoundManager.playOnly("manolWin");
 		entityManager.generateNewEntitiesMap();
-		score += ((ShipEntity) entityManager.getShip()).getComboManager().getMaxComboAchieved();
+		score += entityManager.getShip().getComboManager().getMaxComboAchieved();
 	}
 
 	public void notifyAlienKilled() {
 		entityManager.decrementAlienCount();
-		((ShipEntity) entityManager.getShip()).getComboManager().incrementRecentKillCount();
+		entityManager.getShip().getComboManager().incrementRecentKillCount();
 		if (entityManager.getAlienCount() < 1){
 			notifyWin();
 		}
@@ -417,7 +418,7 @@ public class Game extends Canvas {
 			}
 			if (e.getKeyChar() == 27) { // escape to menu
 				// turn autoFire off to prevent from shooting in the next game
-				((ShipEntity) entityManager.getShip()).setAutoFireOn(false);
+				entityManager.getShip().setAutoFireOn(false);
 				StateManager.setState(States.MENU);
 				getMusicManager().loopBackgroundMusic(0);
 				switchToMenuKeyHandler();

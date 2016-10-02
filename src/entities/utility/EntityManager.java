@@ -150,10 +150,9 @@ public class EntityManager {
 		removeList.clear();
 	}
 	
-	public void forceLogic(){
-		for( int i = 0; i < this.alienEntities.size(); i++){
-			Entity entity = this.alienEntities.get(i);
-			entity.doLogic();
+	public void applyLogic(){
+		for (Entity alien : alienEntities){
+			alien.doLogic();
 		}
 	}
 	
@@ -243,8 +242,8 @@ public class EntityManager {
 		return alienCount;
 	}
 	
-	public Entity getShip(){
-		return ship;
+	public ShipEntity getShip(){
+		return (ShipEntity)ship;
 	}
 	
 	public boolean existAliens(){

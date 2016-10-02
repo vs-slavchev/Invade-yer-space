@@ -35,12 +35,7 @@ public class TextBox {
 	}
 	
 	public void draw(Graphics2D g){
-		duration--;
-		if (y > targetY){
-			y -= (y - targetY)/20;
-		} else if (y < targetY){
-			y += (targetY - y)/20;
-		}
+		moveBox();
 		
 		if (isTutorial){
 			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
@@ -48,6 +43,23 @@ public class TextBox {
 			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_SONG);
 		}
 		
+		drawBoxBase(g);
+		if (isTutorial){
+			drawTutorialElements(g);
+		}
+	}
+
+	private void drawTutorialElements(Graphics2D g) {
+		g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
+		g.fillRect(x - 40, y - 20, 45, 45);
+		g.setColor(Color.blue);
+		g.drawRect(x - 40, y - 20, 45, 45);
+		g.setColor(Color.yellow);
+		g.setFont(ContentValues.QUESTION_FONT);
+		g.drawString("?", x - 30, y + 20);
+	}
+
+	private void drawBoxBase(Graphics2D g) {
 		g.fillRect(x, y, width, height);
 		g.setColor(Color.blue);
 		g.drawRect(x+2, y+2, width-4, height-4);
@@ -56,15 +68,14 @@ public class TextBox {
 		for (int i = 0; i < text.length; i++) {
 			g.drawString(text[i], x + 10, y + (i+1)*30);
 		}
-		
-		if (isTutorial){
-			g.setColor(ContentValues.COLOR_TEXT_BOX_FILL_TUTORIAL);
-			g.fillRect(x - 40, y - 20, 45, 45);
-			g.setColor(Color.blue);
-			g.drawRect(x - 40, y - 20, 45, 45);
-			g.setColor(Color.yellow);
-			g.setFont(ContentValues.QUESTION_FONT);
-			g.drawString("?", x - 30, y + 20);
+	}
+
+	private void moveBox() {
+		duration--;
+		if (y > targetY){
+			y -= (y - targetY)/20;
+		} else if (y < targetY){
+			y += (targetY - y)/20;
 		}
 	}
 
