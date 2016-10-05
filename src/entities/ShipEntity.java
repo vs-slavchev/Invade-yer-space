@@ -126,7 +126,7 @@ public class ShipEntity extends Entity{
 			if (dx < moveSpeed){
 				dx += ContentValues.ACCELERATION;
 			}
-		}else{
+		}else{ // apply horizontal friction -- same as later one
 			if (dx > ContentValues.FRICTION){
 				dx -= ContentValues.FRICTION;
 			}else if (dx < -ContentValues.FRICTION){
@@ -136,7 +136,7 @@ public class ShipEntity extends Entity{
 			}
 		}
 		
-		if( inputController.isUpPressed() ){
+		if (inputController.isUpPressed() ){
 			if (dy > -moveSpeed*2/3){
 				dy -= ContentValues.ACCELERATION;
 			}
