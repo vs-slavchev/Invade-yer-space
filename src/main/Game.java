@@ -140,9 +140,7 @@ public class Game extends Canvas {
 					entityManager.applyLogic();
 					logicRequiredThisLoop = false;
 				}
-				((ShipEntity) entityManager.getShip())
-						.processInput(inputController);
-				
+				entityManager.getShip().processInput(inputController);
 			}
 
 			controlMusicGain();
@@ -357,13 +355,13 @@ public class Game extends Canvas {
 				inputController.setMusicUpPressed(true);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
-				inputController.setOnePressed(true);
+				inputController.numberPressed.set(1, true);
 			}else if (e.getKeyCode() == KeyEvent.VK_2) {
-				inputController.setTwoPressed(true);
+				inputController.numberPressed.set(2, true);
 			}else if (e.getKeyCode() == KeyEvent.VK_3) {
-				inputController.setThreePressed(true);
+				inputController.numberPressed.set(3, true);
 			}else if (e.getKeyCode() == KeyEvent.VK_4) {
-				inputController.setFourPressed(true);
+				inputController.numberPressed.set(4, true);
 			}
 		}
 
@@ -391,13 +389,13 @@ public class Game extends Canvas {
 				inputController.setMusicUpPressed(false);
 			}
 			if (e.getKeyCode() == KeyEvent.VK_1) {
-				inputController.setOnePressed(false);
+				inputController.numberPressed.set(1, false);
 			}else if (e.getKeyCode() == KeyEvent.VK_2) {
-				inputController.setTwoPressed(false);
+				inputController.numberPressed.set(2, false);
 			}else if (e.getKeyCode() == KeyEvent.VK_3) {
-				inputController.setThreePressed(false);
+				inputController.numberPressed.set(3, false);
 			}else if (e.getKeyCode() == KeyEvent.VK_4) {
-				inputController.setFourPressed(false);
+				inputController.numberPressed.set(4, false);
 			}
 		}
 

@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import entities.aliens.AlienEntity;
@@ -121,47 +122,31 @@ public class ShipEntity extends Entity{
 			if (dx > -moveSpeed){
 				dx -= ContentValues.ACCELERATION;
 			}
-		}
-		else if( inputController.isRightPressed() ){
+		} else if( inputController.isRightPressed() ){
 			if (dx < moveSpeed){
 				dx += ContentValues.ACCELERATION;
 			}
-		}else{ // apply horizontal friction -- same as later one
-			if (dx > ContentValues.FRICTION){
-				dx -= ContentValues.FRICTION;
-			}else if (dx < -ContentValues.FRICTION){
-				dx += ContentValues.FRICTION;
-			}else{
-				dx = 0;
-			}
+		} else {
+			dx = applyFriction(dx);
 		}
 		
 		if (inputController.isUpPressed() ){
 			if (dy > -moveSpeed*2/3){
 				dy -= ContentValues.ACCELERATION;
 			}
-		}
-		else if( inputController.isDownPressed() ){
+		} else if( inputController.isDownPressed() ){
 			if (dy < moveSpeed*2/3){
 				dy += ContentValues.ACCELERATION;
 			}
-		}else{ // apply vertical friction
-			if (dy > ContentValues.FRICTION){
-				dy -= ContentValues.FRICTION;
-			}else if (dy < -ContentValues.FRICTION){
-				dy += ContentValues.FRICTION;
-			}else{
-				dy = 0;
-			}
+		} else {
+			dy = applyFriction(dy);
 		}
 		
 		if( inputController.isFirePressed() || autoFireOn ){
 			if (weapons[currentWeapon].tryToFire()) {
 				// if successfully shot then get knocked back as a result
 				y += 2;
-				if (y > Game.getGameHeight() - collisionHeight - 50) {
-					y = Game.getGameHeight() - collisionHeight - 50;
-				}
+				y = Math.min(y, Game.getGameHeight() - collisionHeight - 50);
 				AnimationManager.spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}
 		}
@@ -169,31 +154,30 @@ public class ShipEntity extends Entity{
 			autoFireOn = !autoFireOn;
 			inputController.setAutoFirePressed(false);
 		}
-		if (inputController.isOnePressed()) {
-			if (currentWeapon != 0) {
-				currentWeapon = 0;
-				weapons[currentWeapon].resetFireTimer();
-				SoundManager.play("weaponSwitch");
-			}
-		} else if (inputController.isTwoPressed()) {
-			if (currentWeapon != 1) {
-				currentWeapon = 1;
-				weapons[currentWeapon].resetFireTimer();
-				SoundManager.play("weaponSwitch");
-			}
-		} else if (inputController.isThreePressed()) {
-			if (currentWeapon != 2) {
-				currentWeapon = 2;
-				weapons[currentWeapon].resetFireTimer();
-				SoundManager.play("weaponSwitch");
-			}
-		} else if (inputController.isFourPressed()) {
-			if (currentWeapon != 3) {
-				currentWeapon = 3;
-				weapons[currentWeapon].resetFireTimer();
-				SoundManager.play("weaponSwitch");
+		
+		checkShootingWeaponsInput(inputController);
+	}
+
+	private void checkShootingWeaponsInput(InputController inputController) {
+		for (int numberPress = 1; numberPress < inputController.numberPressed.size(); numberPress++) {
+			if (inputController.numberPressed.get(numberPress)) {
+				int weaponIndex = numberPress - 1;
+				if (currentWeapon != weaponIndex) {
+					currentWeapon = weaponIndex;
+					weapons[currentWeapon].resetFireTimer();
+					SoundManager.play("weaponSwitch");
+				}
 			}
 		}
+	}
+
+	private static double applyFriction(double deltaSpeed) {
+		if (deltaSpeed > ContentValues.FRICTION){
+			return deltaSpeed - ContentValues.FRICTION;
+		}else if (deltaSpeed < -ContentValues.FRICTION){
+			return deltaSpeed + ContentValues.FRICTION;
+		}
+		return 0;
 	}
 	
 	public ParticleEmitter getParticleEmitter(){
@@ -212,18 +196,20 @@ public class ShipEntity extends Entity{
 	}
 
 	private void drawLaser(Graphics2D g) {
-		if (laserOn){
-			g.drawImage(ImageManager.getImage("projectiles/laser"),
-					(int)x + animation.getDimensionX()/2
-						- ImageManager.getImage("projectiles/laser").getWidth(null)/2,
-					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)), null);
-			g.drawImage(ImageManager.getImage("projectiles/laser"),
-					(int)x + animation.getDimensionX()/2
-						- ImageManager.getImage("projectiles/laser").getWidth(null)/2,
-					0, (int)x + animation.getDimensionX()/2
-						+ ImageManager.getImage("projectiles/laser").getWidth(null)/2,
-					(int) (y - ImageManager.getImage("projectiles/laser").getHeight(null)),
-					0, 0, ImageManager.getImage("projectiles/laser").getWidth(null), 2, null);
+		if (laserOn) {
+			Image laser = ImageManager.getImage("projectiles/laser");
+			int laserWidth = laser.getWidth(null);
+			int laserHeight = laser.getHeight(null);
+			
+			g.drawImage(laser,
+					(int) x + animation.getDimensionX() / 2 - laserWidth / 2,
+					(int) (y - laserHeight), null);
+			g.drawImage(laser,
+					(int) x + animation.getDimensionX() / 2 - laserWidth / 2,
+					0,
+					(int) x + animation.getDimensionX() / 2 + laserWidth / 2,
+					(int) (y - laserHeight),
+					0, 0, laserWidth, 2, null);
 		}
 	}
 
@@ -261,16 +247,23 @@ public class ShipEntity extends Entity{
 			g.setColor(new Color(255, greenComponent, 0));
 			g.fillRect(baseX + i*35, (int)(baseY + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());
 			
-			// draw an exclamation mark over heat bar
-			if (weapons[i].getOverheatPercent() > 70) {
-				g.fillRect(baseX + i * 35 + 12,
-						baseY - 40, 6, 20);
-				g.fillRect(baseX + i * 35 + 12,
-						baseY - 15, 6, 5);
-			}
-			String iconName = "projectiles/shot" + (i+1);
-			int iconX = baseX + i*35 + 15 - ImageManager.getImage(iconName).getWidth(null)/2;
-			g.drawImage(ImageManager.getImage(iconName), iconX, game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3, null);
+			drawExclamationMark(g, baseX, baseY, i);
+			drawProjectileIcons(g, baseX, i);
+		}
+	}
+
+	private void drawProjectileIcons(Graphics2D g, int baseX, int i) {
+		String iconName = "projectiles/shot" + (i+1);
+		int iconX = baseX + i*35 + 15 - ImageManager.getImage(iconName).getWidth(null)/2;
+		g.drawImage(ImageManager.getImage(iconName), iconX, game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3, null);
+	}
+
+	private void drawExclamationMark(Graphics2D g, int baseX, int baseY, int i) {
+		if (weapons[i].getOverheatPercent() > 70) {
+			g.fillRect(baseX + i * 35 + 12,
+					baseY - 40, 6, 20);
+			g.fillRect(baseX + i * 35 + 12,
+					baseY - 15, 6, 5);
 		}
 	}
 	

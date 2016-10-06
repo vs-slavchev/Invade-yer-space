@@ -61,7 +61,7 @@ public class ComboManager {
 		else if (flakesBonusReady && recentKillCount >= 120){
 			flakesBonusReady = false;
 			return new StatusEffect("flakes");
-		}
+		} //TODO: error
 		return null;
 	}
 	

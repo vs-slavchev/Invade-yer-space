@@ -1,5 +1,9 @@
 package utility;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class InputController {
 	
 	private volatile boolean firePressed = false;
@@ -7,13 +11,10 @@ public class InputController {
 	private boolean rightPressed = false;
 	private boolean upPressed = false;
 	private boolean downPressed = false;
-	private boolean onePressed = false;
-	private boolean twoPressed = false;
-	private boolean threePressed = false;
-	private boolean fourPressed = false;
 	private boolean autoFirePressed = false;
 	private boolean musicDownPressed = false;
 	private boolean musicUpPressed = false;
+	public List<Boolean> numberPressed = new ArrayList<>();
 	
 	public void reset(){
 		leftPressed = false;
@@ -21,10 +22,8 @@ public class InputController {
 		upPressed = false;
 		downPressed = false;
 		firePressed = false;
-		onePressed = false;
-		twoPressed = false;
-		threePressed = false;
-		fourPressed = false;
+		Boolean[] values = {false, false, false, false, false};
+		numberPressed.addAll(Arrays.asList(values));
 		autoFirePressed = false;
 		musicDownPressed = false;
 		musicUpPressed = false;
@@ -94,35 +93,4 @@ public class InputController {
 		return downPressed;
 	}
 	
-	public boolean isOnePressed() {
-		return onePressed;
-	}
-
-	public void setOnePressed(boolean onePressed) {
-		this.onePressed = onePressed;
-	}
-
-	public boolean isTwoPressed() {
-		return twoPressed;
-	}
-
-	public void setTwoPressed(boolean twoPressed) {
-		this.twoPressed = twoPressed;
-	}
-
-	public boolean isThreePressed() {
-		return threePressed;
-	}
-
-	public void setThreePressed(boolean threePressed) {
-		this.threePressed = threePressed;
-	}
-
-	public boolean isFourPressed() {
-		return fourPressed;
-	}
-
-	public void setFourPressed(boolean fourPressed) {
-		this.fourPressed = fourPressed;
-	}
 }
