@@ -247,9 +247,6 @@ public class EntityManager {
 	}
 	
 	public boolean existAliens(){
-		if (alienEntities.isEmpty()){
-			return false;
-		}
-		return true;
+		return !alienEntities.isEmpty();
 	}
 }

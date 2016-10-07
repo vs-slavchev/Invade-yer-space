@@ -107,10 +107,7 @@ public class AlienEntity extends Entity{
 	}
 	
 	public boolean isDead(){
-		if( healthPoints <= 0 ){
-			return true;
-		}
-		return false;
+		return healthPoints <= 0;
 	}
 	
 	public void spawnExplosionAnimation(){

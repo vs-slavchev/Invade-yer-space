@@ -49,7 +49,7 @@ public class MusicManager {
 		backgroundMusic.setGain(gain);
 		backgroundMusic.setBalance(0.0f);
 		TextBoxManager.showTextBox(
-				new TextBox("Song: " + songNames[index] + ";Artist: Marto D;MnM Studios", 20, 800, 270, 400));
+				new TextBox("Song: " + songNames[index] + ";Artist: Marto D;MnM Studios", 20, 800));
 	}
 
 	private void validateIndex(int index) {
@@ -63,11 +63,8 @@ public class MusicManager {
 
 	public void modifyGain(float value) {
 		gain += value;
-		if (gain < 0.3f) {
-			gain = 0.3f;
-		} else if (gain > 1.0f) {
-			gain = 1.0f;
-		}
+		gain = Math.max(gain, 0.3f);
+		gain = Math.min(gain, 1.0f);
 		backgroundMusic.setGain(gain);
 	}
 
@@ -87,9 +84,4 @@ public class MusicManager {
 			backgroundMusic.setGain(gain);
 		}
 	}
-
-	public void stopBackgroundMusic() {
-		backgroundMusic.stop();
-	}
-
 }

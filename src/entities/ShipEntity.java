@@ -18,7 +18,7 @@ import utility.InputController;
 import utility.image.ParticleEmitter;
 import utility.sound.SoundManager;
 
-public class ShipEntity extends Entity{
+public class ShipEntity extends Entity {
 
 	private double moveSpeed = 300;
 	private Animation animation;
@@ -109,33 +109,33 @@ public class ShipEntity extends Entity{
 		}
 	}
 	
-	public void collidedWith(final Entity other){
+	public void collidedWith(final Entity other) {
 		if( other instanceof AlienEntity){
 			this.game.notifyDeath();
 			autoFireOn = false;
 		}
 	}
 	
-	public void processInput(InputController inputController){
+	public void processInput(InputController inputController) {
 		
 		if( inputController.isLeftPressed() ){
-			if (dx > -moveSpeed){
+			if (dx > -moveSpeed) {
 				dx -= ContentValues.ACCELERATION;
 			}
 		} else if( inputController.isRightPressed() ){
-			if (dx < moveSpeed){
+			if (dx < moveSpeed) {
 				dx += ContentValues.ACCELERATION;
 			}
 		} else {
 			dx = applyFriction(dx);
 		}
 		
-		if (inputController.isUpPressed() ){
+		if (inputController.isUpPressed()) {
 			if (dy > -moveSpeed*2/3){
 				dy -= ContentValues.ACCELERATION;
 			}
-		} else if( inputController.isDownPressed() ){
-			if (dy < moveSpeed*2/3){
+		} else if( inputController.isDownPressed()) {
+			if (dy < moveSpeed*2 / 3) {
 				dy += ContentValues.ACCELERATION;
 			}
 		} else {
@@ -150,7 +150,7 @@ public class ShipEntity extends Entity{
 				AnimationManager.spawnAnimation("effects/muzzleFlash", (int)x + 8, (int)y - 10, 1);
 			}
 		}
-		if (inputController.isAutoFirePressed()){
+		if (inputController.isAutoFirePressed()) {
 			autoFireOn = !autoFireOn;
 			inputController.setAutoFirePressed(false);
 		}
@@ -172,15 +172,15 @@ public class ShipEntity extends Entity{
 	}
 
 	private static double applyFriction(double deltaSpeed) {
-		if (deltaSpeed > ContentValues.FRICTION){
+		if (deltaSpeed > ContentValues.FRICTION) {
 			return deltaSpeed - ContentValues.FRICTION;
-		}else if (deltaSpeed < -ContentValues.FRICTION){
+		} else if (deltaSpeed < -ContentValues.FRICTION) {
 			return deltaSpeed + ContentValues.FRICTION;
 		}
 		return 0;
 	}
 	
-	public ParticleEmitter getParticleEmitter(){
+	public ParticleEmitter getParticleEmitter() {
 		return particleEmitter;
 	}
 
@@ -225,7 +225,7 @@ public class ShipEntity extends Entity{
 				}
 			}
 
-			int arcOrigin = 90 - angle/2;
+			int arcOrigin = 90 - angle / 2;
 			g.setColor(Color.CYAN);
 			g.drawArc((int)x - 7, (int)y - 10, 46, 76, arcOrigin, angle);
 			g.drawArc((int)x - 3, (int)y - 6, 38, 68, arcOrigin, angle);
@@ -242,10 +242,10 @@ public class ShipEntity extends Entity{
 			baseX = game.getWidth() - 150;
 		}
 		
-		for (int i = 0; i < ContentValues.NUM_NORMAL_WEAPONS; i++){
+		for (int i = 0; i < ContentValues.NUM_NORMAL_WEAPONS; i++) {
 			int greenComponent = (int)(100 - weapons[i].getOverheatPercent())*255/100;
 			g.setColor(new Color(255, greenComponent, 0));
-			g.fillRect(baseX + i*35, (int)(baseY + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());
+			g.fillRect(baseX + i * 35, (int)(baseY + 100 - weapons[i].getOverheatPercent()), 30, (int) weapons[i].getOverheatPercent());
 			
 			drawExclamationMark(g, baseX, baseY, i);
 			drawProjectileIcons(g, baseX, i);
@@ -253,7 +253,7 @@ public class ShipEntity extends Entity{
 	}
 
 	private void drawProjectileIcons(Graphics2D g, int baseX, int i) {
-		String iconName = "projectiles/shot" + (i+1);
+		String iconName = "projectiles/shot" + (i + 1);
 		int iconX = baseX + i*35 + 15 - ImageManager.getImage(iconName).getWidth(null)/2;
 		g.drawImage(ImageManager.getImage(iconName), iconX, game.getHeight() - 30 + (ContentValues.NUM_NORMAL_WEAPONS-i)*3, null);
 	}
@@ -267,19 +267,19 @@ public class ShipEntity extends Entity{
 		}
 	}
 	
-	public int getCenteredX(){
-		return (int) (x + animation.getDimensionX()/2);
+	public int getCenteredX() {
+		return (int) (x + animation.getDimensionX() / 2);
 	}
 	
-	public ComboManager getComboManager(){
+	public ComboManager getComboManager() {
 		return comboManager;
 	}
 	
-	public Animation getAnimation(){
+	public Animation getAnimation() {
 		return animation;
 	}
 	
-	public boolean isInvulnerable(){
+	public boolean isInvulnerable() {
 		return invulnerable;
 	}
 	

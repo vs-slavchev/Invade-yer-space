@@ -7,33 +7,30 @@ public class TextBoxManager {
 	
 	private static CopyOnWriteArrayList<TextBox> textBoxes = new CopyOnWriteArrayList<>();
 	
-	public static void showTextBox(TextBox textBox){
+	public static void showTextBox(TextBox textBox) {
 		textBoxes.add(textBox);
 	}
-	
-	public static void drawTextBoxes(Graphics2D g){
-		if (!textBoxes.isEmpty()) {
-			for (TextBox textBox : textBoxes) {
-				if (textBox.getDuration() <= 0) {
-					textBoxes.remove(textBox);
-					continue;
-				}
+
+	public static void drawAllTextBoxes(Graphics2D g) {
+		for (TextBox textBox : textBoxes) {
+			checkExpired(textBox);
+			textBox.draw(g);
+		}
+	}
+
+	public static void drawSongTextBoxesOnly(Graphics2D g) {
+		for (TextBox textBox : textBoxes) {
+			if (!textBox.isTutorial()) {
+				checkExpired(textBox);
 				textBox.draw(g);
 			}
 		}
 	}
-	
-	public static void drawSongTextBoxes(Graphics2D g) {
-		if (!textBoxes.isEmpty()) {
-			for (TextBox textBox : textBoxes) {
-				if (!textBox.isTutorial()) {
-					if (textBox.getDuration() <= 0) {
-						textBoxes.remove(textBox);
-						continue;
-					}
-					textBox.draw(g);
-				}
-			}
-		}
+
+	private static void checkExpired(TextBox textBox) {
+		if (textBox.isExpired()) {
+            textBoxes.remove(textBox);
+			return;
+        }
 	}
 }

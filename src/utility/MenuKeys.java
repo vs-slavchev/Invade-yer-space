@@ -44,6 +44,8 @@ public class MenuKeys extends KeyAdapter {
 		case KeyEvent.VK_PERIOD:
 			game.getInputController().setMusicUpPressed(true);
 			break;
+		default:
+			//empty on purpose
 		}
 	}
 

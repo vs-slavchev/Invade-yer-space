@@ -22,11 +22,11 @@ public class InputController {
 		upPressed = false;
 		downPressed = false;
 		firePressed = false;
-		Boolean[] values = {false, false, false, false, false};
-		numberPressed.addAll(Arrays.asList(values));
 		autoFirePressed = false;
 		musicDownPressed = false;
 		musicUpPressed = false;
+		Boolean[] values = {false, false, false, false, false};
+		numberPressed.addAll(Arrays.asList(values));
 	}
 
 	public boolean isMusicDownPressed() {

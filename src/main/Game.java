@@ -43,7 +43,7 @@ public class Game extends Canvas {
 	public final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	public final static GraphicsDevice device = env.getScreenDevices()[0]; 
 	public static final Rectangle SCREEN_RECTANGLE = device.getDefaultConfiguration().getBounds(); 
-	public static final int SCREEN_WIDTH = SCREEN_RECTANGLE.width; 
+	public static final int SCREEN_WIDTH = SCREEN_RECTANGLE.width;
 	public static final int SCREEN_HEIGHT = SCREEN_RECTANGLE.height; 
 	
 	private final int FPS = 90;
@@ -77,7 +77,7 @@ public class Game extends Canvas {
 
 		// make the cursor transparent
 		container.setCursor( container.getToolkit().createCustomCursor(
-				new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ), new Point(), null ) );
+				new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
 		/* tell awt not to repaint the canvas since I am doing it myself in
 		 * accelerated mode */
 		setIgnoreRepaint(true);
@@ -188,12 +188,12 @@ public class Game extends Canvas {
 				entityManager.getShip().getComboManager().drawComboScore(g);
 				
 			} else {
-				TextBoxManager.drawTextBoxes(g);
+				TextBoxManager.drawAllTextBoxes(g);
 			}
 			
 		} else if (StateManager.getState() == States.MENU){
 			MainMenu.drawMenu(g);
-			TextBoxManager.drawSongTextBoxes(g);
+			TextBoxManager.drawSongTextBoxesOnly(g);
 		}
 		
 		drawSpeakerIcon(g);
@@ -206,10 +206,10 @@ public class Game extends Canvas {
 	private void drawSpeakerIcon(Graphics2D g) {
 		int sX = 0;
 		boolean willDraw = false;
-		if (inputController.isMusicDownPressed()){
+		if (inputController.isMusicDownPressed()) {
 			sX = 1;
 			willDraw = true;
-		}else if (inputController.isMusicUpPressed()){
+		}else if (inputController.isMusicUpPressed()) {
 			willDraw = true;
 		}
 		if (willDraw) {
@@ -218,12 +218,12 @@ public class Game extends Canvas {
 		}
 	}
 
-	public void switchToMenuKeyHandler(){
+	public void switchToMenuKeyHandler() {
 		removeKeyListener(keyInputHandler);
 		addKeyListener(menuKeys);
 	}
 	
-	public void switchToInputKeyHandler(){
+	public void switchToInputKeyHandler() {
 		removeKeyListener(menuKeys);
 		addKeyListener(keyInputHandler);
 	}
@@ -258,11 +258,11 @@ public class Game extends Canvas {
 		entityManager.speedUpAlienEntities();
 	}
 	
-	public boolean isAlienHPBarDrawn(){
+	public boolean isAlienHPBarDrawn() {
 		return alienHPBarDrawn;
 	}
 	
-	public static void setAlienHPBarDrawn(boolean value){
+	public static void setAlienHPBarDrawn(boolean value) {
 		alienHPBarDrawn = value;
 	}
 
@@ -288,7 +288,7 @@ public class Game extends Canvas {
 		return inputController;
 	}
 	
-	public static int getScore(){
+	public static int getScore() {
 		return score;
 	}
 	
@@ -304,19 +304,11 @@ public class Game extends Canvas {
 		return entityManager;
 	}
 
-	public MusicManager getSoundManager() {
-		return getMusicManager();
-	}
-
 	public boolean isWaitingForKeyPress() {
 		return waitingForKeyPress;
 	}
-	
-	public static void drawStringCentered(Graphics2D g, String text, int x, int y){
-		g.drawString(text, x - g.getFontMetrics().stringWidth(String.valueOf(text))/2, y);
-	}
-	
-	public void setWaitingForKeyPress(boolean val){
+
+	public void setWaitingForKeyPress(boolean val) {
 		waitingForKeyPress = val;
 	}
 

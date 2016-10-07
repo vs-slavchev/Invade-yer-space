@@ -42,6 +42,8 @@ public class ContentValues {
 	public static final Font INFO_FONT = new Font("Monospaced", Font.BOLD, 18);
 	public static final Font TEXT_BOX_FONT = new Font("Dialog", Font.BOLD, 20);
 	public static final Font QUESTION_FONT = new Font("Dialog", Font.BOLD, 48);
+	public static final int NUM_TUTORIALS = 7;
+	public static final int TIME_STEP = 400;
 	
 	//visual effects
 	public static final double PLANET_SPAWN_CHANCE = 0.0005;
@@ -58,12 +60,9 @@ public class ContentValues {
 		if (min >= max){
 			return value;
 		}
-		int result = value;
-		if(result < min){
-			result = min; 
-		}else if(result > max){
-			result = max;
-		}
+
+		int result = Math.min(value, max);
+		result = Math.max(result, min);
 		return result;
 	}
 }
