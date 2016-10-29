@@ -1,114 +1,114 @@
 package entities;
 
-import java.awt.Graphics2D;
-
-import javax.swing.JOptionPane;
-
-import utility.ContentValues;
-import utility.image.AnimationManager;
-import utility.image.ImageManager;
 import entities.aliens.AlienEntity;
 import main.Game;
+import utility.ContentValues;
+import utility.InvadeError;
+import utility.image.AnimationManager;
+import utility.image.ImageManager;
 
-public class ShotEntity extends Entity{
+import java.awt.*;
 
-	// name is required for drawing and explosions
-	private final String name;
-	private boolean used = false;
-	
-	public ShotEntity(Game game, final String name, final int x, final int y, final int dx){
-		super(x, y);
-		this.game = game;
-		this.name = name;
-		this.collisionWidth = ImageManager.getImage(name).getWidth(null);
-		this.collisionHeight = ImageManager.getImage(name).getHeight(null);
-		
-		switch (name) {
-		case "projectiles/shot1":
-			dy = ContentValues.BULLETS_VELOCITY[0];
-			this.dx = -60 + Math.random() * 120;
-			break;
-		case "projectiles/shot2":
-			dy = ContentValues.BULLETS_VELOCITY[1];
-			this.dx = dx;
-			break;
-		case "projectiles/shot3":
-			dy = ContentValues.BULLETS_VELOCITY[2];
-			this.dx = dx;
-			break;
-		case "projectiles/shot4":
-			dy = ContentValues.BULLETS_VELOCITY[3];
-			this.dx = dx;
-			break;
-		case "projectiles/shot5":
-			dy = ContentValues.BULLETS_VELOCITY[4];
-			this.dx = dx;
-			break;
-		case "projectiles/shot6":
-			dy = ContentValues.BULLETS_VELOCITY[5];
-			this.dx = dx;
-			break;
-		case "projectiles/shot7":
-			dy = ContentValues.BULLETS_VELOCITY[6];
-			this.dx = dx;
-			break;
-		case "projectiles/shot8":
-			dy = ContentValues.BULLETS_VELOCITY[7];
-			this.dx = dx;
-			break;
-		default:
-			JOptionPane.showMessageDialog(null,
-					"Error: \n" + name + "\nnot supported by ShotEntity.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			 System.exit(0);
-			break;
-		}
-	}
-	
-	public void move(final long delta){
-		super.move(delta);
-		if (name.equals("projectiles/shot2")){
-			dx += Math.sin(y)*20;
-		}
-		
-		if( y < -20 ){
-			game.getEntityManager().removeEntity(this);
-		}
-	}
-	
-	public void collidedWith(Entity other){
-		if(used)
-			return;
-		if( other instanceof AlienEntity){
-			used = true;
-			game.getEntityManager().removeEntity(this);
-			
-			performRocketCollision();
-			
-			((AlienEntity) other).takeDamage();
-			if( ((AlienEntity) other).isDead() ){
-				((AlienEntity) other).spawnExplosionAnimation();
-				game.getEntityManager().removeEntity(other);
-			}
-		}
-	}
+public class ShotEntity extends Entity {
 
-	private void performRocketCollision() {
-		if (name.equals("projectiles/shot4") || name.equals("projectiles/shot7")){
-			game.getEntityManager().createAoEObject((int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
-					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS,
-					ContentValues.ROCKET_EXPLOSION_RADIUS*2, ContentValues.ROCKET_EXPLOSION_RADIUS*2);
-			// the scale is = explosion radius/image raduis
-			AnimationManager.spawnAnimation("effects/explosion",
-					(int)x - ContentValues.ROCKET_EXPLOSION_RADIUS,
-					(int)y - ContentValues.ROCKET_EXPLOSION_RADIUS, ContentValues.ROCKET_EXPLOSION_RADIUS/(ImageManager.getImage("effects/explosion1").getHeight(null)/2));
-		}
-	}
+    // name is required for drawing and explosions
+    private final int imageId;
+    private boolean used = false;
 
-	@Override
-	public void draw(Graphics2D g) {
-		g.drawImage(ImageManager.getImage(name), (int)x, (int)y, null);
-	}
+    public ShotEntity(Game game, final int imageId, final int x, final int y, final int dx) {
+        super(x, y);
+        this.game = game;
+        this.imageId = imageId;
+        this.collisionWidth = ImageManager.getImage(getImageName(imageId)).getWidth(null);
+        this.collisionHeight = ImageManager.getImage(getImageName(imageId)).getHeight(null);
+        this.dx = dx;
 
+        switch (imageId) {
+            case 1:
+                dy = ContentValues.ROCKET_VELOCITY;
+                this.dx = -60 + Math.random() * 120;
+                break;
+            case 2:
+                dy = ContentValues.MACHINE_GUN_VELOCITY;
+                break;
+            case 3:
+                dy = ContentValues.SINE_WAVE_VELOCITY;
+                break;
+            case 4:
+                dy = ContentValues.GREEN_SHOT_VELOCITY;
+                break;
+            case 5:
+                dy = ContentValues.BOMB_VELOCITY;
+                break;
+            case 6:
+                dy = ContentValues.SPEAR_VELOCITY;
+                break;
+            case 7:
+                dy = ContentValues.SCATTER_SHOT_VELOCITY;
+                break;
+            case 8:
+                dy = ContentValues.FLAKE_VELOCITY;
+                break;
+            default:
+                InvadeError.show(getImageName(imageId) + " not supported by ShotEntity.");
+                break;
+        }
+    }
+
+    private String getImageName(int imageId) {
+        return "projectiles/shot" + imageId;
+    }
+
+    public void move(final long delta) {
+        super.move(delta);
+        if (imageId == 2) {
+            dx += Math.sin(y) * 20;
+        }
+
+        if (y < -20) {
+            game.getEntityManager().removeEntity(this);
+        }
+    }
+
+    public void collidedWith(Entity other) {
+        if (used)
+            return;
+        if (other instanceof AlienEntity) {
+            used = true;
+            game.getEntityManager().removeEntity(this);
+
+            aoeExplode();
+
+            ((AlienEntity) other).takeDamage();
+            if (((AlienEntity) other).isDead()) {
+                ((AlienEntity) other).spawnExplosionAnimation();
+                game.getEntityManager().removeEntity(other);
+            }
+        }
+    }
+
+    private void aoeExplode() {
+        if (imageId == 4 || imageId == 7) {
+            game.getEntityManager().createAoeObject(
+                    (int) x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+                    (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
+                    ContentValues.ROCKET_EXPLOSION_RADIUS * 2);
+            // the scale is the explosion radius or image radius
+            AnimationManager.spawnAnimation("effects/explosion",
+                    (int) x - ContentValues.ROCKET_EXPLOSION_RADIUS,
+                    (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
+                    ContentValues.ROCKET_EXPLOSION_RADIUS
+                            / (ImageManager.getImage("effects/explosion1").getHeight(null) / 2));
+        }
+    }
+
+    @Override
+    public void draw(Graphics2D g) {
+        g.drawImage(ImageManager.getImage(getImageName(imageId)), (int) x, (int) y, null);
+    }
+
+    @Override
+    public void doLogic() {
+        // intentionally left empty
+    }
 }

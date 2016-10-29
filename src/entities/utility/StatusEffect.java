@@ -1,69 +1,66 @@
 package entities.utility;
 
-import javax.swing.JOptionPane;
-
 import utility.ContentValues;
+import utility.InvadeError;
 import utility.sound.SoundManager;
 
 public class StatusEffect {
-	
-	private int duration;
-	private final String name;
-	private boolean active;
-	
-	public StatusEffect(String name){
-		this.name  = name;
-		active = true;
-		switch(name){
-		case "laser":
-			duration = ContentValues.MAX_PLAYER_LASER_DURATION;
-			SoundManager.play("lazor");
-			SoundManager.play("lazorSfx");
-			break;
-		case "scatter":
-			duration = 150;
-			break;
-		case "spears":
-			duration = 200;
-			break;
-		case "quadRockets":
-			duration = 10;
-			SoundManager.play("rocket");
-			break;
-		case "shield":
-			duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
-			SoundManager.play("reflectiveShield");
-			break;
-		case "flakes":
-			duration = 500;
-			break;
-		default:
-			JOptionPane.showMessageDialog(null,
-					"Error: \n" + name + "\nnot supported by StatusEffect.",
-				    "Error",
-				    JOptionPane.ERROR_MESSAGE);
-			 System.exit(0);
-			 break;
-		}
-	}
-	
-	public void update(){
-		duration--;
-		if (duration <= 0){
-			active = false;
-		}
-	}
 
-	public String getName() {
-		return name;
-	}
+    public enum StatusEffectType {LASER, SCATTER, SPEARS, QUAD_ROCKETS, SHIELD, FLAKES};
 
-	public boolean isActive() {
-		return active;
-	}
+    private final StatusEffectType type;
+    private int duration;
+    private boolean active;
 
-	public int getDuration() {
-		return duration;
-	}
-	
+    public StatusEffect(StatusEffectType type) {
+        this.type = type;
+        active = true;
+        switch (type) {
+            case LASER:
+                duration = ContentValues.MAX_PLAYER_LASER_DURATION;
+                SoundManager.play("lazor");
+                SoundManager.play("lazorSfx");
+                break;
+            case SCATTER:
+                duration = 150;
+                break;
+            case SPEARS:
+                duration = 200;
+                break;
+            case QUAD_ROCKETS:
+                duration = 10;
+                SoundManager.play("rocket");
+                break;
+            case SHIELD:
+                duration = ContentValues.MAX_PLAYER_SHIELD_DURATION;
+                SoundManager.play("reflectiveShield");
+                break;
+            case FLAKES:
+                duration = 500;
+                break;
+            default:
+                InvadeError.show(type + " not supported by StatusEffect.");
+                break;
+        }
+    }
+
+    public void update() {
+        duration--;
+        if (duration <= 0) {
+            active = false;
+        }
+    }
+
+    public StatusEffectType getType() {
+        return type;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
 }
