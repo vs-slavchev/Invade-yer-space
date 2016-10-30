@@ -145,7 +145,7 @@ public class EntityManager {
     public void initEntities() {
         cleanUpEntities();
 
-        ship = new ShipEntity(this.game, Game.getGameWidth() / 2, Game.getGameHeight() * 5 / 6);
+        ship = new ShipEntity(this.game, Game.SCREEN_WIDTH / 2, Game.SCREEN_HEIGHT * 5 / 6);
         entities.add(this.ship);
 
         alienCount = 0;
@@ -172,8 +172,8 @@ public class EntityManager {
         AlienEntity alien = new AlienEntity(game, type, -100, -100);
         int offsetX = alien.getAnimation().getWidth() / 2;
         int offsetY = alien.getAnimation().getHeight() / 2;
-        alien.setXY(100 + (col * Game.getGameWidth() / 30) - offsetX,
-                20 + (row * Game.getGameHeight() / 20) - offsetY);
+        alien.setXY(100 + (col * Game.SCREEN_WIDTH / 30) - offsetX,
+                20 + (row * Game.SCREEN_HEIGHT / 20) - offsetY);
         return alien;
     }
 
@@ -186,7 +186,7 @@ public class EntityManager {
         return this;
     }
 
-    public void speedUpAlienEntities() {
+    public void speedUpAliens() {
         for (int i = 0; i < alienEntities.size(); i++) {
             Entity entity = alienEntities.get(i);
             if (entity instanceof AlienEntity) {

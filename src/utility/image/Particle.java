@@ -19,9 +19,7 @@ public class Particle {
     }
 
     public void drawParticle(Graphics g) {
-        if (yModifier > 0) {
-            updateParticle();
-        }
+        updateParticle();
         g.setColor(this.color);
         // java does not support single pixel drawing :(
         g.drawLine(x, y, x, y);

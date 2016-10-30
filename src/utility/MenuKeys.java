@@ -15,7 +15,6 @@ public class MenuKeys extends KeyAdapter {
         this.game = game;
     }
 
-    @SuppressWarnings("incomplete-switch")
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         switch (key) {
@@ -28,9 +27,7 @@ public class MenuKeys extends KeyAdapter {
                 MainMenu.goDown();
                 break;
             case KeyEvent.VK_SPACE:
-                SoundManager.play("menuSound");
-                MainMenu.select(game);
-                break;
+                // fallthrough
             case KeyEvent.VK_ENTER:
                 SoundManager.play("menuSound");
                 MainMenu.select(game);

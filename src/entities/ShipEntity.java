@@ -38,7 +38,7 @@ public class ShipEntity extends Entity {
         this.collisionWidth = animation.getWidth();
         this.collisionHeight = animation.getHeight();
         for (int i = 0; i < weapons.length; i++) {
-            weapons[i] = new PlayerWeapon(game, this, "projectiles/shot" + (i + 1));
+            weapons[i] = new PlayerWeapon(game, this, i + 1);
         }
     }
 
@@ -65,8 +65,8 @@ public class ShipEntity extends Entity {
         updateStatusEffects();
 
         boolean limitedLeft = dx < 0 && x < 10;
-        boolean limitedRight = dx > 0 && x > Game.getGameWidth() - collisionWidth - 15;
-        boolean limitedDown = dy > 0 && y >= Game.getGameHeight() - collisionHeight - 50;
+        boolean limitedRight = dx > 0 && x > Game.SCREEN_WIDTH - collisionWidth - 15;
+        boolean limitedDown = dy > 0 && y >= Game.SCREEN_HEIGHT - collisionHeight - 50;
         boolean limitedUp = dy < 0 && y < 10;
 
         if (limitedLeft || limitedRight || limitedDown || limitedUp) {
@@ -115,7 +115,7 @@ public class ShipEntity extends Entity {
 
     public void collidedWith(final Entity other) {
         if (other instanceof AlienEntity) {
-            this.game.notifyDeath();
+            game.notifyDeath();
             autoFireOn = false;
         }
     }
@@ -155,7 +155,7 @@ public class ShipEntity extends Entity {
             if (weapons[currentWeapon].tryToFire()) {
                 // if successfully shot then get knocked back as a result
                 y += 2;
-                y = Math.min(y, Game.getGameHeight() - collisionHeight - 50);
+                y = Math.min(y, Game.SCREEN_HEIGHT - collisionHeight - 50);
                 AnimationManager.spawnAnimation("effects/muzzleFlash", (int) x + 8, (int) y - 10, 1);
             }
         }
@@ -168,9 +168,9 @@ public class ShipEntity extends Entity {
     }
 
     private void checkShootingWeaponsInput(InputController inputController) {
-        for (int numberPress = 1; numberPress < inputController.numberPressed.size(); numberPress++) {
-            if (inputController.numberPressed.get(numberPress)) {
-                int weaponIndex = numberPress - 1;
+        for (int numPress = 1; numPress < inputController.numberPressed.size(); numPress++) {
+            if (inputController.numberPressed.get(numPress)) {
+                int weaponIndex = numPress - 1;
                 if (currentWeapon != weaponIndex) {
                     currentWeapon = weaponIndex;
                     weapons[currentWeapon].resetFireTimer();
@@ -259,8 +259,8 @@ public class ShipEntity extends Entity {
     }
 
     private void drawExclamationMark(Graphics2D g, int baseX, int baseY, int i) {
-        boolean veryHot = weapons[i].getOverheatPercent() > 70;
-        if (veryHot) {
+        boolean weaponIsHot = weapons[i].getOverheatPercent() > 70;
+        if (weaponIsHot) {
             int exclamationX = baseX + i * 35 + 12;
             g.fillRect(exclamationX, baseY - 40, 6, 20);
             g.fillRect(exclamationX, baseY - 15, 6, 5);

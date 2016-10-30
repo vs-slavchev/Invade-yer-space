@@ -15,8 +15,8 @@ public class ContentValues {
     public static final int FRICTION = 18;
     public static final int NUM_NORMAL_WEAPONS = 4;
     public static final double INITIAL_WEAPON_COOLING_SPEED = 0.0000001;
-    public static final double MAX_WEAPON_COOLING_SPEED = 0.15;
     public static final double WEAPON_COOLING_SPEED_MULTIPLIER = 1.05;
+    public static final double MAX_WEAPON_COOLING_SPEED = 0.15;
 
     // enemy related:
     public static final double LEVEL_DIFFICULTY_STEP = 0.3;
@@ -42,7 +42,8 @@ public class ContentValues {
     public static final int FLAKE_VELOCITY = -400;
 
     // sound and music
-    public static final float MUSIC_PER_TICK_MODIFIER = 0.007f;
+    public static final float GAIN_PER_TICK_MODIFIER = 0.007f;
+    public static final float INITIAL_GAIN = 0.72f;
     public static final boolean DECREASE_CLIPS_GAIN = true;
 
     // used colors
@@ -66,15 +67,4 @@ public class ContentValues {
     public static final int MAX_GEMS = 64;
     public static final int NUM_BACKGROUND_STARS = 400;
 
-
-    // utility method for values
-    public static int controlMinMax(final int value, final int min, final int max) {
-        if (min >= max) {
-            return value;
-        }
-
-        int result = Math.min(value, max);
-        result = Math.max(result, min);
-        return result;
-    }
 }

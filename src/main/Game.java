@@ -23,9 +23,9 @@ import java.awt.image.BufferedImage;
 
 public class Game extends Canvas {
 
-    public final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    public final static GraphicsDevice device = env.getScreenDevices()[0];
-    public static final Rectangle SCREEN_RECTANGLE = device.getDefaultConfiguration().getBounds();
+    private final static GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    private final static GraphicsDevice device = env.getScreenDevices()[0];
+    private static final Rectangle SCREEN_RECTANGLE = device.getDefaultConfiguration().getBounds();
     public static final int SCREEN_WIDTH = SCREEN_RECTANGLE.width;
     public static final int SCREEN_HEIGHT = SCREEN_RECTANGLE.height;
     private static final long serialVersionUID = -4872814357516418820L;
@@ -33,7 +33,7 @@ public class Game extends Canvas {
     private static MusicManager musicManager = new MusicManager();
     private static boolean alienHPBarDrawn = false;
     private final int FPS = 90;
-    volatile boolean gameRunning = true;
+    boolean gameRunning = true;
     boolean waitingForKeyPress = false;
     InputController inputController;
     EntityManager entityManager = new EntityManager(this);
@@ -43,11 +43,9 @@ public class Game extends Canvas {
     private boolean logicRequiredThisLoop = false;
     private MenuKeys menuKeys = new MenuKeys(this);
     private KeyInputHandler keyInputHandler = new KeyInputHandler();
-    private BackgroundPlanetManager planetManager =
-            new BackgroundPlanetManager("planets/planet");
+    private BackgroundPlanetManager planetManager = new BackgroundPlanetManager("planets/planet");
 
     public Game() {
-
         JFrame container = new JFrame("Invade yer space ye scurvy dog!");
         JPanel panel = (JPanel) container.getContentPane();
         panel.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -57,31 +55,25 @@ public class Game extends Canvas {
         setLocation(0, 0);
         container.setUndecorated(true);
         panel.add(this);
+        makeCursorTransparent(container);
 
-        // make the cursor transparent
-        container.setCursor(container.getToolkit().createCustomCursor(
-                new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
-        /* tell awt not to repaint the canvas since I am doing it myself in
-         * accelerated mode */
+        /* tell awt not to repaint the canvas since we do it in accelerated mode */
         setIgnoreRepaint(true);
 
         container.pack();
         container.setResizable(false);
         container.setVisible(true);
-
         container.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
 
-        addKeyListener(menuKeys);
-
         requestFocus();
-
         createBufferStrategy(2);
         strategy = getBufferStrategy();
 
+        addKeyListener(menuKeys);
         inputController = new InputController();
         ImageManager.initImages();
 
@@ -89,20 +81,16 @@ public class Game extends Canvas {
         SoundManager.initSoundManager();
         TutorialManager.initTutorialList();
         MainMenu.initGems();
-
         musicManager.loopBackgroundMusic(0);
+    }
+
+    private void makeCursorTransparent(JFrame container) {
+        container.setCursor(container.getToolkit().createCustomCursor(
+                new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(), null));
     }
 
     public static void main(String argv[]) {
         (new Game()).playGame();
-    }
-
-    public static int getGameWidth() {
-        return SCREEN_WIDTH;
-    }
-
-    public static int getGameHeight() {
-        return SCREEN_HEIGHT;
     }
 
     public static int getScore() {
@@ -148,9 +136,9 @@ public class Game extends Canvas {
 
     private void controlMusicGain() {
         if (inputController.isMusicDownPressed()) {
-            musicManager.modifyGain(-ContentValues.MUSIC_PER_TICK_MODIFIER);
+            musicManager.modifyGain(-ContentValues.GAIN_PER_TICK_MODIFIER);
         } else if (inputController.isMusicUpPressed()) {
-            musicManager.modifyGain(ContentValues.MUSIC_PER_TICK_MODIFIER);
+            musicManager.modifyGain(ContentValues.GAIN_PER_TICK_MODIFIER);
         }
         musicManager.update();
     }
@@ -160,7 +148,7 @@ public class Game extends Canvas {
             long sleepTime = lastLoopTime + (1000 / FPS) - System.currentTimeMillis();
             Thread.sleep(sleepTime > 0 ? sleepTime : 1);
         } catch (InterruptedException e) {
-            System.out.println("mainThread.sleep was interrupted!");
+            InvadeError.show("sleep was interrupted");
         }
     }
 
@@ -192,27 +180,25 @@ public class Game extends Canvas {
             TextBoxManager.drawSongTextBoxesOnly(g);
         }
 
-        drawSpeakerIcon(g);
+        drawAdditionalIcons(g);
 
         // after drawing clean up and flip the buffer
         g.dispose();
         strategy.show();
     }
 
-    private void drawSpeakerIcon(Graphics2D g) {
-        int sX = 0;
-        boolean willDraw = false;
+    private void drawAdditionalIcons(Graphics2D g) {
         if (inputController.isMusicDownPressed()) {
-            sX = 1;
-            willDraw = true;
+            drawSpeakerIcon(g, 1);
         } else if (inputController.isMusicUpPressed()) {
-            willDraw = true;
+            drawSpeakerIcon(g, 0);
         }
-        if (willDraw) {
-            g.drawImage(ImageManager.getImage("effects/speakerUI"),
-                    SCREEN_WIDTH - 90, 30, SCREEN_WIDTH - 90 + 64, 30 + 64,
-                    64 * sX, 0, 64 * (sX + 1), 64, null);
-        }
+    }
+
+    private void drawSpeakerIcon(Graphics2D g, int spriteId) {
+        g.drawImage(ImageManager.getImage("effects/speakerUI"),
+                SCREEN_WIDTH - 90, 30, SCREEN_WIDTH - 90 + 64, 30 + 64,
+                64 * spriteId, 0, 64 * (spriteId + 1), 64, null);
     }
 
     public void switchToMenuKeyHandler() {
@@ -249,10 +235,11 @@ public class Game extends Canvas {
     public void notifyAlienKilled() {
         entityManager.decrementAlienCount();
         entityManager.getShip().getComboManager().incrementRecentKillCount();
-        if (entityManager.getAlienCount() <= 0) {
+        boolean allAliensDead = entityManager.getAlienCount() <= 0;
+        if (allAliensDead) {
             notifyWin();
         }
-        entityManager.speedUpAlienEntities();
+        entityManager.speedUpAliens();
     }
 
     public boolean isAlienHPBarDrawn() {

@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class PlayerWeapon {
 
-    private final String bulletName;
+    private final int bulletId;
     private final double heatAmplifier;
     private final int firingInterval;
     private Game game;
@@ -21,49 +21,49 @@ public class PlayerWeapon {
     private double overheatCoolingSpeed = 0.0;
     private long lastFireTime;
 
-    public PlayerWeapon(Game game, ShipEntity ship, String bulletName) {
+    public PlayerWeapon(Game game, ShipEntity ship, final int bulletId) {
         this.game = game;
         this.ship = ship;
-        this.bulletName = bulletName;
+        this.bulletId = bulletId;
         lastFireTime = System.currentTimeMillis();
 
-        switch (bulletName) {
-            case "projectiles/shot1":
+        switch (bulletId) {
+            case 1:
                 firingInterval = 100;
                 heatAmplifier = 1.75;
                 break;
-            case "projectiles/shot2":
+            case 2:
                 firingInterval = 250;
                 heatAmplifier = 3;
                 break;
-            case "projectiles/shot3":
+            case 3:
                 firingInterval = 400;
                 heatAmplifier = 7;
                 break;
-            case "projectiles/shot4":
-                firingInterval = 1200;
+            case 4:
+                firingInterval = 1_200;
                 heatAmplifier = 60;
                 break;
-            case "projectiles/shot5":
-                firingInterval = 1500;
+            case 5:
+                firingInterval = 1_500;
                 heatAmplifier = 0;
                 break;
-            case "projectiles/shot6":
+            case 6:
                 firingInterval = 500;
                 heatAmplifier = 0;
                 break;
-            case "projectiles/shot7":
+            case 7:
                 firingInterval = 1_000;
                 heatAmplifier = 0;
                 break;
-            case "projectiles/shot8":
+            case 8:
                 firingInterval = 400;
                 heatAmplifier = 0;
                 break;
             default:
                 firingInterval = 0;
                 heatAmplifier = 0;
-                InvadeError.show(bulletName + " not supported by PlayerWeapon.");
+                InvadeError.show("bulletId: " + bulletId + " not supported by PlayerWeapon.");
                 break;
         }
     }
@@ -85,7 +85,7 @@ public class PlayerWeapon {
         }
 
         lastFireTime = System.currentTimeMillis();
-        Image bullet = ImageManager.getImage(bulletName);
+        Image bullet = ImageManager.getImage("projectiles/shot" + bulletId);
         int x = ship.getX() + ship.getAnimation().getWidth() / 2 - bullet.getWidth(null) / 2;
         int y = ship.getY() - bullet.getHeight(null);
         ship.getAnimation().setRunning(true);
@@ -106,56 +106,56 @@ public class PlayerWeapon {
     }
 
     public void createShot(final int x, final int y) {
-        switch (bulletName) {
-            case "projectiles/shot1":
-                game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+        switch (bulletId) {
+            case 1:
+                game.getEntityManager().addToEntities(new ShotEntity(game, 1, x, y, 0));
                 SoundManager.play("frequentShoot");
                 break;
-            case "projectiles/shot2":
+            case 2:
                 game.getEntityManager()
-                        .addToEntities(new ShotEntity(game, bulletName, x - 20, y, 0))
-                        .addToEntities(new ShotEntity(game, bulletName, x + 20, y, 0));
+                        .addToEntities(new ShotEntity(game, 2, x - 20, y, 0))
+                        .addToEntities(new ShotEntity(game, 2, x + 20, y, 0));
                 SoundManager.play("sineShoot");
                 break;
-            case "projectiles/shot3":
+            case 3:
                 game.getEntityManager()
-                        .addToEntities(new ShotEntity(game, bulletName, x - 15, y + 20, -80))
-                        .addToEntities(new ShotEntity(game, bulletName, x + 15, y + 20, 80))
-                        .addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+                        .addToEntities(new ShotEntity(game, 3, x - 15, y + 20, -80))
+                        .addToEntities(new ShotEntity(game, 3, x + 15, y + 20, 80))
+                        .addToEntities(new ShotEntity(game, 3, x, y, 0));
                 SoundManager.play("tripleShoot");
                 break;
-            case "projectiles/shot4":
-                game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+            case 4:
+                game.getEntityManager().addToEntities(new ShotEntity(game, 4, x, y, 0));
                 SoundManager.play("cannonShoot");
                 break;
-            case "projectiles/shot5":
+            case 5:
                 for (int i = -800; i <= 800; i += 100) {
                     game.getEntityManager()
-                            .addToEntities(new ShotEntity(game, bulletName, x + i, y, 0));
+                            .addToEntities(new ShotEntity(game, 5, x + i, y, 0));
                 }
                 break;
-            case "projectiles/shot6":
+            case 6:
                 for (int i = 0; i <= 180; i += 30) {
                     game.getEntityManager()
-                            .addToEntities(new ShotEntity(game, bulletName, x - 30 + i / 3,
+                            .addToEntities(new ShotEntity(game, 6, x - 30 + i / 3,
                             (int) (y + 30 - 30 * Math.sin(Math.toRadians(i))), -90 + i));
                 }
                 break;
-            case "projectiles/shot7":
+            case 7:
                 game.getEntityManager()
-                        .addToEntities(new ShotEntity(game, bulletName, x, y + 15, 0))
-                        .addToEntities(new ShotEntity(game, bulletName, x + 90, y + 50, 30))
-                        .addToEntities(new ShotEntity(game, bulletName, x - 90, y + 50, -30));
+                        .addToEntities(new ShotEntity(game, 7, x, y + 15, 0))
+                        .addToEntities(new ShotEntity(game, 7, x + 90, y + 50, 30))
+                        .addToEntities(new ShotEntity(game, 7, x - 90, y + 50, -30));
                 break;
-            case "projectiles/shot8":
+            case 8:
                 game.getEntityManager()
-                        .addToEntities(new ShotEntity(game, bulletName, x - 160, y, 100))
-                        .addToEntities(new ShotEntity(game, bulletName, x - 80, y, 80))
-                        .addToEntities(new ShotEntity(game, bulletName, x + 160, y, -100))
-                        .addToEntities(new ShotEntity(game, bulletName, x + 80, y, -80));
+                        .addToEntities(new ShotEntity(game, 8, x - 160, y, 100))
+                        .addToEntities(new ShotEntity(game, 8, x - 80, y, 80))
+                        .addToEntities(new ShotEntity(game, 8, x + 160, y, -100))
+                        .addToEntities(new ShotEntity(game, 8, x + 80, y, -80));
                 break;
             default:
-                game.getEntityManager().addToEntities(new ShotEntity(game, bulletName, x, y, 0));
+                InvadeError.show(bulletId + " not recognized by player weapon.");
                 break;
         }
     }

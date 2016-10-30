@@ -42,7 +42,7 @@ public class AlienEntity extends Entity {
         //if an alien reaches the end of the screen - change direction
         if (dx < 0 && x < 10)
             game.updateLogic();
-        if (dx > 0 && this.x > Game.getGameWidth() - 50) {
+        if (dx > 0 && this.x > Game.SCREEN_WIDTH - 50) {
             game.updateLogic();
         }
         animation.update();
@@ -55,7 +55,7 @@ public class AlienEntity extends Entity {
         dx = -dx; //swap direction
         y += 10; //move lower
 
-        boolean enemyReachedPlayer = y > Game.getGameHeight() - 30;
+        boolean enemyReachedPlayer = y > Game.SCREEN_HEIGHT - 30;
         if (enemyReachedPlayer) {
             game.notifyDeath();
         }

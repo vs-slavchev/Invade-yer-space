@@ -1,11 +1,13 @@
 package utility.image;
 
 import utility.ContentValues;
+import utility.InvadeError;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.IndexColorModel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,11 +26,7 @@ public class ImageManager {
         try {
             img = ImageIO.read(new File(path + fname + ext));
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error: \n" + path + fname + ext + "\nmissing!",
-                    "Error loading image!",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            InvadeError.show(path + fname + ext + " missing!");
         }
         images.put(fname, img);
         return img;
@@ -78,13 +76,14 @@ public class ImageManager {
     }
 
     public static void loadImages(Iterable<String> fNames) {
-        for (String s : fNames)
+        for (String s : fNames) {
             loadImage(s);
+        }
     }
 
     public static Image getImage(String s) {
         if (!images.containsKey(s)) {
-            System.out.println(" Image not found in hashmap. key=\"" + s + "\"");
+            InvadeError.show("Image not loaded properly. key=\"" + s + "\"");
         }
         return images.get(s);
     }

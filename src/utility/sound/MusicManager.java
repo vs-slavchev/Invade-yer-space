@@ -1,6 +1,8 @@
 package utility.sound;
 
 import org.newdawn.easyogg.OggClip;
+import utility.ContentValues;
+import utility.InvadeError;
 import utility.TextBox;
 import utility.TextBoxManager;
 
@@ -16,7 +18,7 @@ public class MusicManager {
     private String[] songNames = new String[numberOfSongs];
     private OggClip[] songs = new OggClip[numberOfSongs];
     private OggClip backgroundMusic;
-    private float gain = 0.72f;
+    private float gain = ContentValues.INITIAL_GAIN;
     private int delay = 210;
     private boolean delayActive = false;
 
@@ -36,9 +38,7 @@ public class MusicManager {
         try {
             songs[index] = new OggClip(fileName);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error: \n" + fileName + "\nmissing!", "Error loading music!",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            InvadeError.show(fileName + " missing!");
         }
     }
 
@@ -55,10 +55,7 @@ public class MusicManager {
 
     private void validateIndex(int index) {
         if (index >= numberOfSongs) {
-            JOptionPane.showMessageDialog(null,
-                    "Error: song index not supported.\nindex = " + index + "\nmax index = " + (numberOfSongs - 1),
-                    "Error indexing music!", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            InvadeError.show("song index " + index + " not supported");
         }
     }
 

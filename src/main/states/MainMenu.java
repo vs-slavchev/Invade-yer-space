@@ -3,6 +3,7 @@ package main.states;
 import main.Game;
 import main.states.StateManager.States;
 import utility.ContentValues;
+import utility.InvadeError;
 import utility.image.Gem;
 import utility.image.ImageManager;
 import utility.sound.SoundManager;
@@ -17,20 +18,11 @@ public class MainMenu {
     private static Gem[] gems = new Gem[ContentValues.MAX_GEMS];
 
     public static void goUp() {
-
-        if (currentOption == 0) {
-            currentOption = options.length - 1;
-        } else {
-            currentOption--;
-        }
+        currentOption = currentOption == 0 ? options.length - 1 : currentOption - 1;
     }
 
     public static void goDown() {
-        if (currentOption == options.length - 1) {
-            currentOption = 0;
-        } else {
-            currentOption++;
-        }
+        currentOption = currentOption == options.length - 1 ? 0 : currentOption + 1;
     }
 
     public static void select(Game game) {
@@ -47,11 +39,7 @@ public class MainMenu {
                 System.exit(0);
                 break;
             default:
-                JOptionPane.showMessageDialog(null,
-                        "Error: \n" + choice + "\nnot a valid menu choice!",
-                        "Error in menu!",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
+                InvadeError.show(choice + " not a valid menu choice!");
                 break;
         }
     }
@@ -77,10 +65,7 @@ public class MainMenu {
 
     private static void updateGems() {
         for (Gem gem : gems) {
-            gem.y += 0.7;
-            if (gem.y > Game.SCREEN_HEIGHT) {
-                gem.y = -50;
-            }
+            gem.move();
         }
     }
 
@@ -90,8 +75,8 @@ public class MainMenu {
 
         String path = "text/";
 
-        g.drawImage(ImageManager.getImage(path + "titleText"), Game.SCREEN_WIDTH / 2
-                        - ImageManager.getImage(path + "titleText").getWidth(null) / 2,
+        Image titleImg = ImageManager.getImage(path + "titleText");
+        g.drawImage(titleImg, Game.SCREEN_WIDTH / 2 - titleImg.getWidth(null) / 2,
                 Game.SCREEN_HEIGHT / 9, null);
 
         int baseX = 300;
@@ -109,14 +94,14 @@ public class MainMenu {
                     Game.SCREEN_HEIGHT * 4 / 10 + i * offset, null);
         }
 
-        int creditsX = Game.SCREEN_WIDTH - ImageManager.getImage(path + "credits").getWidth(null);
-        int creditsY = Game.SCREEN_HEIGHT - ImageManager.getImage(path + "credits").getHeight(null);
-
-        g.drawImage(ImageManager.getImage(path + "credits"), creditsX, creditsY, null);
+        Image creditsImg = ImageManager.getImage(path + "credits");
+        int creditsX = Game.SCREEN_WIDTH - creditsImg.getWidth(null);
+        int creditsY = Game.SCREEN_HEIGHT - creditsImg.getHeight(null);
+        g.drawImage(creditsImg, creditsX, creditsY, null);
 
         g.setFont(ContentValues.INFO_FONT);
         g.setColor(Color.BLACK);
-        g.drawString(ContentValues.GAME_VERSION, 100, Game.getGameHeight() - 10);
+        g.drawString(ContentValues.GAME_VERSION, 100, Game.SCREEN_HEIGHT - 10);
     }
 
 }

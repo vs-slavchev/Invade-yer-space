@@ -21,13 +21,13 @@ public class ParticleEmitter {
         Color randomColor = new Color((int) (200 + Math.random() * 55),
                 (int) (128 + Math.random() * 127), 0);
 
-        if (particles.size() > currentIndex && particles.get(currentIndex) != null) {
+        Particle newParticle = new Particle(x, y, particlePositionOffset, randomColor, 5);
+        boolean reusing = particles.size() > currentIndex && particles.get(currentIndex) != null;
+        if (reusing) {
             particles.remove(currentIndex);
-            particles.add(currentIndex, new Particle(x, y, particlePositionOffset,
-                    randomColor, 5));
+            particles.add(currentIndex, newParticle);
         } else {
-            particles.add(new Particle(x, y, particlePositionOffset,
-                    randomColor, 5));
+            particles.add(newParticle);
         }
 
         this.currentIndex++;

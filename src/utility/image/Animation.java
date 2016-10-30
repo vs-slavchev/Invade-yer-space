@@ -50,12 +50,9 @@ public class Animation {
         }
         g.drawImage(ImageManager.getImage(name),
                 x, y,
-                x + (int) (getWidth() * scale),
-                y + (int) (getHeight() * scale),
-                (int) currentFrame * getWidth(),
-                0,
-                (int) (currentFrame + 1) * getWidth(),
-                getHeight(),
+                x + (int) (getWidth() * scale), y + (int) (getHeight() * scale),
+                (int) currentFrame * getWidth(), 0,
+                (int) (currentFrame + 1) * getWidth(), getHeight(),
                 null);
     }
 

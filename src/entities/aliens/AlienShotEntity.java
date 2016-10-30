@@ -26,7 +26,7 @@ public class AlienShotEntity extends Entity {
 
     public void move(final long delta) {
         super.move(delta);
-        boolean outOfScreen = y > Game.getGameHeight() + 20 || y < -20;
+        boolean outOfScreen = y > Game.SCREEN_HEIGHT + 20 || y < -20;
         if (outOfScreen) {
             game.getEntityManager().removeEntity(this);
         }

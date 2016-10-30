@@ -1,6 +1,7 @@
 package utility.sound;
 
 import utility.ContentValues;
+import utility.InvadeError;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -15,7 +16,7 @@ import java.util.Map;
 public class SoundManager {
 
     private final static String path = "sounds/";
-    private static Map<String, Clip> sounds = new HashMap<String, Clip>();
+    private static Map<String, Clip> sounds = new HashMap<>();
     private static ArrayList<String> fileNames = new ArrayList<>();
 
     public static void initSoundManager() {
@@ -42,7 +43,6 @@ public class SoundManager {
         }
 
         for (String name : fileNames) {
-            @SuppressWarnings("resource")
             Clip clip = getClip(name);
             sounds.put(name, clip);
 
@@ -52,33 +52,38 @@ public class SoundManager {
         }
     }
 
+    private static Clip getClip(final String filename) {
+        Clip clip = null;
+        try {
+            clip = AudioSystem.getClip();
+            AudioInputStream sample = AudioSystem.getAudioInputStream(
+                    new File(path + filename + ".wav"));
+            clip.open(sample);
+        } catch (Exception e) {
+            InvadeError.show(filename + ".wav missing!");
+        }
+        return clip;
+    }
+
     private static void decreaseGain(Clip clip) {
-        FloatControl gainControl = (FloatControl) clip
-                .getControl(FloatControl.Type.MASTER_GAIN);
+        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         gainControl.setValue(-10.0f);
     }
 
     public static void play(String name) {
         if (!sounds.containsKey(name)) {
-            JOptionPane.showMessageDialog(null,
-                    "Error: \n" + name + ".wav" + "\nnot found in SoundManager HashMap!",
-                    "Error playing sound!",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            InvadeError.show(name + ".wav not loaded in SoundManager.");
         }
-        if (!sounds.get(name).isActive()) {
-            sounds.get(name).setFramePosition(0);
-            sounds.get(name).start();
+        Clip sound = sounds.get(name);
+        if (!sound.isActive()) {
+            sound.setFramePosition(0);
+            sound.start();
         }
     }
 
     public static void playOnly(String name) {
         if (!sounds.containsKey(name)) {
-            JOptionPane.showMessageDialog(null,
-                    "Error: \n" + name + ".wav" + "\nnot found in SoundManager HashMap!",
-                    "Error playing sound!",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            InvadeError.show(name + ".wav not loaded in SoundManager.");
         }
 
         for (Clip clip : sounds.values()) {
@@ -88,23 +93,6 @@ public class SoundManager {
             }
         }
         sounds.get(name).start();
-    }
-
-    private static Clip getClip(final String filename) {
-        Clip clip = null;
-        try {
-            clip = AudioSystem.getClip();
-            @SuppressWarnings("resource")
-            AudioInputStream sample = AudioSystem.getAudioInputStream(new File(path + filename + ".wav"));
-            clip.open(sample);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    "Error: \n" + path + filename + ".wav" + "\nmissing!",
-                    "Error loading sound!",
-                    JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
-        }
-        return clip;
     }
 
     public static void close() {

@@ -1,5 +1,7 @@
 package utility.image;
 
+import utility.InvadeError;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
@@ -8,32 +10,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AnimationManager {
 
-    private static List<Animation> animations = new CopyOnWriteArrayList<>();
+    private static final List<Animation> animations = new CopyOnWriteArrayList<>();
 
-    public static void spawnAnimation(final String type, final int x, final int y, final double scale) {
-
+    public static void spawnAnimation(final String type, final int x, final int y,
+                                      final double scale) {
         Animation anim = null;
-        String modified_type = type;
         switch (type) {
             case "effects/sparks":
-                anim = new Animation(x, y, 0.2, 4, modified_type, false, true, scale);
+                anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
                 break;
             case "effects/reflectionSparks":
-                anim = new Animation(x, y, 0.2, 4, modified_type, false, true, scale);
+                anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
                 break;
             case "effects/muzzleFlash":
-                anim = new Animation(x, y, 0.5, 4, modified_type, false, true, scale);
+                anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
                 break;
             case "effects/explosion":
-                modified_type += Integer.toString((int) Math.round(1 + Math.random() * 3));
-                anim = new Animation(x, y, 0.12, 7, modified_type, false, true, scale);
+                int explosionId = (int) Math.round(1 + Math.random() * 3);
+                String modifiedType = type + explosionId;
+                anim = new Animation(x, y, 0.12, 7, modifiedType, false, true, scale);
                 break;
             default:
-                JOptionPane.showMessageDialog(null,
-                        "Error: \n" + modified_type + "\nanimation not supported by AnimationManager.",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                System.exit(0);
+                InvadeError.show(type + "animation not supported by AnimationManager.");
                 break;
         }
         synchronized (animations) {
