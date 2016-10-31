@@ -25,29 +25,29 @@ public class ShotEntity extends Entity {
 
         switch (imageId) {
             case 1:
-                dy = ContentValues.ROCKET_VELOCITY;
+                dy = ContentValues.MACHINE_GUN_VELOCITY;
                 this.dx = -60 + Math.random() * 120;
                 break;
             case 2:
-                dy = ContentValues.MACHINE_GUN_VELOCITY;
+            	dy = ContentValues.SINE_WAVE_VELOCITY;
                 break;
             case 3:
-                dy = ContentValues.SINE_WAVE_VELOCITY;
+            	dy = ContentValues.GREEN_SHOT_VELOCITY;
                 break;
             case 4:
-                dy = ContentValues.GREEN_SHOT_VELOCITY;
+            	dy = ContentValues.BOMB_VELOCITY;
                 break;
             case 5:
-                dy = ContentValues.BOMB_VELOCITY;
+            	dy = ContentValues.SPEAR_VELOCITY;
                 break;
             case 6:
-                dy = ContentValues.SPEAR_VELOCITY;
+            	dy = ContentValues.SCATTER_SHOT_VELOCITY;
                 break;
             case 7:
-                dy = ContentValues.SCATTER_SHOT_VELOCITY;
+            	dy = ContentValues.ROCKET_VELOCITY;
                 break;
             case 8:
-                dy = ContentValues.FLAKE_VELOCITY;
+            	dy = ContentValues.FLAKE_VELOCITY;
                 break;
             default:
                 InvadeError.show(getImageName(imageId) + " not supported by ShotEntity.");
@@ -94,7 +94,7 @@ public class ShotEntity extends Entity {
                     (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     ContentValues.ROCKET_EXPLOSION_RADIUS * 2);
             // the scale is the explosion radius or image radius
-            AnimationManager.spawnAnimation("effects/explosion",
+            AnimationManager.spawnAnimation("explosion",
                     (int) x - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     ContentValues.ROCKET_EXPLOSION_RADIUS

@@ -156,7 +156,7 @@ public class ShipEntity extends Entity {
                 // if successfully shot then get knocked back as a result
                 y += 2;
                 y = Math.min(y, Game.SCREEN_HEIGHT - collisionHeight - 50);
-                AnimationManager.spawnAnimation("effects/muzzleFlash", (int) x + 8, (int) y - 10, 1);
+                AnimationManager.spawnAnimation("muzzleFlash", (int) x + 8, (int) y - 10, 1);
             }
         }
         if (inputController.isAutoFirePressed()) {

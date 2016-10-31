@@ -108,7 +108,7 @@ public class AlienEntity extends Entity {
         SoundManager.playExplosionSfx();
         int sparksX = (int) (x + 10 + Math.random() * animation.getWidth() / 2);
         int sparksY = (int) (y + 10 + Math.random() * animation.getHeight() / 2);
-        AnimationManager.spawnAnimation("effects/sparks", sparksX, sparksY, 1);
+        AnimationManager.spawnAnimation("sparks", sparksX, sparksY, 1);
         healthPoints--;
     }
 
@@ -121,13 +121,13 @@ public class AlienEntity extends Entity {
             game.getEntityManager().createAoeObject((int) x - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     ContentValues.ROCKET_EXPLOSION_RADIUS * 2);
-            AnimationManager.spawnAnimation("effects/explosion",
+            AnimationManager.spawnAnimation("explosion",
                     (int) x - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     (int) y - ContentValues.ROCKET_EXPLOSION_RADIUS,
                     ContentValues.ROCKET_EXPLOSION_RADIUS
                             / (ImageManager.getImage("effects/explosion1").getHeight(null) / 2));
         } else {
-            AnimationManager.spawnAnimation("effects/explosion", (int) x, (int) y, 1);
+            AnimationManager.spawnAnimation("explosion", (int) x, (int) y, 1);
         }
     }
 

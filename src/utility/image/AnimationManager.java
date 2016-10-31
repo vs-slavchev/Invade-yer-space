@@ -2,9 +2,7 @@ package utility.image;
 
 import utility.InvadeError;
 
-import javax.swing.*;
 import java.awt.*;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -15,36 +13,33 @@ public class AnimationManager {
     public static void spawnAnimation(final String type, final int x, final int y,
                                       final double scale) {
         Animation anim = null;
+        String animName = "effects/" + type;
         switch (type) {
-            case "effects/sparks":
-                anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
+            case "sparks":
+                anim = new Animation(x, y, 0.2, 4, animName, false, true, scale);
                 break;
-            case "effects/reflectionSparks":
-                anim = new Animation(x, y, 0.2, 4, type, false, true, scale);
+            case "reflectionSparks":
+                anim = new Animation(x, y, 0.2, 4, animName, false, true, scale);
                 break;
-            case "effects/muzzleFlash":
-                anim = new Animation(x, y, 0.5, 4, type, false, true, scale);
+            case "muzzleFlash":
+                anim = new Animation(x, y, 0.5, 4, animName, false, true, scale);
                 break;
-            case "effects/explosion":
+            case "explosion":
                 int explosionId = (int) Math.round(1 + Math.random() * 3);
-                String modifiedType = type + explosionId;
-                anim = new Animation(x, y, 0.12, 7, modifiedType, false, true, scale);
+                String extendedName = animName + explosionId;
+                anim = new Animation(x, y, 0.12, 7, extendedName, false, true, scale);
                 break;
             default:
-                InvadeError.show(type + "animation not supported by AnimationManager.");
+                InvadeError.show(animName + " animation not supported by AnimationManager.");
                 break;
         }
-        synchronized (animations) {
-            if (anim != null) {
-                animations.add(anim);
-            }
+        if (anim != null) {
+            animations.add(anim);
         }
     }
 
-    public static synchronized void updateAnimations() {
-        for (final Iterator<Animation> iterator = animations.iterator(); iterator
-                .hasNext(); ) {
-            Animation anim = iterator.next();
+    public static void updateAnimations() {
+        for (Animation anim : animations) {
             anim.update();
             if (!anim.getActive()) {
                 animations.remove(anim);
@@ -53,9 +48,7 @@ public class AnimationManager {
     }
 
     public static void drawAnimations(Graphics2D g) {
-        for (final Iterator<Animation> iterator = animations.iterator(); iterator
-                .hasNext(); ) {
-            Animation anim = iterator.next();
+        for (Animation anim : animations) {
             if (anim != null) {
                 anim.drawAnimation(g);
             }

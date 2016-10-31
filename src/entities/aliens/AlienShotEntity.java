@@ -40,7 +40,7 @@ public class AlienShotEntity extends Entity {
                     dx = calculateReflectedDeltaX(ship);
                     dy = -dy;
                     reflected = true;
-                    AnimationManager.spawnAnimation("effects/reflectionSparks", (int) x - 10, (int) y - 15, 2.0);
+                    AnimationManager.spawnAnimation("reflectionSparks", (int) x - 10, (int) y - 15, 2.0);
                 }
                 return;
             }
